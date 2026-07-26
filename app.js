@@ -2,55 +2,77 @@
 
 Family Wealth AI OS
 
-V4.0 Alpha Build 002
+V4.0 Alpha Build 004
 
-Application Core
-
-+
-
-Assets Management
+Assets + Income Core
 
 */
 
 let assets = [];
 
-// =========================
+let incomes = [];
+
+// ======================
 
 // 系统启动
 
-// =========================
+// ======================
 
 window.onload = function(){
 
-    loadAssets();
+    loadData();
 
     updateAssetDisplay();
+
+    updateIncomeDisplay();
 
     updateDashboard();
 
 };
 
-// =========================
+// ======================
 
-// 资产读取保存
+// 数据读取
 
-// =========================
+// ======================
 
-function loadAssets(){
+function loadData(){
 
-    let data = localStorage.getItem(
+    let assetData =
+
+    localStorage.getItem(
 
         "wealth_assets"
 
     );
 
-    if(data){
+    if(assetData){
 
-        assets = JSON.parse(data);
+        assets = JSON.parse(assetData);
+
+    }
+
+    let incomeData =
+
+    localStorage.getItem(
+
+        "wealth_incomes"
+
+    );
+
+    if(incomeData){
+
+        incomes = JSON.parse(incomeData);
 
     }
 
 }
+
+// ======================
+
+// 数据保存
+
+// ======================
 
 function saveAssets(){
 
@@ -64,51 +86,57 @@ function saveAssets(){
 
 }
 
-// =========================
+function saveIncome(){
 
-// 添加资产
+    localStorage.setItem(
 
-// =========================
+        "wealth_incomes",
+
+        JSON.stringify(incomes)
+
+    );
+
+}
+
+// ======================
+
+// 资产添加
+
+// ======================
 
 function addNewAsset(){
 
-    let asset = {
+    let asset={
 
-        name:
+        name:getValue("assetName"),
 
-        document.getElementById("assetName").value,
+        category:getValue("assetCategory"),
 
-        category:
+        type:getValue("assetType"),
 
-        document.getElementById("assetCategory").value,
+        owner:getValue("assetOwner"),
 
-        type:
+        country:getValue("assetCountry"),
 
-        document.getElementById("assetType").value,
+        currency:getValue("assetCurrency"),
 
-        country:
+        institution:getValue("assetInstitution"),
 
-        document.getElementById("assetCountry").value,
+        account:getValue("assetAccount"),
 
-        currency:
+        cost:Number(
 
-        document.getElementById("assetCurrency").value,
+            getValue("assetCost")
 
-        institution:
+        ),
 
-        document.getElementById("assetInstitution").value,
+        value:Number(
 
-        account:
+            getValue("assetValue")
 
-        document.getElementById("assetAccount").value,
+        ),
 
-        value:
-
-        Number(
-
-            document.getElementById("assetValue").value
-
-        )
+        note:getValue("assetNote")
 
     };
 
@@ -132,53 +160,11 @@ function addNewAsset(){
 
 }
 
-// =========================
+// ======================
 
-// 清空输入
+// 显示资产
 
-// =========================
-
-function clearAssetInput(){
-
-    let ids=[
-
-        "assetName",
-
-        "assetCategory",
-
-        "assetType",
-
-        "assetCountry",
-
-        "assetCurrency",
-
-        "assetInstitution",
-
-        "assetAccount",
-
-        "assetValue"
-
-    ];
-
-    ids.forEach(function(id){
-
-        let e=document.getElementById(id);
-
-        if(e){
-
-            e.value="";
-
-        }
-
-    });
-
-}
-
-// =========================
-
-// 显示资产列表
-
-// =========================
+// ======================
 
 function updateAssetDisplay(){
 
@@ -204,49 +190,49 @@ function updateAssetDisplay(){
 
         );
 
-        div.className="asset-item";
-
         div.innerHTML=`
 
-        <hr>
+<hr>
 
-        <b>${item.name}</b>
+<h3>${item.name}</h3>
 
-        <br>
+类别：
 
-        类型：
+${item.category}
 
-        ${item.type || ""}
+<br>
 
-        <br>
+类型：
 
-        国家：
+${item.type}
 
-        ${item.country || ""}
+<br>
 
-        <br>
+成本：
 
-        金额：
+¥${Number(item.cost).toLocaleString()}
 
-        ¥${Number(item.value)
+<br>
 
-        .toLocaleString()}
+当前价值：
 
-        <br><br>
+¥${Number(item.value).toLocaleString()}
 
-        <button onclick="editAsset(${index})">
+<br><br>
 
-        编辑
+<button onclick="editAsset(${index})">
 
-        </button>
+编辑
 
-        <button onclick="deleteAsset(${index})">
+</button>
 
-        删除
+<button onclick="deleteAsset(${index})">
 
-        </button>
+删除
 
-        `;
+</button>
+
+`;
 
         list.appendChild(div);
 
@@ -254,29 +240,29 @@ function updateAssetDisplay(){
 
 }
 
-// =========================
+// ======================
 
 // 编辑资产
 
-// =========================
+// ======================
 
 function editAsset(index){
 
-    let item=assets[index];
-
-    let newValue=
+    let value=
 
     prompt(
 
-        "修改资产金额",
+        "修改当前价值",
 
-        item.value
+        assets[index].value
 
     );
 
-    if(newValue!==null){
+    if(value!==null){
 
-        item.value=Number(newValue);
+        assets[index].value=
+
+        Number(value);
 
         saveAssets();
 
@@ -288,21 +274,15 @@ function editAsset(index){
 
 }
 
-// =========================
+// ======================
 
 // 删除资产
 
-// =========================
+// ======================
 
 function deleteAsset(index){
 
-    let ok=confirm(
-
-        "确定删除这个资产吗？"
-
-    );
-
-    if(ok){
+    if(confirm("确定删除该资产？")){
 
         assets.splice(index,1);
 
@@ -316,23 +296,143 @@ function deleteAsset(index){
 
 }
 
-// =========================
+// ======================
+
+// 收入添加
+
+// ======================
+
+function addIncome(){
+
+    let income={
+
+        name:getValue("incomeName"),
+
+        category:getValue("incomeCategory"),
+
+        source:getValue("incomeSource"),
+
+        amount:Number(
+
+            getValue("incomeAmount")
+
+        ),
+
+        period:getValue("incomePeriod")
+
+    };
+
+    if(!income.name){
+
+        alert("请输入收入名称");
+
+        return;
+
+    }
+
+    incomes.push(income);
+
+    saveIncome();
+
+    clearIncomeInput();
+
+    updateIncomeDisplay();
+
+    updateDashboard();
+
+}
+
+// ======================
+
+// 收入显示
+
+// ======================
+
+function updateIncomeDisplay(){
+
+    let list=document.getElementById(
+
+        "incomeList"
+
+    );
+
+    if(!list){
+
+        return;
+
+    }
+
+    list.innerHTML="";
+
+    incomes.forEach(function(item){
+
+        let div=document.createElement(
+
+            "div"
+
+        );
+
+        div.innerHTML=`
+
+<hr>
+
+<h3>${item.name}</h3>
+
+类别：
+
+${item.category}
+
+<br>
+
+来源：
+
+${item.source}
+
+<br>
+
+金额：
+
+¥${Number(item.amount).toLocaleString()}
+
+<br>
+
+周期：
+
+${item.period}
+
+`;
+
+        list.appendChild(div);
+
+    });
+
+}
+
+// ======================
 
 // Dashboard
 
-// =========================
+// ======================
 
 function updateDashboard(){
 
-    let total=0;
+    let totalAssets=0;
 
     assets.forEach(function(item){
 
-        total += Number(
+        totalAssets +=
 
-            item.value || 0
+        Number(item.value || 0);
 
-        );
+    });
+
+    let totalIncome=0;
+
+    incomes.forEach(function(item){
+
+        totalIncome +=
+
+        Number(item.amount || 0);
 
     });
 
@@ -346,7 +446,9 @@ function updateDashboard(){
 
         a.innerHTML=
 
-        "¥"+total.toLocaleString();
+        "¥"+
+
+        totalAssets.toLocaleString();
 
     }
 
@@ -360,8 +462,118 @@ function updateDashboard(){
 
         n.innerHTML=
 
-        "¥"+total.toLocaleString();
+        "¥"+
+
+        totalAssets.toLocaleString();
 
     }
+
+    let i=document.getElementById(
+
+        "totalIncome"
+
+    );
+
+    if(i){
+
+        i.innerHTML=
+
+        "¥"+
+
+        totalIncome.toLocaleString();
+
+    }
+
+}
+
+// ======================
+
+// 工具
+
+// ======================
+
+function getValue(id){
+
+    let e=document.getElementById(id);
+
+    if(e){
+
+        return e.value;
+
+    }
+
+    return "";
+
+}
+
+function clearAssetInput(){
+
+    let ids=[
+
+"assetName",
+
+"assetCategory",
+
+"assetType",
+
+"assetOwner",
+
+"assetCountry",
+
+"assetCurrency",
+
+"assetInstitution",
+
+"assetAccount",
+
+"assetCost",
+
+"assetValue",
+
+"assetNote"
+
+];
+
+ids.forEach(function(id){
+
+    let e=document.getElementById(id);
+
+    if(e){
+
+        e.value="";
+
+    }
+
+});
+
+}
+
+function clearIncomeInput(){
+
+let ids=[
+
+"incomeName",
+
+"incomeCategory",
+
+"incomeSource",
+
+"incomeAmount",
+
+"incomePeriod"
+
+];
+
+ids.forEach(function(id){
+
+let e=document.getElementById(id);
+
+if(e){
+
+e.value="";
+
+}
+
+});
 
 }
