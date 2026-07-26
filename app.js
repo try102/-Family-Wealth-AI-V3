@@ -1,3 +1,4 @@
+alert("V3.1运行");
 // Family Wealth AI Agent V3.1
 
 // Application Controller
