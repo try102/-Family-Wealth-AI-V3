@@ -10,7 +10,7 @@
 
 <title>
 
-Family Wealth AI Agent V3.0
+Family Wealth AI Agent V3.5
 
 </title>
 
@@ -22,7 +22,7 @@ Family Wealth AI Agent V3.0
 
 <h1>
 
-家庭财富 AI Agent V3.0
+家庭财富 AI Agent V3.5
 
 </h1>
 
@@ -46,11 +46,13 @@ Family Wealth AI Agent V3.0
 
 <div class="asset-form">
 
-<input 
+<input
 
 id="assetName"
 
-placeholder="资产名称">
+placeholder="资产名称（例如 Apple）"
+
+>
 
 <select id="assetCategory">
 
@@ -103,31 +105,64 @@ ETF
 </option>
 
 </select>
-<input 
+
+<input
 
 id="assetType"
 
-placeholder="资产类型">
+placeholder="资产类型（例如 美股）"
 
-<input 
+>
+
+<input
 
 id="assetCountry"
 
-placeholder="国家">
+placeholder="国家"
 
-<input 
+>
+
+<input
+
+id="assetCurrency"
+
+placeholder="币种（例如 USD）"
+
+>
+
+<input
+
+id="assetInstitution"
+
+placeholder="机构（例如 Fidelity）"
+
+>
+
+<input
 
 id="assetAmount"
 
 type="number"
 
-placeholder="金额">
+placeholder="金额"
+
+>
 
 <button onclick="addNewAsset()">
 
 添加资产
 
 </button>
+
+</div>
+
+<h2>
+
+资产配置
+
+</h2>
+
+<div id="portfolio">
 
 </div>
 
