@@ -1,7 +1,8 @@
-alert("V3.1运行");
-// Family Wealth AI Agent V3.1
+// Family Wealth AI Agent V3.5
 
 // Application Controller
+
+// 添加新资产
 
 function addNewAsset(){
 
@@ -9,29 +10,61 @@ function addNewAsset(){
 
         name:
 
-        document.getElementById("assetName").value,
+        document.getElementById(
+
+            "assetName"
+
+        ).value,
 
         category:
 
-        document.getElementById("assetCategory").value,
+        document.getElementById(
+
+            "assetCategory"
+
+        ).value,
 
         type:
 
-        document.getElementById("assetType").value,
+        document.getElementById(
+
+            "assetType"
+
+        ).value,
 
         country:
 
-        document.getElementById("assetCountry").value,
+        document.getElementById(
+
+            "assetCountry"
+
+        ).value,
+
+        currency:
+
+        document.getElementById(
+
+            "assetCurrency"
+
+        ).value,
 
         institution:
 
-        document.getElementById("assetInstitution").value,
+        document.getElementById(
+
+            "assetInstitution"
+
+        ).value,
 
         amount:
 
         Number(
 
-            document.getElementById("assetAmount").value
+            document.getElementById(
+
+                "assetAmount"
+
+            ).value
 
         )
 
@@ -45,7 +78,11 @@ function addNewAsset(){
 
     ){
 
-        alert("请输入资产名称和金额");
+        alert(
+
+            "请输入资产名称和金额"
+
+        );
 
         return;
 
@@ -69,13 +106,23 @@ function addNewAsset(){
 
     );
 
+    let category =
+
     document.getElementById(
 
         "assetCategory"
 
-    ).value="";
+    );
+
+    if(category){
+
+        category.value="";
+
+    }
 
 }
+
+// 更新财富总览
 
 function updateDashboard(){
 
@@ -83,7 +130,7 @@ function updateDashboard(){
 
     calculateTotalAssets();
 
-    let box =
+    let totalBox =
 
     document.getElementById(
 
@@ -91,17 +138,25 @@ function updateDashboard(){
 
     );
 
-    if(box){
+    if(totalBox){
 
-        box.innerHTML =
+        totalBox.innerHTML =
 
         "¥" +
 
-        total.toLocaleString();
+        total.toLocaleString(
+
+            "zh-CN"
+
+        );
 
     }
 
+    updatePortfolioDisplay();
+
 }
+
+// 页面启动
 
 window.onload=function(){
 
