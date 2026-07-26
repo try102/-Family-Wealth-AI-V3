@@ -2,9 +2,9 @@
 
 Family Wealth AI OS
 
-V4.0 Alpha Build 004
+V4.0 Alpha Build 005
 
-Assets + Income Core
+Assets + Income Management
 
 */
 
@@ -40,11 +40,7 @@ function loadData(){
 
     let assetData =
 
-    localStorage.getItem(
-
-        "wealth_assets"
-
-    );
+    localStorage.getItem("wealth_assets");
 
     if(assetData){
 
@@ -54,11 +50,7 @@ function loadData(){
 
     let incomeData =
 
-    localStorage.getItem(
-
-        "wealth_incomes"
-
-    );
+    localStorage.getItem("wealth_incomes");
 
     if(incomeData){
 
@@ -70,7 +62,7 @@ function loadData(){
 
 // ======================
 
-// 数据保存
+// 保存
 
 // ======================
 
@@ -124,17 +116,9 @@ function addNewAsset(){
 
         account:getValue("assetAccount"),
 
-        cost:Number(
+        cost:Number(getValue("assetCost")),
 
-            getValue("assetCost")
-
-        ),
-
-        value:Number(
-
-            getValue("assetValue")
-
-        ),
+        value:Number(getValue("assetValue")),
 
         note:getValue("assetNote")
 
@@ -162,17 +146,13 @@ function addNewAsset(){
 
 // ======================
 
-// 显示资产
+// 资产显示
 
 // ======================
 
 function updateAssetDisplay(){
 
-    let list=document.getElementById(
-
-        "assetList"
-
-    );
+    let list=document.getElementById("assetList");
 
     if(!list){
 
@@ -184,11 +164,7 @@ function updateAssetDisplay(){
 
     assets.forEach(function(item,index){
 
-        let div=document.createElement(
-
-            "div"
-
-        );
+        let div=document.createElement("div");
 
         div.innerHTML=`
 
@@ -248,9 +224,7 @@ ${item.type}
 
 function editAsset(index){
 
-    let value=
-
-    prompt(
+    let value=prompt(
 
         "修改当前价值",
 
@@ -260,9 +234,7 @@ function editAsset(index){
 
     if(value!==null){
 
-        assets[index].value=
-
-        Number(value);
+        assets[index].value=Number(value);
 
         saveAssets();
 
@@ -295,7 +267,6 @@ function deleteAsset(index){
     }
 
 }
-
 // ======================
 
 // 收入添加
@@ -364,7 +335,7 @@ function updateIncomeDisplay(){
 
     list.innerHTML="";
 
-    incomes.forEach(function(item){
+    incomes.forEach(function(item,index){
 
         let div=document.createElement(
 
@@ -376,7 +347,11 @@ function updateIncomeDisplay(){
 
 <hr>
 
-<h3>${item.name}</h3>
+<h3>
+
+${item.name}
+
+</h3>
 
 类别：
 
@@ -400,11 +375,79 @@ ${item.source}
 
 ${item.period}
 
+<br><br>
+
+<button onclick="editIncome(${index})">
+
+编辑
+
+</button>
+
+<button onclick="deleteIncome(${index})">
+
+删除
+
+</button>
+
 `;
 
         list.appendChild(div);
 
     });
+
+}
+
+// ======================
+
+// 编辑收入
+
+// ======================
+
+function editIncome(index){
+
+    let amount = prompt(
+
+        "修改收入金额",
+
+        incomes[index].amount
+
+    );
+
+    if(amount!==null){
+
+        incomes[index].amount =
+
+        Number(amount);
+
+        saveIncome();
+
+        updateIncomeDisplay();
+
+        updateDashboard();
+
+    }
+
+}
+
+// ======================
+
+// 删除收入
+
+// ======================
+
+function deleteIncome(index){
+
+    if(confirm("确定删除该收入记录？")){
+
+        incomes.splice(index,1);
+
+        saveIncome();
+
+        updateIncomeDisplay();
+
+        updateDashboard();
+
+    }
 
 }
 
@@ -420,9 +463,11 @@ function updateDashboard(){
 
     assets.forEach(function(item){
 
-        totalAssets +=
+        totalAssets += Number(
 
-        Number(item.value || 0);
+            item.value || 0
+
+        );
 
     });
 
@@ -430,21 +475,23 @@ function updateDashboard(){
 
     incomes.forEach(function(item){
 
-        totalIncome +=
+        totalIncome += Number(
 
-        Number(item.amount || 0);
+            item.amount || 0
+
+        );
 
     });
 
-    let a=document.getElementById(
+    let totalBox=document.getElementById(
 
         "totalAssets"
 
     );
 
-    if(a){
+    if(totalBox){
 
-        a.innerHTML=
+        totalBox.innerHTML =
 
         "¥"+
 
@@ -452,15 +499,15 @@ function updateDashboard(){
 
     }
 
-    let n=document.getElementById(
+    let netBox=document.getElementById(
 
         "netWorth"
 
     );
 
-    if(n){
+    if(netBox){
 
-        n.innerHTML=
+        netBox.innerHTML =
 
         "¥"+
 
@@ -468,15 +515,15 @@ function updateDashboard(){
 
     }
 
-    let i=document.getElementById(
+    let incomeBox=document.getElementById(
 
         "totalIncome"
 
     );
 
-    if(i){
+    if(incomeBox){
 
-        i.innerHTML=
+        incomeBox.innerHTML =
 
         "¥"+
 
@@ -488,7 +535,7 @@ function updateDashboard(){
 
 // ======================
 
-// 工具
+// 工具函数
 
 // ======================
 
@@ -550,7 +597,7 @@ ids.forEach(function(id){
 
 function clearIncomeInput(){
 
-let ids=[
+    let ids=[
 
 "incomeName",
 
@@ -566,13 +613,13 @@ let ids=[
 
 ids.forEach(function(id){
 
-let e=document.getElementById(id);
+    let e=document.getElementById(id);
 
-if(e){
+    if(e){
 
-e.value="";
+        e.value="";
 
-}
+    }
 
 });
 
