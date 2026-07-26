@@ -1,8 +1,8 @@
-// Family Wealth AI Agent V3.5
+// Family Wealth AI OS V3.6
 
 // Application Controller
 
-// 添加新资产
+// 添加资产
 
 function addNewAsset(){
 
@@ -90,7 +90,9 @@ function addNewAsset(){
 
     addAsset(asset);
 
-    document.querySelectorAll(
+    document
+
+    .querySelectorAll(
 
         ".asset-form input"
 
@@ -122,7 +124,7 @@ function addNewAsset(){
 
 }
 
-// 更新财富总览
+// Dashboard更新
 
 function updateDashboard(){
 
@@ -152,7 +154,17 @@ function updateDashboard(){
 
     }
 
-    updatePortfolioDisplay();
+    if(
+
+        typeof updatePortfolioDisplay
+
+        === "function"
+
+    ){
+
+        updatePortfolioDisplay();
+
+    }
 
 }
 
