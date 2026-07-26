@@ -1,79 +1,15 @@
-// Family Wealth AI OS V3.7
+{
 
-// Income Agent
+  "salary": 0,
 
-let incomeData = {
+  "businessIncome": 0,
 
-    salary:0,
+  "rentalIncome": 0,
 
-    businessIncome:0,
+  "dividendIncome": 0,
 
-    rentalIncome:0,
+  "interestIncome": 0,
 
-    dividendIncome:0,
-
-    interestIncome:0,
-
-    otherIncome:0
-
-};
-
-// 计算年度收入
-
-function calculateAnnualIncome(){
-
-    return (
-
-        incomeData.salary +
-
-        incomeData.businessIncome +
-
-        incomeData.rentalIncome +
-
-        incomeData.dividendIncome +
-
-        incomeData.interestIncome +
-
-        incomeData.otherIncome
-
-    );
-
-}
-
-// 计算月平均收入
-
-function calculateMonthlyIncome(){
-
-    return (
-
-        calculateAnnualIncome()
-
-        /
-
-        12
-
-    );
-
-}
-
-// 收入分析
-
-function analyzeIncome(){
-
-    return {
-
-        total:
-
-        calculateAnnualIncome(),
-
-        monthly:
-
-        calculateMonthlyIncome(),
-
-        detail:
-
-        incomeData
-
-    };
+  "otherIncome": 0
 
 }
