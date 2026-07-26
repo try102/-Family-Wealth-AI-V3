@@ -161,3 +161,104 @@ window.onload=function(){
     startWealthOS();
 
 };
+// 添加新资产
+
+function addNewAsset(){
+
+    let asset={
+
+        name:
+
+        document.getElementById("assetName").value,
+
+        category:
+
+        document.getElementById("assetCategory").value,
+
+        type:
+
+        document.getElementById("assetType").value,
+
+        country:
+
+        document.getElementById("assetCountry").value,
+
+        currency:
+
+        document.getElementById("assetCurrency").value,
+
+        institution:
+
+        document.getElementById("assetInstitution").value,
+
+        account:
+
+        document.getElementById("assetAccount").value,
+
+        value:
+
+        Number(
+
+        document.getElementById("assetValue").value
+
+        )
+
+    };
+
+    addAsset(asset);
+
+    updateAssetDisplay();
+
+    updateDashboard();
+
+}
+
+// 显示资产
+
+function updateAssetDisplay(){
+
+    let list=document.getElementById(
+
+        "assetList"
+
+    );
+
+    if(!list)return;
+
+    list.innerHTML="";
+
+    getAssets().forEach(function(item){
+
+        let div=document.createElement("div");
+
+        div.className="asset-item";
+
+        div.innerHTML=`
+
+        <b>${item.name}</b>
+
+        <br>
+
+        类型：
+
+        ${item.type}
+
+        <br>
+
+        国家：
+
+        ${item.country}
+
+        <br>
+
+        金额：
+
+        ¥${Number(item.value).toLocaleString()}
+
+        `;
+
+        list.appendChild(div);
+
+    });
+
+}
