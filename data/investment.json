@@ -1,129 +1,15 @@
-// Family Wealth AI OS V3.7
+{
 
-// Investment Agent
+  "realizedGain": 0,
 
-// 投资收益分析模块
+  "unrealizedGain": 0,
 
-let investmentData = {
+  "capitalLoss": 0,
 
-    realizedGain:0,
+  "dividend": 0,
 
-    unrealizedGain:0,
+  "interest": 0,
 
-    capitalLoss:0,
-
-    dividend:0,
-
-    interest:0,
-
-    investmentCost:0
-
-};
-
-// 已实现收益
-
-function calculateRealizedReturn(){
-
-    return (
-
-        investmentData.realizedGain
-
-        -
-
-        investmentData.capitalLoss
-
-    );
-
-}
-
-// 总投资收益
-
-function calculateInvestmentIncome(){
-
-    return (
-
-        investmentData.realizedGain
-
-        +
-
-        investmentData.unrealizedGain
-
-        -
-
-        investmentData.capitalLoss
-
-        +
-
-        investmentData.dividend
-
-        +
-
-        investmentData.interest
-
-    );
-
-}
-
-// 投资回报率
-
-function calculateInvestmentReturnRate(){
-
-    if(
-
-        investmentData.investmentCost === 0
-
-    ){
-
-        return 0;
-
-    }
-
-    return (
-
-        calculateInvestmentIncome()
-
-        /
-
-        investmentData.investmentCost
-
-        *
-
-        100
-
-    ).toFixed(2);
-
-}
-
-// 投资分析输出
-
-function analyzeInvestment(){
-
-    return {
-
-        realizedGain:
-
-        investmentData.realizedGain,
-
-        unrealizedGain:
-
-        investmentData.unrealizedGain,
-
-        dividend:
-
-        investmentData.dividend,
-
-        interest:
-
-        investmentData.interest,
-
-        totalReturn:
-
-        calculateInvestmentIncome(),
-
-        returnRate:
-
-        calculateInvestmentReturnRate()
-
-    };
+  "returnRate": 0
 
 }
