@@ -10,7 +10,7 @@
 
 <title>
 
-Family Wealth AI Agent V3.5
+Family Wealth AI OS V3.6
 
 </title>
 
@@ -22,15 +22,27 @@ Family Wealth AI Agent V3.5
 
 <h1>
 
-家庭财富 AI Agent V3.5
+家庭财富 AI OS V3.6
 
 </h1>
 
+<!-- 财富驾驶舱 -->
+
+<section class="dashboard">
+
 <h2>
 
-财富总览
+财富驾驶舱 Dashboard
 
 </h2>
+
+<div class="card">
+
+<h3>
+
+总资产
+
+</h3>
 
 <div id="totalAssets">
 
@@ -38,9 +50,175 @@ Family Wealth AI Agent V3.5
 
 </div>
 
+</div>
+
+<div class="card">
+
+<h3>
+
+资产配置
+
+</h3>
+
+<div id="portfolio">
+
+暂无数据
+
+</div>
+
+</div>
+
+</section>
+
+<!-- 功能中心 -->
+
+<section>
+
 <h2>
 
-添加资产
+财富管理中心
+
+</h2>
+
+<div class="module-grid">
+
+<div class="module-card">
+
+📊
+
+<h3>
+
+资产管理
+
+</h3>
+
+<p>
+
+管理股票、基金、房产、现金等资产
+
+</p>
+
+</div>
+
+<div class="module-card">
+
+💵
+
+<h3>
+
+收入现金流
+
+</h3>
+
+<p>
+
+工资、投资收入、租金等
+
+</p>
+
+</div>
+
+<div class="module-card">
+
+📈
+
+<h3>
+
+投资分析
+
+</h3>
+
+<p>
+
+组合分析、风险评估
+
+</p>
+
+</div>
+
+<div class="module-card">
+
+🧾
+
+<h3>
+
+税务规划
+
+</h3>
+
+<p>
+
+税务优化与年度规划
+
+</p>
+
+</div>
+
+<div class="module-card">
+
+🏖
+
+<h3>
+
+退休规划
+
+</h3>
+
+<p>
+
+退休现金流与目标分析
+
+</p>
+
+</div>
+
+<div class="module-card">
+
+🏠
+
+<h3>
+
+遗产规划
+
+</h3>
+
+<p>
+
+家庭财富传承规划
+
+</p>
+
+</div>
+
+<div class="module-card">
+
+🤖
+
+<h3>
+
+AI 财富顾问
+
+</h3>
+
+<p>
+
+智能财富分析助手
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- 添加资产 -->
+
+<section>
+
+<h2>
+
+资产录入
 
 </h2>
 
@@ -50,7 +228,7 @@ Family Wealth AI Agent V3.5
 
 id="assetName"
 
-placeholder="资产名称（例如 Apple）"
+placeholder="资产名称"
 
 >
 
@@ -110,7 +288,7 @@ ETF
 
 id="assetType"
 
-placeholder="资产类型（例如 美股）"
+placeholder="资产类型"
 
 >
 
@@ -126,7 +304,7 @@ placeholder="国家"
 
 id="assetCurrency"
 
-placeholder="币种（例如 USD）"
+placeholder="币种"
 
 >
 
@@ -134,7 +312,7 @@ placeholder="币种（例如 USD）"
 
 id="assetInstitution"
 
-placeholder="机构（例如 Fidelity）"
+placeholder="机构"
 
 >
 
@@ -156,15 +334,11 @@ placeholder="金额"
 
 </div>
 
-<h2>
+</section>
 
-资产配置
+<!-- 资产列表 -->
 
-</h2>
-
-<div id="portfolio">
-
-</div>
+<section>
 
 <h2>
 
@@ -175,6 +349,8 @@ placeholder="金额"
 <div id="assetList">
 
 </div>
+
+</section>
 
 <script src="assets/assets.js"></script>
 
