@@ -1,10 +1,10 @@
-// Family Wealth AI Agent V3
+// Family Wealth AI Agent V3.5
 
-// Asset Database
+// Asset Data Engine
 
 let assets = JSON.parse(
 
-    localStorage.getItem("assets")
+    localStorage.getItem("familyWealthAssets")
 
 ) || [];
 
@@ -14,7 +14,7 @@ function saveAssets(){
 
     localStorage.setItem(
 
-        "assets",
+        "familyWealthAssets",
 
         JSON.stringify(assets)
 
@@ -46,15 +46,43 @@ function deleteAsset(index){
 
 }
 
+// 编辑资产
+
+function editAsset(index){
+
+    let item = assets[index];
+
+    let newAmount = prompt(
+
+        "修改金额",
+
+        item.amount
+
+    );
+
+    if(newAmount !== null){
+
+        item.amount =
+
+        Number(newAmount);
+
+        saveAssets();
+
+        updateAssetDisplay();
+
+    }
+
+}
+
 // 计算总资产
 
 function calculateTotalAssets(){
 
     return assets.reduce(
 
-        (total,item)=>
+        (sum,item)=>
 
-        total + Number(item.amount || 0),
+        sum + Number(item.amount || 0),
 
         0
 
@@ -62,7 +90,51 @@ function calculateTotalAssets(){
 
 }
 
-// 显示资产
+// 计算类别比例
+
+function calculateCategoryRate(category){
+
+    let total =
+
+    calculateTotalAssets();
+
+    if(total === 0){
+
+        return 0;
+
+    }
+
+    let amount =
+
+    assets
+
+    .filter(
+
+        item =>
+
+        item.category === category
+
+    )
+
+    .reduce(
+
+        (sum,item)=>
+
+        sum + Number(item.amount || 0),
+
+        0
+
+    );
+
+    return (
+
+        amount / total * 100
+
+    ).toFixed(1);
+
+}
+
+// 显示资产列表
 
 function updateAssetDisplay(){
 
@@ -74,7 +146,11 @@ function updateAssetDisplay(){
 
     );
 
-    if(!list) return;
+    if(!list){
+
+        return;
+
+    }
 
     list.innerHTML="";
 
@@ -96,25 +172,39 @@ function updateAssetDisplay(){
 
         div.innerHTML = `
 
-        <b>${item.name}</b>
+        <h3>
 
-        <br>
+        ${item.name}
 
-        分类：
+        </h3>
 
-        ${item.category}
+        类别：
+
+        ${item.category || "未分类"}
 
         <br>
 
         类型：
 
-        ${item.type}
+        ${item.type || ""}
 
         <br>
 
         国家：
 
-        ${item.country}
+        ${item.country || ""}
+
+        <br>
+
+        机构：
+
+        ${item.institution || ""}
+
+        <br>
+
+        币种：
+
+        ${item.currency || "CNY"}
 
         <br>
 
@@ -122,9 +212,33 @@ function updateAssetDisplay(){
 
         ¥${Number(item.amount).toLocaleString()}
 
+        <br>
+
+        占比：
+
+        ${
+
+        calculateCategoryRate(item.category)
+
+        }%
+
         <br><br>
 
-        <button onclick="deleteAsset(${index})">
+        <button onclick="
+
+        editAsset(${index})
+
+        ">
+
+        编辑
+
+        </button>
+
+        <button onclick="
+
+        deleteAsset(${index})
+
+        ">
 
         删除
 
