@@ -1,1 +1,91 @@
+/* Family Wealth AI Agent V3.0 */
 
+body{
+
+    font-family:
+
+    Arial,
+
+    "Microsoft YaHei",
+
+    sans-serif;
+
+    margin:30px;
+
+    background:#f7f7f7;
+
+}
+
+h1{
+
+    text-align:center;
+
+}
+
+h2{
+
+    margin-top:30px;
+
+}
+
+#totalAssets{
+
+    font-size:32px;
+
+    font-weight:bold;
+
+    margin:15px 0;
+
+}
+
+.asset-form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+    max-width:400px;
+
+}
+
+.asset-form input{
+
+    padding:12px;
+
+    font-size:16px;
+
+    border:1px solid #ccc;
+
+    border-radius:6px;
+
+}
+
+button{
+
+    padding:12px;
+
+    font-size:16px;
+
+    border:none;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+}
+
+.asset-card{
+
+    background:white;
+
+    padding:15px;
+
+    margin-top:15px;
+
+    border-radius:8px;
+
+    border:1px solid #ddd;
+
+}
