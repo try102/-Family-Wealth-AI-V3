@@ -4,83 +4,89 @@ Family Wealth AI OS
 
 V4.0 Alpha Build 001
 
-Application Core
-
-+
-
-Assets Center Controller
+Assets Test Version
 
 */
 
-// ===============================
+let assets = [];
 
-// 系统核心状态
+// 页面启动
 
-// ===============================
+window.onload = function(){
 
-const WealthOS = {
+    loadAssets();
 
-    version:"4.0 Alpha Build 001",
+    updateAssetDisplay();
 
-    data:{
-
-        netWorth:0,
-
-        totalAssets:0,
-
-        annualIncome:0,
-
-        investmentReturn:0
-
-    }
+    updateDashboard();
 
 };
 
-// ===============================
+// 添加资产
 
-// 金额格式化
+function addNewAsset(){
 
-// ===============================
+    alert("添加资产按钮运行了");
 
-function formatMoney(value){
+    let asset = {
 
-    return "¥" +
+        name:
 
-    Number(value || 0)
+        document.getElementById("assetName").value,
 
-    .toLocaleString("zh-CN");
+        category:
 
-}
+        document.getElementById("assetCategory").value,
 
-// ===============================
+        type:
 
-// 资产模块数据
+        document.getElementById("assetType").value,
 
-// ===============================
+        country:
 
-let assets = [];
+        document.getElementById("assetCountry").value,
 
-// 加载资产
+        currency:
 
-function loadAssets(){
+        document.getElementById("assetCurrency").value,
 
-    let saved =
+        institution:
 
-    localStorage.getItem(
+        document.getElementById("assetInstitution").value,
 
-        "wealth_assets"
+        account:
 
-    );
+        document.getElementById("assetAccount").value,
 
-    if(saved){
+        value:
 
-        assets = JSON.parse(saved);
+        Number(
+
+            document.getElementById("assetValue").value
+
+        )
+
+    };
+
+    if(!asset.name){
+
+        alert("请输入资产名称");
+
+        return;
 
     }
 
+    assets.push(asset);
+
+    saveAssets();
+
+    updateAssetDisplay();
+
+    updateDashboard();
+
 }
 
-// 保存资产
+// 保存
 
 function saveAssets(){
 
@@ -94,151 +100,33 @@ function saveAssets(){
 
 }
 
-// 添加资产
+// 读取
 
-function addAsset(asset){
+function loadAssets(){
 
-    assets.push(asset);
+    let data =
 
-    saveAssets();
+    localStorage.getItem(
 
-}
+        "wealth_assets"
 
-// 计算总资产
+    );
 
-function calculateTotalAssets(){
+    if(data){
 
-    let total = 0;
-
-    assets.forEach(function(item){
-
-        total += Number(
-
-            item.value || 0
-
-        );
-
-    });
-
-    return total;
-
-}
-
-// ===============================
-
-// 添加新资产
-
-// ===============================
-
-function addNewAsset(){
-
-    let asset = {
-
-        name:
-
-        document.getElementById(
-
-            "assetName"
-
-        ).value,
-
-        category:
-
-        document.getElementById(
-
-            "assetCategory"
-
-        ).value,
-
-        type:
-
-        document.getElementById(
-
-            "assetType"
-
-        ).value,
-
-        country:
-
-        document.getElementById(
-
-            "assetCountry"
-
-        ).value,
-
-        currency:
-
-        document.getElementById(
-
-            "assetCurrency"
-
-        ).value,
-
-        institution:
-
-        document.getElementById(
-
-            "assetInstitution"
-
-        ).value,
-
-        account:
-
-        document.getElementById(
-
-            "assetAccount"
-
-        ).value,
-
-        value:
-
-        Number(
-
-            document.getElementById(
-
-                "assetValue"
-
-            ).value
-
-        )
-
-    };
-
-    if(!asset.name){
-
-        alert(
-
-            "请输入资产名称"
-
-        );
-
-        return;
+        assets = JSON.parse(data);
 
     }
 
-    addAsset(asset);
-
-    updateAssetDisplay();
-
-    updateDashboard();
-
 }
 
-// ===============================
-
-// 显示资产列表
-
-// ===============================
+// 显示资产
 
 function updateAssetDisplay(){
 
     let list =
 
-    document.getElementById(
-
-        "assetList"
-
-    );
+    document.getElementById("assetList");
 
     if(!list){
 
@@ -248,61 +136,25 @@ function updateAssetDisplay(){
 
     list.innerHTML="";
 
-    assets.forEach(function(item,index){
+    assets.forEach(function(item){
 
-        let div =
+        let div = document.createElement("div");
 
-        document.createElement(
+        div.innerHTML =
 
-            "div"
+        `
 
-        );
-
-        div.className="asset-item";
-
-        div.innerHTML = `
+        <hr>
 
         <b>${item.name}</b>
 
         <br>
 
-        类别：
-
-        ${item.category || ""}
+        类型：${item.type}
 
         <br>
 
-        类型：
-
-        ${item.type || ""}
-
-        <br>
-
-        国家：
-
-        ${item.country || ""}
-
-        <br>
-
-        币种：
-
-        ${item.currency || ""}
-
-        <br>
-
-        机构：
-
-        ${item.institution || ""}
-
-        <br>
-
-        金额：
-
-        ¥${Number(
-
-            item.value || 0
-
-        ).toLocaleString()}
+        金额：¥${item.value.toLocaleString()}
 
         `;
 
@@ -312,23 +164,19 @@ function updateAssetDisplay(){
 
 }
 
-// ===============================
-
-// Dashboard更新
-
-// ===============================
+// 更新Dashboard
 
 function updateDashboard(){
 
-    let total =
+    let total = 0;
 
-    calculateTotalAssets();
+    assets.forEach(function(item){
 
-    WealthOS.data.totalAssets = total;
+        total += Number(item.value || 0);
 
-    WealthOS.data.netWorth = total;
+    });
 
-    let totalBox =
+    let box =
 
     document.getElementById(
 
@@ -336,15 +184,15 @@ function updateDashboard(){
 
     );
 
-    if(totalBox){
+    if(box){
 
-        totalBox.innerHTML =
+        box.innerHTML =
 
-        formatMoney(total);
+        "¥" + total.toLocaleString();
 
     }
 
-    let netBox =
+    let net =
 
     document.getElementById(
 
@@ -352,76 +200,12 @@ function updateDashboard(){
 
     );
 
-    if(netBox){
+    if(net){
 
-        netBox.innerHTML =
+        net.innerHTML =
 
-        formatMoney(total);
-
-    }
-
-}
-
-// ===============================
-
-// AI CFO 初始化
-
-// ===============================
-
-function initializeAIAdvisor(){
-
-    let box =
-
-    document.getElementById(
-
-        "aiAdvice"
-
-    );
-
-    if(box){
-
-        box.innerHTML =
-
-        "AI CFO 已启动，等待财富数据输入。";
+        "¥" + total.toLocaleString();
 
     }
 
 }
-
-// ===============================
-
-// 系统启动
-
-// ===============================
-
-function startWealthOS(){
-
-    console.log(
-
-        "Family Wealth AI OS Started"
-
-    );
-
-    console.log(
-
-        WealthOS.version
-
-    );
-
-    loadAssets();
-
-    updateAssetDisplay();
-
-    updateDashboard();
-
-    initializeAIAdvisor();
-
-}
-
-// 页面加载
-
-window.onload=function(){
-
-    startWealthOS();
-
-};
