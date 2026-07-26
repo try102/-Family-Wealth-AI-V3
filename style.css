@@ -1,173 +1,231 @@
-/* Family Wealth AI OS V3.6
+/* 
 
-   User Interface
+Family Wealth AI OS
+
+V4.0 Alpha Build 001
+
+Global Style
 
 */
 
-body{
+* {
+
+    box-sizing: border-box;
+
+}
+
+body {
+
+    margin:0;
 
     font-family:
 
-    Arial,
+    -apple-system,
 
-    "Microsoft YaHei",
+    BlinkMacSystemFont,
+
+    "Segoe UI",
+
+    Arial,
 
     sans-serif;
 
-    margin:30px;
-
-    background:#f5f7fa;
+    background:#f4f6f8;
 
     color:#222;
 
 }
 
-h1{
+/* 顶部 */
+
+header {
+
+    background:#1f2937;
+
+    color:white;
+
+    padding:25px;
 
     text-align:center;
 
-    margin-bottom:40px;
+}
+
+header h1 {
+
+    margin:0;
+
+    font-size:32px;
 
 }
 
-h2{
+header p {
 
-    margin-top:35px;
+    margin-top:8px;
+
+    opacity:0.85;
+
+}
+
+/* 页面布局 */
+
+.layout {
+
+    display:flex;
+
+    min-height:calc(100vh - 120px);
+
+}
+
+/* 左侧导航 */
+
+nav {
+
+    width:240px;
+
+    background:#111827;
+
+    padding:20px;
+
+}
+
+nav h3 {
+
+    color:white;
+
+    margin-top:0;
+
+}
+
+nav button {
+
+    width:100%;
+
+    margin-bottom:10px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#374151;
+
+    color:white;
+
+    text-align:left;
+
+    font-size:15px;
+
+}
+
+nav button:hover {
+
+    background:#4b5563;
+
+}
+
+/* 主区域 */
+
+main {
+
+    flex:1;
+
+    padding:25px;
+
+}
+
+/* 卡片 */
+
+.card {
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    margin-bottom:25px;
+
+    box-shadow:
+
+    0 4px 12px rgba(0,0,0,0.08);
+
+}
+
+.card h2 {
+
+    margin-top:0;
 
 }
 
 /* Dashboard */
 
-.dashboard{
-
-    display:flex;
-
-    gap:20px;
-
-    flex-wrap:wrap;
-
-}
-
-.card{
-
-    background:white;
-
-    padding:25px;
-
-    border-radius:12px;
-
-    min-width:260px;
-
-    box-shadow:
-
-    0 2px 8px rgba(0,0,0,0.08);
-
-}
-
-#totalAssets{
-
-    font-size:32px;
-
-    font-weight:bold;
-
-    margin-top:10px;
-
-}
-
-/* 模块中心 */
-
-.module-grid{
+.dashboard {
 
     display:grid;
 
     grid-template-columns:
 
-    repeat(auto-fit,minmax(220px,1fr));
+    repeat(4,1fr);
 
     gap:20px;
 
 }
 
-.module-card{
+.dashboard div {
 
-    background:white;
+    background:#f9fafb;
 
-    padding:25px;
+    padding:20px;
 
     border-radius:12px;
 
     text-align:center;
 
-    box-shadow:
-
-    0 2px 8px rgba(0,0,0,0.08);
-
-    cursor:pointer;
-
 }
 
-.module-card:hover{
+.dashboard h3 {
 
-    transform:translateY(-3px);
-
-}
-
-/* 资产输入 */
-
-.asset-form{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:12px;
-
-    max-width:420px;
-
-}
-
-.asset-form input,
-
-.asset-form select{
-
-    padding:12px;
+    margin-bottom:10px;
 
     font-size:16px;
 
-    border-radius:8px;
-
-    border:1px solid #ccc;
+    color:#6b7280;
 
 }
 
-button{
+.dashboard p {
 
-    padding:12px;
+    font-size:24px;
 
-    border-radius:8px;
+    font-weight:bold;
 
-    border:none;
-
-    cursor:pointer;
-
-    font-size:16px;
+    margin:0;
 
 }
 
-/* 资产卡片 */
+/* 手机适配 */
 
-.asset-card{
+@media(max-width:800px){
 
-    background:white;
+    .layout {
 
-    padding:20px;
+        flex-direction:column;
 
-    margin-top:15px;
+    }
 
-    border-radius:12px;
+    nav {
 
-    box-shadow:
+        width:100%;
 
-    0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .dashboard {
+
+        grid-template-columns:
+
+        repeat(2,1fr);
+
+    }
 
 }
