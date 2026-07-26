@@ -10,7 +10,7 @@
 
 <title>
 
-Family Wealth AI OS V3.6
+Family Wealth AI OS
 
 </title>
 
@@ -20,49 +20,109 @@ Family Wealth AI OS V3.6
 
 <body>
 
+<header>
+
 <h1>
 
-家庭财富 AI OS V3.6
+Family Wealth AI OS
 
 </h1>
 
-<!-- 财富驾驶舱 -->
+<p>
 
-<section class="dashboard">
+AI驱动的家庭财富智能操作系统
+
+</p>
+
+</header>
+
+<div class="layout">
+
+<nav>
+
+<h3>财富中心</h3>
+
+<button>🏠 Dashboard</button>
+
+<button>👨‍👩‍👧 家庭中心</button>
+
+<button>💰 资产中心</button>
+
+<button>💵 收入中心</button>
+
+<button>📉 支出中心</button>
+
+<button>📈 投资中心</button>
+
+<button>🏦 负债中心</button>
+
+<button>🧾 税务中心</button>
+
+<button>🏖 退休规划</button>
+
+<button>📄 文件中心</button>
+
+<button>🤖 AI CFO</button>
+
+</nav>
+
+<main>
+
+<section class="card">
 
 <h2>
 
-财富驾驶舱 Dashboard
+财富驾驶舱
 
 </h2>
 
-<div class="card">
+<div class="dashboard">
 
-<h3>
+<div>
 
-总资产
+<h3>净资产</h3>
 
-</h3>
-
-<div id="totalAssets">
+<p id="netWorth">
 
 ¥0
 
-</div>
+</p>
 
 </div>
 
-<div class="card">
+<div>
 
-<h3>
+<h3>总资产</h3>
 
-资产配置
+<p id="totalAssets">
 
-</h3>
+¥0
 
-<div id="portfolio">
+</p>
 
-暂无数据
+</div>
+
+<div>
+
+<h3>年度收入</h3>
+
+<p id="annualIncome">
+
+¥0
+
+</p>
+
+</div>
+
+<div>
+
+<h3>投资收益</h3>
+
+<p id="investmentReturn">
+
+¥0
+
+</p>
 
 </div>
 
@@ -70,297 +130,49 @@ Family Wealth AI OS V3.6
 
 </section>
 
-<!-- 功能中心 -->
-
-<section>
+<section class="card">
 
 <h2>
 
-财富管理中心
+AI 今日建议
 
 </h2>
 
-<div class="module-grid">
+<p id="aiAdvice">
 
-<div class="module-card">
-
-📊
-
-<h3>
-
-资产管理
-
-</h3>
-
-<p>
-
-管理股票、基金、房产、现金等资产
+系统正在等待数据...
 
 </p>
-
-</div>
-
-<div class="module-card">
-
-💵
-
-<h3>
-
-收入现金流
-
-</h3>
-
-<p>
-
-工资、投资收入、租金等
-
-</p>
-
-</div>
-
-<div class="module-card">
-
-📈
-
-<h3>
-
-投资分析
-
-</h3>
-
-<p>
-
-组合分析、风险评估
-
-</p>
-
-</div>
-
-<div class="module-card">
-
-🧾
-
-<h3>
-
-税务规划
-
-</h3>
-
-<p>
-
-税务优化与年度规划
-
-</p>
-
-</div>
-
-<div class="module-card">
-
-🏖
-
-<h3>
-
-退休规划
-
-</h3>
-
-<p>
-
-退休现金流与目标分析
-
-</p>
-
-</div>
-
-<div class="module-card">
-
-🏠
-
-<h3>
-
-遗产规划
-
-</h3>
-
-<p>
-
-家庭财富传承规划
-
-</p>
-
-</div>
-
-<div class="module-card">
-
-🤖
-
-<h3>
-
-AI 财富顾问
-
-</h3>
-
-<p>
-
-智能财富分析助手
-
-</p>
-
-</div>
-
-</div>
 
 </section>
 
-<!-- 添加资产 -->
-
-<section>
+<section class="card">
 
 <h2>
 
-资产录入
+财富模块状态
 
 </h2>
 
-<div class="asset-form">
+<ul>
 
-<input
+<li>资产 Agent：已连接</li>
 
-id="assetName"
+<li>收入 Agent：已连接</li>
 
-placeholder="资产名称"
+<li>投资 Agent：已连接</li>
 
->
+<li>税务 Agent：准备中</li>
 
-<select id="assetCategory">
+<li>退休 Agent：准备中</li>
 
-<option value="">
-
-选择资产类别
-
-</option>
-
-<option value="现金">
-
-现金
-
-</option>
-
-<option value="股票">
-
-股票
-
-</option>
-
-<option value="ETF">
-
-ETF
-
-</option>
-
-<option value="基金">
-
-基金
-
-</option>
-
-<option value="债券">
-
-债券
-
-</option>
-
-<option value="房产">
-
-房产
-
-</option>
-
-<option value="其他">
-
-其他
-
-</option>
-
-</select>
-
-<input
-
-id="assetType"
-
-placeholder="资产类型"
-
->
-
-<input
-
-id="assetCountry"
-
-placeholder="国家"
-
->
-
-<input
-
-id="assetCurrency"
-
-placeholder="币种"
-
->
-
-<input
-
-id="assetInstitution"
-
-placeholder="机构"
-
->
-
-<input
-
-id="assetAmount"
-
-type="number"
-
-placeholder="金额"
-
->
-
-<button onclick="addNewAsset()">
-
-添加资产
-
-</button>
-
-</div>
+</ul>
 
 </section>
 
-<!-- 资产列表 -->
-
-<section>
-
-<h2>
-
-资产列表
-
-</h2>
-
-<div id="assetList">
+</main>
 
 </div>
-
-</section>
-
-<script src="assets/assets.js"></script>
-
-<script src="assets/portfolio.js"></script>
-
-<script src="agents/incomeAgent.js"></script>
-
-<script src="agents/taxAgent.js"></script>
-
-<script src="agents/retirementAgent.js"></script>
 
 <script src="app.js"></script>
 
