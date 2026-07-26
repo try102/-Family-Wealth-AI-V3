@@ -10,7 +10,7 @@
 
 <title>
 
-Family Wealth AI OS
+Family Wealth AI OS V4.0
 
 </title>
 
@@ -30,7 +30,7 @@ Family Wealth AI OS
 
 <p>
 
-AI驱动的家庭财富智能操作系统
+AI驱动的家庭财富智能操作系统 V4.0
 
 </p>
 
@@ -42,27 +42,53 @@ AI驱动的家庭财富智能操作系统
 
 <h3>财富中心</h3>
 
-<button>🏠 Dashboard</button>
+<button>
 
-<button>👨‍👩‍👧 家庭中心</button>
+🏠 Dashboard
 
-<button>💰 资产中心</button>
+</button>
 
-<button>💵 收入中心</button>
+<button>
 
-<button>📉 支出中心</button>
+👨‍👩‍👧 家庭中心
 
-<button>📈 投资中心</button>
+</button>
 
-<button>🏦 负债中心</button>
+<button>
 
-<button>🧾 税务中心</button>
+💰 资产中心
 
-<button>🏖 退休规划</button>
+</button>
 
-<button>📄 文件中心</button>
+<button>
 
-<button>🤖 AI CFO</button>
+💵 收入中心
+
+</button>
+
+<button>
+
+📈 投资中心
+
+</button>
+
+<button>
+
+🧾 税务中心
+
+</button>
+
+<button>
+
+🏖 退休规划
+
+</button>
+
+<button>
+
+🤖 AI CFO
+
+</button>
 
 </nav>
 
@@ -75,66 +101,16 @@ AI驱动的家庭财富智能操作系统
 财富驾驶舱
 
 </h2>
-<section class="card">
 
-<h2>
-
-资产中心
-
-</h2>
-
-<div class="asset-form">
-
-<input id="assetName"
-
-placeholder="资产名称">
-
-<input id="assetCategory"
-
-placeholder="资产类别">
-
-<input id="assetType"
-
-placeholder="资产类型">
-
-<input id="assetCountry"
-
-placeholder="国家">
-
-<input id="assetCurrency"
-
-placeholder="币种">
-
-<input id="assetInstitution"
-
-placeholder="机构">
-
-<input id="assetAccount"
-
-placeholder="账户">
-
-<input id="assetValue"
-
-placeholder="当前价值">
-
-<button onclick="addNewAsset()">
-
-添加资产
-
-</button>
-
-</div>
-
-<div id="assetList">
-
-</div>
-
-</section>
 <div class="dashboard">
 
 <div>
 
-<h3>净资产</h3>
+<h3>
+
+净资产
+
+</h3>
 
 <p id="netWorth">
 
@@ -146,7 +122,11 @@ placeholder="当前价值">
 
 <div>
 
-<h3>总资产</h3>
+<h3>
+
+总资产
+
+</h3>
 
 <p id="totalAssets">
 
@@ -158,7 +138,11 @@ placeholder="当前价值">
 
 <div>
 
-<h3>年度收入</h3>
+<h3>
+
+年度收入
+
+</h3>
 
 <p id="annualIncome">
 
@@ -170,7 +154,11 @@ placeholder="当前价值">
 
 <div>
 
-<h3>投资收益</h3>
+<h3>
+
+投资收益
+
+</h3>
 
 <p id="investmentReturn">
 
@@ -188,13 +176,13 @@ placeholder="当前价值">
 
 <h2>
 
-AI 今日建议
+AI CFO
 
 </h2>
 
 <p id="aiAdvice">
 
-系统正在等待数据...
+系统正在启动...
 
 </p>
 
@@ -204,40 +192,76 @@ AI 今日建议
 
 <h2>
 
-财富模块状态
+资产中心
 
 </h2>
 
-<ul>
+<input id="assetName"
 
-<li>资产 Agent：已连接</li>
+placeholder="资产名称">
 
-<li>收入 Agent：已连接</li>
+<br><br>
 
-<li>投资 Agent：已连接</li>
+<input id="assetCategory"
 
-<li>税务 Agent：准备中</li>
+placeholder="资产类别">
 
-<li>退休 Agent：准备中</li>
+<br><br>
 
-</ul>
+<input id="assetType"
+
+placeholder="资产类型">
+
+<br><br>
+
+<input id="assetCountry"
+
+placeholder="国家">
+
+<br><br>
+
+<input id="assetCurrency"
+
+placeholder="币种">
+
+<br><br>
+
+<input id="assetInstitution"
+
+placeholder="机构">
+
+<br><br>
+
+<input id="assetAccount"
+
+placeholder="账户">
+
+<br><br>
+
+<input id="assetValue"
+
+placeholder="当前价值">
+
+<br><br>
+
+<button onclick="addNewAsset()">
+
+添加资产
+
+</button>
+
+<div id="assetList">
+
+</div>
 
 </section>
 
 </main>
 
 </div>
-<script>
 
-alert("HTML加载成功");
-
-</script>
 <script src="app.js"></script>
-<script>
 
-alert("app.js后面的测试");
-
-</script>
 </body>
 
 </html>
