@@ -1,5 +1,3 @@
-alert("app.js加载成功");
-
 /*
 
 Family Wealth AI OS
@@ -35,9 +33,7 @@ window.onload = function(){
 
 function addNewAsset(){
 
-    alert("添加资产按钮运行了");
-
-    let asset = {
+ let asset = {
 
         name:
 
