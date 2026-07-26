@@ -1,8 +1,6 @@
-// Family Wealth AI Agent V3
+// Family Wealth AI Agent V3.1
 
 // Application Controller
-
-// 添加资产
 
 function addNewAsset(){
 
@@ -24,6 +22,10 @@ function addNewAsset(){
 
         document.getElementById("assetCountry").value,
 
+        institution:
+
+        document.getElementById("assetInstitution").value,
+
         amount:
 
         Number(
@@ -42,11 +44,7 @@ function addNewAsset(){
 
     ){
 
-        alert(
-
-            "请输入资产名称和金额"
-
-        );
+        alert("请输入资产名称和金额");
 
         return;
 
@@ -70,11 +68,19 @@ function addNewAsset(){
 
     );
 
+    document.getElementById(
+
+        "assetCategory"
+
+    ).value="";
+
 }
 
-// 更新财富总览
-
 function updateDashboard(){
+
+    let total =
+
+    calculateTotalAssets();
 
     let box =
 
@@ -90,15 +96,11 @@ function updateDashboard(){
 
         "¥" +
 
-        calculateTotalAssets()
-
-        .toLocaleString();
+        total.toLocaleString();
 
     }
 
 }
-
-// 页面启动
 
 window.onload=function(){
 
