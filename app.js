@@ -2,22 +2,23 @@
 
 Family Wealth AI OS
 
-V4.0 Alpha Build 001
+V4.0 Alpha Build 002
 
-*/
-/*
+Application Core
 
-Family Wealth AI OS
++
 
-V4.0 Alpha Build 001
-
-Assets Test Version
+Assets Management
 
 */
 
 let assets = [];
 
-// 页面启动
+// =========================
+
+// 系统启动
+
+// =========================
 
 window.onload = function(){
 
@@ -29,11 +30,49 @@ window.onload = function(){
 
 };
 
+// =========================
+
+// 资产读取保存
+
+// =========================
+
+function loadAssets(){
+
+    let data = localStorage.getItem(
+
+        "wealth_assets"
+
+    );
+
+    if(data){
+
+        assets = JSON.parse(data);
+
+    }
+
+}
+
+function saveAssets(){
+
+    localStorage.setItem(
+
+        "wealth_assets",
+
+        JSON.stringify(assets)
+
+    );
+
+}
+
+// =========================
+
 // 添加资产
+
+// =========================
 
 function addNewAsset(){
 
- let asset = {
+    let asset = {
 
         name:
 
@@ -85,53 +124,69 @@ function addNewAsset(){
 
     saveAssets();
 
+    clearAssetInput();
+
     updateAssetDisplay();
 
     updateDashboard();
 
 }
 
-// 保存
+// =========================
 
-function saveAssets(){
+// 清空输入
 
-    localStorage.setItem(
+// =========================
 
-        "wealth_assets",
+function clearAssetInput(){
 
-        JSON.stringify(assets)
+    let ids=[
 
-    );
+        "assetName",
+
+        "assetCategory",
+
+        "assetType",
+
+        "assetCountry",
+
+        "assetCurrency",
+
+        "assetInstitution",
+
+        "assetAccount",
+
+        "assetValue"
+
+    ];
+
+    ids.forEach(function(id){
+
+        let e=document.getElementById(id);
+
+        if(e){
+
+            e.value="";
+
+        }
+
+    });
 
 }
 
-// 读取
+// =========================
 
-function loadAssets(){
+// 显示资产列表
 
-    let data =
-
-    localStorage.getItem(
-
-        "wealth_assets"
-
-    );
-
-    if(data){
-
-        assets = JSON.parse(data);
-
-    }
-
-}
-
-// 显示资产
+// =========================
 
 function updateAssetDisplay(){
 
-    let list =
+    let list=document.getElementById(
 
-    document.getElementById("assetList");
+        "assetList"
+
+    );
 
     if(!list){
 
@@ -141,13 +196,17 @@ function updateAssetDisplay(){
 
     list.innerHTML="";
 
-    assets.forEach(function(item){
+    assets.forEach(function(item,index){
 
-        let div = document.createElement("div");
+        let div=document.createElement(
 
-        div.innerHTML =
+            "div"
 
-        `
+        );
+
+        div.className="asset-item";
+
+        div.innerHTML=`
 
         <hr>
 
@@ -155,11 +214,37 @@ function updateAssetDisplay(){
 
         <br>
 
-        类型：${item.type}
+        类型：
+
+        ${item.type || ""}
 
         <br>
 
-        金额：¥${item.value.toLocaleString()}
+        国家：
+
+        ${item.country || ""}
+
+        <br>
+
+        金额：
+
+        ¥${Number(item.value)
+
+        .toLocaleString()}
+
+        <br><br>
+
+        <button onclick="editAsset(${index})">
+
+        编辑
+
+        </button>
+
+        <button onclick="deleteAsset(${index})">
+
+        删除
+
+        </button>
 
         `;
 
@@ -169,47 +254,113 @@ function updateAssetDisplay(){
 
 }
 
-// 更新Dashboard
+// =========================
+
+// 编辑资产
+
+// =========================
+
+function editAsset(index){
+
+    let item=assets[index];
+
+    let newValue=
+
+    prompt(
+
+        "修改资产金额",
+
+        item.value
+
+    );
+
+    if(newValue!==null){
+
+        item.value=Number(newValue);
+
+        saveAssets();
+
+        updateAssetDisplay();
+
+        updateDashboard();
+
+    }
+
+}
+
+// =========================
+
+// 删除资产
+
+// =========================
+
+function deleteAsset(index){
+
+    let ok=confirm(
+
+        "确定删除这个资产吗？"
+
+    );
+
+    if(ok){
+
+        assets.splice(index,1);
+
+        saveAssets();
+
+        updateAssetDisplay();
+
+        updateDashboard();
+
+    }
+
+}
+
+// =========================
+
+// Dashboard
+
+// =========================
 
 function updateDashboard(){
 
-    let total = 0;
+    let total=0;
 
     assets.forEach(function(item){
 
-        total += Number(item.value || 0);
+        total += Number(
+
+            item.value || 0
+
+        );
 
     });
 
-    let box =
-
-    document.getElementById(
+    let a=document.getElementById(
 
         "totalAssets"
 
     );
 
-    if(box){
+    if(a){
 
-        box.innerHTML =
+        a.innerHTML=
 
-        "¥" + total.toLocaleString();
+        "¥"+total.toLocaleString();
 
     }
 
-    let net =
-
-    document.getElementById(
+    let n=document.getElementById(
 
         "netWorth"
 
     );
 
-    if(net){
+    if(n){
 
-        net.innerHTML =
+        n.innerHTML=
 
-        "¥" + total.toLocaleString();
+        "¥"+total.toLocaleString();
 
     }
 
