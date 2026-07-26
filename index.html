@@ -1,1 +1,107 @@
+<!DOCTYPE html>
 
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+
+Family Wealth AI Agent V3.0
+
+</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<h1>
+
+家庭财富 AI Agent V3.0
+
+</h1>
+
+<h2>
+
+财富总览
+
+</h2>
+
+<div id="totalAssets">
+
+¥0
+
+</div>
+
+<h2>
+
+添加资产
+
+</h2>
+
+<div class="asset-form">
+
+<input 
+
+id="assetName"
+
+placeholder="资产名称">
+
+<input 
+
+id="assetCategory"
+
+placeholder="资产分类">
+
+<input 
+
+id="assetType"
+
+placeholder="资产类型">
+
+<input 
+
+id="assetCountry"
+
+placeholder="国家">
+
+<input 
+
+id="assetAmount"
+
+type="number"
+
+placeholder="金额">
+
+<button onclick="addNewAsset()">
+
+添加资产
+
+</button>
+
+</div>
+
+<h2>
+
+资产列表
+
+</h2>
+
+<div id="assetList">
+
+</div>
+
+<script src="assets/assets.js"></script>
+
+<script src="assets/portfolio.js"></script>
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
