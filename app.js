@@ -1,3 +1,12 @@
+alert("app.js加载成功");
+
+/*
+
+Family Wealth AI OS
+
+V4.0 Alpha Build 001
+
+*/
 /*
 
 Family Wealth AI OS
