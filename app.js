@@ -1,179 +1,163 @@
-// Family Wealth AI OS V3.6
+/*
 
-// Application Controller
+Family Wealth AI OS
 
-// 添加资产
+V4.0 Alpha Build 001
 
-function addNewAsset(){
+Application Core
 
-    let asset = {
+*/
 
-        name:
+// 系统状态
 
-        document.getElementById(
+const WealthOS = {
 
-            "assetName"
+    version:"4.0 Alpha Build 001",
 
-        ).value,
+    modules:{
 
-        category:
+        dashboard:true,
 
-        document.getElementById(
+        family:true,
 
-            "assetCategory"
+        assets:true,
 
-        ).value,
+        income:true,
 
-        type:
+        investment:true,
 
-        document.getElementById(
+        tax:false,
 
-            "assetType"
+        retirement:false,
 
-        ).value,
+        advisor:false
 
-        country:
+    },
 
-        document.getElementById(
+    data:{
 
-            "assetCountry"
+        netWorth:0,
 
-        ).value,
+        totalAssets:0,
 
-        currency:
+        annualIncome:0,
 
-        document.getElementById(
-
-            "assetCurrency"
-
-        ).value,
-
-        institution:
-
-        document.getElementById(
-
-            "assetInstitution"
-
-        ).value,
-
-        amount:
-
-        Number(
-
-            document.getElementById(
-
-                "assetAmount"
-
-            ).value
-
-        )
-
-    };
-
-    if(
-
-        !asset.name ||
-
-        !asset.amount
-
-    ){
-
-        alert(
-
-            "请输入资产名称和金额"
-
-        );
-
-        return;
+        investmentReturn:0
 
     }
 
-    addAsset(asset);
+};
 
-    document
+// 格式化金额
 
-    .querySelectorAll(
+function formatMoney(value){
 
-        ".asset-form input"
+    return "¥" +
 
-    )
-
-    .forEach(
-
-        input=>{
-
-            input.value="";
-
-        }
-
-    );
-
-    let category =
-
-    document.getElementById(
-
-        "assetCategory"
-
-    );
-
-    if(category){
-
-        category.value="";
-
-    }
+    Number(value).toLocaleString("zh-CN");
 
 }
 
-// Dashboard更新
+// 更新 Dashboard
 
 function updateDashboard(){
 
-    let total =
+    document.getElementById(
 
-    calculateTotalAssets();
+        "netWorth"
 
-    let totalBox =
+    ).innerHTML =
+
+    formatMoney(
+
+        WealthOS.data.netWorth
+
+    );
 
     document.getElementById(
 
         "totalAssets"
 
+    ).innerHTML =
+
+    formatMoney(
+
+        WealthOS.data.totalAssets
+
     );
 
-    if(totalBox){
+    document.getElementById(
 
-        totalBox.innerHTML =
+        "annualIncome"
 
-        "¥" +
+    ).innerHTML =
 
-        total.toLocaleString(
+    formatMoney(
 
-            "zh-CN"
+        WealthOS.data.annualIncome
 
-        );
+    );
 
-    }
+    document.getElementById(
 
-    if(
+        "investmentReturn"
 
-        typeof updatePortfolioDisplay
+    ).innerHTML =
 
-        === "function"
+    formatMoney(
 
-    ){
+        WealthOS.data.investmentReturn
 
-        updatePortfolioDisplay();
+    );
+
+}
+
+// AI CFO 初始化
+
+function initializeAIAdvisor(){
+
+    let box = document.getElementById(
+
+        "aiAdvice"
+
+    );
+
+    if(box){
+
+        box.innerHTML =
+
+        "AI CFO 已启动，等待财富数据输入。";
 
     }
 
 }
 
-// 页面启动
+// 系统启动
+
+function startWealthOS(){
+
+    console.log(
+
+        "Family Wealth AI OS Started"
+
+    );
+
+    console.log(
+
+        WealthOS.version
+
+    );
+
+    updateDashboard();
+
+    initializeAIAdvisor();
+
+}
+
+// 页面加载
 
 window.onload=function(){
 
-    updateAssetDisplay();
-
-    updateDashboard();
+    startWealthOS();
 
 };
