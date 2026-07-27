@@ -2,9 +2,13 @@
 
 Family Wealth AI OS
 
-V4.0 Build 008.3-D
+Investment Center V1.0
 
 Investment Agent
+
+升级版
+
+保留 V4.0 数据结构
 
 */
 
@@ -76,7 +80,9 @@ const investmentAgent = {
 
         let newInvestment={
 
-            id:Date.now(),
+            id:
+
+            Date.now(),
 
             name:
 
@@ -88,7 +94,7 @@ const investmentAgent = {
 
             type:
 
-            investment.type || "",
+            investment.type || "其他",
 
             market:
 
@@ -238,7 +244,7 @@ const investmentAgent = {
 
     // ======================
 
-    // 投资组合统计
+    // 基础统计
 
     // ======================
 
@@ -247,8 +253,6 @@ const investmentAgent = {
         let totalCost = 0;
 
         let totalValue = 0;
-
-        let totalProfit = 0;
 
         this.investments.forEach(item=>{
 
@@ -266,7 +270,7 @@ const investmentAgent = {
 
         });
 
-        totalProfit =
+        let profit =
 
         totalValue - totalCost;
 
@@ -278,7 +282,7 @@ const investmentAgent = {
 
             (
 
-                totalProfit /
+                profit /
 
                 totalCost *
 
@@ -294,17 +298,11 @@ const investmentAgent = {
 
             this.investments.length,
 
-            totalCost:
-
             totalCost,
-
-            totalValue:
 
             totalValue,
 
-            profit:
-
-            totalProfit,
+            profit,
 
             returnRate:
 
@@ -313,10 +311,9 @@ const investmentAgent = {
         };
 
     },
+        // ======================
 
-    // ======================
-
-    // 分类统计
+    // 投资配置分析
 
     // ======================
 
@@ -324,17 +321,29 @@ const investmentAgent = {
 
         let result={};
 
+        let totalValue =
+
+        this.summary().totalValue;
+
         this.investments.forEach(item=>{
 
-            let type=item.type || "其他";
+            let type =
+
+            item.type || "其他";
 
             if(!result[type]){
 
-                result[type]=0;
+                result[type]={
+
+                    value:0,
+
+                    percentage:0
+
+                };
 
             }
 
-            result[type]+=Number(
+            result[type].value += Number(
 
                 item.currentValue || 0
 
@@ -342,7 +351,271 @@ const investmentAgent = {
 
         });
 
+        Object.keys(result)
+
+        .forEach(type=>{
+
+            if(totalValue>0){
+
+                result[type].percentage =
+
+                (
+
+                    result[type].value /
+
+                    totalValue *
+
+                    100
+
+                ).toFixed(2);
+
+            }
+
+        });
+
         return result;
+
+    },
+
+    // ======================
+
+    // 投资总览 Dashboard
+
+    // ======================
+
+    dashboardSummary(){
+
+        let summary =
+
+        this.summary();
+
+        let profitCount = 0;
+
+        let lossCount = 0;
+
+        this.investments.forEach(item=>{
+
+            let profit =
+
+            Number(item.currentValue || 0)
+
+            -
+
+            Number(item.buyAmount || 0);
+
+            if(profit>0){
+
+                profitCount++;
+
+            }else if(profit<0){
+
+                lossCount++;
+
+            }
+
+        });
+
+        return {
+
+            totalCost:
+
+            summary.totalCost,
+
+            totalValue:
+
+            summary.totalValue,
+
+            profit:
+
+            summary.profit,
+
+            returnRate:
+
+            summary.returnRate,
+
+            investmentCount:
+
+            summary.count,
+
+            profitCount,
+
+            lossCount
+
+        };
+
+    },
+
+    // ======================
+
+    // 风险分析
+
+    // ======================
+
+    riskSummary(){
+
+        let allocation =
+
+        this.allocation();
+
+        let maxType="";
+
+        let maxRatio=0;
+
+        Object.keys(allocation)
+
+        .forEach(type=>{
+
+            let ratio =
+
+            Number(
+
+                allocation[type].percentage
+
+            );
+
+            if(ratio>maxRatio){
+
+                maxRatio=ratio;
+
+                maxType=type;
+
+            }
+
+        });
+
+        let level="低";
+
+        let advice=[];
+
+        if(maxRatio>60){
+
+            level="高";
+
+            advice.push(
+
+                "单一投资类别占比较高，注意集中风险"
+
+            );
+
+        }
+
+        else if(maxRatio>40){
+
+            level="中";
+
+            advice.push(
+
+                "投资组合存在一定集中度"
+
+            );
+
+        }
+
+        else{
+
+            advice.push(
+
+                "投资配置较分散"
+
+            );
+
+        }
+
+        return {
+
+            level,
+
+            maxCategory:maxType,
+
+            maxRatio,
+
+            advice
+
+        };
+
+    },
+
+    // ======================
+
+    // 收益表现分析
+
+    // ======================
+
+    performanceSummary(){
+
+        let profitCount=0;
+
+        let lossCount=0;
+
+        let totalRate=0;
+
+        let count=0;
+
+        this.investments.forEach(item=>{
+
+            let cost =
+
+            Number(item.buyAmount || 0);
+
+            let value =
+
+            Number(item.currentValue || 0);
+
+            let profit=value-cost;
+
+            if(profit>0){
+
+                profitCount++;
+
+            }
+
+            else if(profit<0){
+
+                lossCount++;
+
+            }
+
+            if(cost>0){
+
+                totalRate +=
+
+                profit /
+
+                cost;
+
+                count++;
+
+            }
+
+        });
+
+        return {
+
+            profitCount,
+
+            lossCount,
+
+            averageReturnRate:
+
+            count>0
+
+            ?
+
+            (
+
+                totalRate /
+
+                count *
+
+                100
+
+            ).toFixed(2)
+
+            :
+
+            0
+
+        };
 
     },
 
@@ -354,15 +627,31 @@ const investmentAgent = {
 
     analyze(){
 
-        let data=this.summary();
-
         return {
 
             message:
 
             "投资组合分析完成",
 
-            data:data
+            summary:
+
+            this.summary(),
+
+            dashboard:
+
+            this.dashboardSummary(),
+
+            allocation:
+
+            this.allocation(),
+
+            risk:
+
+            this.riskSummary(),
+
+            performance:
+
+            this.performanceSummary()
 
         };
 
