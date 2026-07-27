@@ -12,15 +12,11 @@ import retirementAgent from "./agents/retirementAgent.js";
 
 Family Wealth AI OS
 
-V4.0 Build 008.2-B
+V4.0 Alpha Build 008.4
 
-Investment Center Upgrade
+Agent Architecture Upgrade
 
 */
-
-let assets = [];
-
-let incomes = [];
 
 // ======================
 
@@ -28,7 +24,7 @@ let incomes = [];
 
 // ======================
 
-window.onload = function(){
+window.onload=function(){
 
     assetsAgent.init();
 
@@ -39,8 +35,6 @@ window.onload = function(){
     taxAgent.init();
 
     retirementAgent.init();
-
-    loadData();
 
     updateAssetDisplay();
 
@@ -54,75 +48,7 @@ window.onload = function(){
 
 // ======================
 
-// 数据读取
-
-// ======================
-
-function loadData(){
-
-    let assetData =
-
-    localStorage.getItem(
-
-        "wealth_assets"
-
-    );
-
-    if(assetData){
-
-        assets = JSON.parse(assetData);
-
-    }
-
-    let incomeData =
-
-    localStorage.getItem(
-
-        "wealth_incomes"
-
-    );
-
-    if(incomeData){
-
-        incomes = JSON.parse(incomeData);
-
-    }
-
-}
-
-// ======================
-
-// 保存
-
-// ======================
-
-function saveAssets(){
-
-    localStorage.setItem(
-
-        "wealth_assets",
-
-        JSON.stringify(assets)
-
-    );
-
-}
-
-function saveIncome(){
-
-    localStorage.setItem(
-
-        "wealth_incomes",
-
-        JSON.stringify(incomes)
-
-    );
-
-}
-
-// ======================
-
-// 资产添加
+// 资产中心
 
 // ======================
 
@@ -170,9 +96,7 @@ function addNewAsset(){
 
     }
 
-    assets.push(asset);
-
-    saveAssets();
+    assetsAgent.add(asset);
 
     clearAssetInput();
 
@@ -181,12 +105,6 @@ function addNewAsset(){
     updateDashboard();
 
 }
-
-// ======================
-
-// 资产显示
-
-// ======================
 
 function updateAssetDisplay(){
 
@@ -204,7 +122,9 @@ function updateAssetDisplay(){
 
     list.innerHTML="";
 
-    assets.forEach(function(item,index){
+    let assets = assetsAgent.view();
+
+    assets.forEach(function(item){
 
         let div=document.createElement(
 
@@ -242,13 +162,13 @@ ${item.type}
 
 <br><br>
 
-<button onclick="editAsset(${index})">
+<button onclick="editAsset(${item.id})">
 
 编辑
 
 </button>
 
-<button onclick="deleteAsset(${index})">
+<button onclick="deleteAsset(${item.id})">
 
 删除
 
@@ -262,27 +182,41 @@ ${item.type}
 
 }
 
-// ======================
+function editAsset(id){
 
-// 编辑资产
+    let item = assetsAgent.view().find(
 
-// ======================
+        a=>a.id===id
 
-function editAsset(index){
+    );
 
-    let value = prompt(
+    if(!item){
+
+        return;
+
+    }
+
+    let value=prompt(
 
         "修改当前价值",
 
-        assets[index].value
+        item.value
 
     );
 
     if(value!==null){
 
-        assets[index].value = Number(value);
+        assetsAgent.edit(
 
-        saveAssets();
+            id,
+
+            {
+
+                value:Number(value)
+
+            }
+
+        );
 
         updateAssetDisplay();
 
@@ -292,19 +226,11 @@ function editAsset(index){
 
 }
 
-// ======================
-
-// 删除资产
-
-// ======================
-
-function deleteAsset(index){
+function deleteAsset(id){
 
     if(confirm("确定删除该资产？")){
 
-        assets.splice(index,1);
-
-        saveAssets();
+        assetsAgent.delete(id);
 
         updateAssetDisplay();
 
@@ -315,7 +241,7 @@ function deleteAsset(index){
 }
 // ======================
 
-// 收入添加
+// 收入中心
 
 // ======================
 
@@ -347,9 +273,7 @@ function addIncome(){
 
     }
 
-    incomes.push(income);
-
-    saveIncome();
+    incomeAgent.add(income);
 
     clearIncomeInput();
 
@@ -358,12 +282,6 @@ function addIncome(){
     updateDashboard();
 
 }
-
-// ======================
-
-// 收入显示
-
-// ======================
 
 function updateIncomeDisplay(){
 
@@ -381,7 +299,9 @@ function updateIncomeDisplay(){
 
     list.innerHTML="";
 
-    incomes.forEach(function(item,index){
+    let incomes = incomeAgent.view();
+
+    incomes.forEach(function(item){
 
         let div=document.createElement(
 
@@ -419,13 +339,13 @@ ${item.period}
 
 <br><br>
 
-<button onclick="editIncome(${index})">
+<button onclick="editIncome(${item.id})">
 
 编辑
 
 </button>
 
-<button onclick="deleteIncome(${index})">
+<button onclick="deleteIncome(${item.id})">
 
 删除
 
@@ -439,29 +359,41 @@ ${item.period}
 
 }
 
-// ======================
+function editIncome(id){
 
-// 编辑收入
+    let item = incomeAgent.view().find(
 
-// ======================
+        i=>i.id===id
 
-function editIncome(index){
+    );
+
+    if(!item){
+
+        return;
+
+    }
 
     let amount=prompt(
 
         "修改收入金额",
 
-        incomes[index].amount
+        item.amount
 
     );
 
     if(amount!==null){
 
-        incomes[index].amount=
+        incomeAgent.edit(
 
-        Number(amount);
+            id,
 
-        saveIncome();
+            {
+
+                amount:Number(amount)
+
+            }
+
+        );
 
         updateIncomeDisplay();
 
@@ -471,19 +403,11 @@ function editIncome(index){
 
 }
 
-// ======================
-
-// 删除收入
-
-// ======================
-
-function deleteIncome(index){
+function deleteIncome(id){
 
     if(confirm("确定删除该收入记录？")){
 
-        incomes.splice(index,1);
-
-        saveIncome();
+        incomeAgent.delete(id);
 
         updateIncomeDisplay();
 
@@ -495,7 +419,7 @@ function deleteIncome(index){
 
 // ======================
 
-// 投资添加
+// 投资中心
 
 // ======================
 
@@ -567,12 +491,6 @@ function addInvestment(){
 
 }
 
-// ======================
-
-// 投资显示
-
-// ======================
-
 function updateInvestmentDisplay(){
 
     let list=document.getElementById(
@@ -589,11 +507,9 @@ function updateInvestmentDisplay(){
 
     list.innerHTML="";
 
-    let investments =
+    let investments = investmentAgent.view();
 
-    investmentAgent.view();
-
-    investments.forEach(function(item,index){
+    investments.forEach(function(item){
 
         let profit =
 
@@ -607,9 +523,7 @@ function updateInvestmentDisplay(){
 
         if(Number(item.buyAmount || 0)>0){
 
-            rate =
-
-            (
+            rate=(
 
                 profit /
 
@@ -710,19 +624,17 @@ function editInvestment(id){
 
     let item = investmentAgent.view().find(
 
-        i => i.id === id
+        i=>i.id===id
 
     );
 
     if(!item){
 
-        alert("未找到投资记录");
-
         return;
 
     }
 
-    let value = prompt(
+    let value=prompt(
 
         "修改当前价值",
 
@@ -730,7 +642,7 @@ function editInvestment(id){
 
     );
 
-    if(value !== null){
+    if(value!==null){
 
         investmentAgent.edit(
 
@@ -780,43 +692,29 @@ function deleteInvestment(id){
 
 function updateDashboard(){
 
-    let totalAssets = 0;
+    let assetSummary =
 
-    assets.forEach(function(item){
+    assetsAgent.summary();
 
-        totalAssets += Number(
+    let incomeSummary =
 
-            item.value || 0
-
-        );
-
-    });
-
-    let totalIncome = 0;
-
-    incomes.forEach(function(item){
-
-        totalIncome += Number(
-
-            item.amount || 0
-
-        );
-
-    });
-
-    let investmentProfit = 0;
+    incomeAgent.summary();
 
     let investmentSummary =
 
     investmentAgent.summary();
 
-    if(investmentSummary){
+    let totalAssets =
 
-        investmentProfit =
+    assetSummary.totalValue || 0;
 
-        investmentSummary.profit || 0;
+    let totalIncome =
 
-    }
+    incomeSummary.totalIncome || 0;
+
+    let investmentProfit =
+
+    investmentSummary.profit || 0;
 
     let totalBox=document.getElementById(
 
@@ -830,7 +728,7 @@ function updateDashboard(){
 
         "¥" +
 
-        totalAssets.toLocaleString();
+        Number(totalAssets).toLocaleString();
 
     }
 
@@ -846,7 +744,7 @@ function updateDashboard(){
 
         "¥" +
 
-        totalAssets.toLocaleString();
+        Number(totalAssets).toLocaleString();
 
     }
 
@@ -862,7 +760,7 @@ function updateDashboard(){
 
         "¥" +
 
-        totalIncome.toLocaleString();
+        Number(totalIncome).toLocaleString();
 
     }
 
@@ -878,7 +776,7 @@ function updateDashboard(){
 
         "¥" +
 
-        investmentProfit.toLocaleString();
+        Number(investmentProfit).toLocaleString();
 
     }
 
@@ -1040,7 +938,7 @@ function clearInvestmentInput(){
 
 // ======================
 
-// module模式暴露函数
+// 暴露给HTML按钮
 
 // ======================
 
