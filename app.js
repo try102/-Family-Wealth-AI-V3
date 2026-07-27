@@ -29,13 +29,13 @@ let investments = [];
 
 window.onload = function(){
 
+    assetsAgent.init();
+
     loadData();
 
     updateAssetDisplay();
 
     updateIncomeDisplay();
-
-    updateInvestmentDisplay();
 
     updateDashboard();
 
