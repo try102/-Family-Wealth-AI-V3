@@ -165,10 +165,17 @@ const assetsAgent = {
         let totalValue=0;
 
         assets.forEach(item=>{
+totalValue +=
 
-            totalValue +=
+Number(
 
-            Number(item.value || 0);
+item.value ||
+
+item.currentValue ||
+
+0
+
+);
 
         });
 
@@ -212,12 +219,17 @@ const assetsAgent = {
 
                 result[category]=0;
 
-            }
+            }result[category] +=
 
-            result[category]+=
+Number(
 
-            Number(item.value || 0);
+item.value ||
 
+item.currentValue ||
+
+0
+
+);
         });
 
         let allocation={};
