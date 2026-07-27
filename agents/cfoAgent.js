@@ -2,11 +2,11 @@
 
 Family Wealth AI OS
 
-V4.0 Alpha Build 009.1
+V4.0 Alpha Build 009.3
 
 AI CFO Agent
 
-财富智能分析中心
+财富健康评分引擎
 
 */
 
@@ -28,7 +28,7 @@ const cfoAgent = {
 
     // ======================
 
-    // 财富总览分析
+    // 财富分析
 
     // ======================
 
@@ -38,7 +38,11 @@ const cfoAgent = {
 
         incomeAgent,
 
-        investmentAgent
+        investmentAgent,
+
+        taxAgent,
+
+        retirementAgent
 
     ){
 
@@ -54,55 +58,43 @@ const cfoAgent = {
 
         investmentAgent.summary();
 
-        let totalAssets =
+        let assetScore =
 
-        Number(
+        this.assetScore(
 
-            assets.totalValue || 0
-
-        );
-
-        let totalIncome =
-
-        Number(
-
-            income.totalIncome || 0
+            assets
 
         );
 
-        let investmentProfit =
+        let incomeScore =
 
-        Number(
+        this.incomeScore(
 
-            investment.profit || 0
+            income
 
         );
 
-        let score = 50;
+        let investmentScore =
 
-        if(totalAssets > 0){
+        this.investmentScore(
 
-            score += 15;
+            investment
 
-        }
+        );
 
-        if(totalIncome > 0){
+        let planningScore =
 
-            score += 15;
+        20;
 
-        }
+        let totalScore =
 
-        if(investmentProfit >= 0){
+        assetScore +
 
-            score += 10;
+        incomeScore +
 
-        }
+        investmentScore +
 
-        if(score > 100){
-
-            score = 100;
-
-        }
+        planningScore;
 
         return {
 
@@ -112,15 +104,27 @@ const cfoAgent = {
 
             totalAssets:
 
-            totalAssets,
+            Number(
+
+                assets.totalValue || 0
+
+            ),
 
             totalIncome:
 
-            totalIncome,
+            Number(
+
+                income.totalIncome || 0
+
+            ),
 
             investmentProfit:
 
-            investmentProfit,
+            Number(
+
+                investment.profit || 0
+
+            ),
 
             assetCount:
 
@@ -132,13 +136,35 @@ const cfoAgent = {
 
             wealthScore:
 
-            score,
+            totalScore,
+
+            scoreDetail:{
+
+                asset:
+
+                assetScore,
+
+                income:
+
+                incomeScore,
+
+                investment:
+
+                investmentScore,
+
+                planning:
+
+                planningScore
+
+            },
 
             advice:
 
             this.generateAdvice(
 
                 assets,
+
+                income,
 
                 investment
 
@@ -150,13 +176,165 @@ const cfoAgent = {
 
     // ======================
 
-    // 智能建议
+    // 资产评分
+
+    // ======================
+
+    assetScore(assets){
+
+        let score = 0;
+
+        if(
+
+            assets.count > 0
+
+        ){
+
+            score += 10;
+
+        }
+
+        if(
+
+            assets.totalValue > 10000
+
+        ){
+
+            score += 10;
+
+        }
+
+        if(
+
+            assets.count >= 3
+
+        ){
+
+            score += 5;
+
+        }
+
+        return Math.min(
+
+            score,
+
+            25
+
+        );
+
+    },
+
+    // ======================
+
+    // 收入评分
+
+    // ======================
+
+    incomeScore(income){
+
+        let score = 0;
+
+        if(
+
+            income.count > 0
+
+        ){
+
+            score += 10;
+
+        }
+
+        if(
+
+            income.totalIncome > 50000
+
+        ){
+
+            score += 10;
+
+        }
+
+        if(
+
+            income.count >= 2
+
+        ){
+
+            score += 5;
+
+        }
+
+        return Math.min(
+
+            score,
+
+            25
+
+        );
+
+    },
+
+    // ======================
+
+    // 投资评分
+
+    // ======================
+
+    investmentScore(investment){
+
+        let score = 0;
+
+        if(
+
+            investment.count > 0
+
+        ){
+
+            score += 10;
+
+        }
+
+        if(
+
+            investment.profit >= 0
+
+        ){
+
+            score += 10;
+
+        }
+
+        if(
+
+            investment.count >= 3
+
+        ){
+
+            score += 5;
+
+        }
+
+        return Math.min(
+
+            score,
+
+            25
+
+        );
+
+    },
+
+    // ======================
+
+    // AI建议
 
     // ======================
 
     generateAdvice(
 
         assets,
+
+        income,
 
         investment
 
@@ -172,7 +350,7 @@ const cfoAgent = {
 
             advice.push(
 
-                "请录入家庭资产信息"
+            "请完善家庭资产信息"
 
             );
 
@@ -180,19 +358,21 @@ const cfoAgent = {
 
         if(
 
-            investment.count === 0
+            income.count === 0
 
         ){
 
             advice.push(
 
-                "暂无投资组合数据"
+            "建议录入收入来源"
 
             );
 
         }
 
         if(
+
+            investment.count > 0 &&
 
             investment.profit < 0
 
@@ -200,7 +380,23 @@ const cfoAgent = {
 
             advice.push(
 
-                "投资出现亏损，需要关注风险"
+            "投资组合存在亏损，需要关注风险"
+
+            );
+
+        }
+
+        if(
+
+            investment.count > 0 &&
+
+            investment.count < 3
+
+        ){
+
+            advice.push(
+
+            "投资集中度较高，可考虑增加资产分散"
 
             );
 
@@ -214,7 +410,7 @@ const cfoAgent = {
 
             advice.push(
 
-                "当前财富结构运行正常，可进一步优化资产配置"
+            "当前财富结构运行正常，可进一步优化资产配置"
 
             );
 
@@ -226,7 +422,7 @@ const cfoAgent = {
 
     // ======================
 
-    // AI CFO 总入口
+    // 总入口
 
     // ======================
 
