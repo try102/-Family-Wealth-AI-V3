@@ -714,17 +714,97 @@ function generateCFOReport(){
 
     }
 
+    let allocationText="";
+
+    if(report.allocation){
+
+        allocationText = `
+
+<h4>
+
+资产配置分析：
+
+</h4>
+
+<ul>
+
+${Object.keys(report.allocation)
+
+.map(category=>`
+
+<li>
+
+${category}：
+
+¥${Number(
+
+report.allocation[category].value
+
+).toLocaleString()}
+
+&nbsp;
+
+(
+
+${report.allocation[category].percentage}%
+
+)
+
+</li>
+
+`)
+
+.join("")}
+
+</ul>
+
+<h4>
+
+配置建议：
+
+</h4>
+
+<ul>
+
+${report.allocationAdvice
+
+.map(item=>`
+
+<li>
+
+${item}
+
+</li>
+
+`)
+
+.join("")}
+
+</ul>
+
+`;
+
+    }
+
     box.innerHTML=`
 
 <hr>
 
-<h3>${report.title}</h3>
+<h3>
+
+${report.title}
+
+</h3>
 
 <p>
 
 当前总资产：
 
-¥${Number(report.totalAssets).toLocaleString()}
+¥${Number(
+
+report.totalAssets
+
+).toLocaleString()}
 
 </p>
 
@@ -732,7 +812,11 @@ function generateCFOReport(){
 
 年度收入：
 
-¥${Number(report.totalIncome).toLocaleString()}
+¥${Number(
+
+report.totalIncome
+
+).toLocaleString()}
 
 </p>
 
@@ -740,7 +824,11 @@ function generateCFOReport(){
 
 投资收益：
 
-¥${Number(report.investmentProfit).toLocaleString()}
+¥${Number(
+
+report.investmentProfit
+
+).toLocaleString()}
 
 </p>
 
@@ -809,6 +897,9 @@ ${report.scoreDetail.planning}/25
 </li>
 
 </ul>
+
+${allocationText}
+
 <h4>
 
 AI建议：
@@ -817,18 +908,25 @@ AI建议：
 
 <ul>
 
-${report.advice.map(
+${report.advice
 
-item=>`<li>${item}</li>`
+.map(item=>`
 
-).join("")}
+<li>
+
+${item}
+
+</li>
+
+`)
+
+.join("")}
 
 </ul>
 
 `;
 
 }
-
 // ======================
 
 // Dashboard
