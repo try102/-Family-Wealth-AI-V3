@@ -185,6 +185,7 @@ AI CFO 已启动，等待财富数据输入。
 </p>
 
 </section>
+
 <section class="card">
 
 <h2>
@@ -288,7 +289,6 @@ AI CFO 已启动，等待财富数据输入。
 </div>
 
 </section>
-
 <section class="card">
 
 <h2>
@@ -297,29 +297,95 @@ AI CFO 已启动，等待财富数据输入。
 
 </h2>
 
-<p>
+<input id="investmentName" placeholder="投资名称">
 
-股票投资
+<br><br>
 
-</p>
+<input id="investmentType" placeholder="投资类型（股票/ETF/基金/债券）">
 
-<p>
+<br><br>
 
-ETF / 基金
+<input id="investmentTicker" placeholder="代码（Ticker/CUSIP）">
 
-</p>
+<br><br>
 
-<p>
+<input id="investmentMarket" placeholder="市场（美国/中国）">
 
-债券投资
+<br><br>
 
-</p>
+<input id="investmentOwner" placeholder="持有人">
 
-<p>
+<br><br>
 
-收益分析
+<h3>
 
-</p>
+买入信息
+
+</h3>
+
+<input 
+
+type="date"
+
+id="investmentBuyDate">
+
+<br><br>
+
+<input id="investmentBuyPrice" placeholder="买入价格">
+
+<br><br>
+
+<input id="investmentBuyQuantity" placeholder="买入数量">
+
+<br><br>
+
+<input id="investmentBuyAmount" placeholder="买入成本">
+
+<br><br>
+
+<h3>
+
+卖出信息
+
+</h3>
+
+<input 
+
+type="date"
+
+id="investmentSellDate">
+
+<br><br>
+
+<input id="investmentSellPrice" placeholder="卖出价格">
+
+<br><br>
+
+<input id="investmentSellQuantity" placeholder="卖出数量">
+
+<br><br>
+
+<input id="investmentSellAmount" placeholder="卖出金额">
+
+<br><br>
+
+<input id="investmentCurrentValue" placeholder="当前价值">
+
+<br><br>
+
+<input id="investmentNote" placeholder="备注">
+
+<br><br>
+
+<button onclick="addInvestment()">
+
+添加投资
+
+</button>
+
+<div id="investmentList">
+
+</div>
 
 </section>
 
