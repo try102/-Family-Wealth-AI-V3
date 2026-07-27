@@ -770,6 +770,47 @@ ${report.wealthScore}/100
 
 <h4>
 
+评分明细：
+
+</h4>
+
+<ul>
+
+<li>
+
+资产基础：
+
+${report.scoreDetail.asset}/25
+
+</li>
+
+<li>
+
+现金流：
+
+${report.scoreDetail.income}/25
+
+</li>
+
+<li>
+
+投资健康：
+
+${report.scoreDetail.investment}/25
+
+</li>
+
+<li>
+
+规划准备：
+
+${report.scoreDetail.planning}/25
+
+</li>
+
+</ul>
+<h4>
+
 AI建议：
 
 </h4>
