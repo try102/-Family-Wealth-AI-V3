@@ -12,6 +12,8 @@ Wealth Engine 接入版
 
 */
 
+import wealthEngine from "./wealthEngine.js";
+
 const cfoAgent = {
 
     name:"AI CFO Agent",
@@ -34,9 +36,7 @@ const cfoAgent = {
 
         incomeAgent,
 
-        investmentAgent,
-
-        wealthEngine
+        investmentAgent
 
     ){
 
@@ -94,11 +94,17 @@ const cfoAgent = {
 
         let totalScore =
 
-        assetScore +
+        assetScore
 
-        incomeScore +
+        +
 
-        investmentScore +
+        incomeScore
+
+        +
+
+        investmentScore
+
+        +
 
         planningScore;
 
@@ -379,39 +385,67 @@ const cfoAgent = {
 
         .forEach(category=>{
 
-            let value =
+            let value = allocation[category];
 
-            allocation[category];
+            // Wealth Engine V1.0 当前返回数字
 
-            let ratio = 0;
+            // 后续升级百分比时兼容对象结构
 
-            if(
+            let amount = 0;
 
-                typeof value === "object"
+            if(typeof value==="object"){
 
-            ){
+                amount =
 
-                ratio =
-
-                Number(
-
-                    value.percentage || 0
-
-                );
+                Number(value.value || 0);
 
             }
 
             else{
 
-                ratio = 0;
+                amount =
+
+                Number(value || 0);
 
             }
 
-            if(
+            let total = 0;
 
-                ratio > 60
+            Object.keys(allocation)
 
-            ){
+            .forEach(key=>{
+
+                let item=allocation[key];
+
+                if(typeof item==="object"){
+
+                    total += Number(item.value || 0);
+
+                }
+
+                else{
+
+                    total += Number(item || 0);
+
+                }
+
+            });
+
+            let ratio=0;
+
+            if(total>0){
+
+                ratio =
+
+                amount /
+
+                total *
+
+                100;
+
+            }
+
+            if(ratio>60){
 
                 advice.push(
 
@@ -425,11 +459,7 @@ const cfoAgent = {
 
         });
 
-        if(
-
-            advice.length===0
-
-        ){
+        if(advice.length===0){
 
             advice.push(
 
@@ -521,11 +551,7 @@ const cfoAgent = {
 
         }
 
-        if(
-
-            advice.length===0
-
-        ){
+        if(advice.length===0){
 
             advice.push(
 
@@ -561,11 +587,7 @@ const cfoAgent = {
 
             incomeAgent,
 
-            investmentAgent,
-
-            // 动态加载财富引擎
-
-            wealthEngine
+            investmentAgent
 
         );
 
