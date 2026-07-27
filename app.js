@@ -61,7 +61,7 @@ window.onload=function(){
 // ======================
 
 function addNewAsset(){
-
+alert("addNewAsset运行");
     let asset={
 
         name:getValue("assetName"),
