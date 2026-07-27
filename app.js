@@ -1,5 +1,13 @@
 import assetsAgent from "./agents/assetsAgent.js";
 
+import incomeAgent from "./agents/incomeAgent.js";
+
+import investmentAgent from "./agents/investmentAgent.js";
+
+import taxAgent from "./agents/taxAgent.js";
+
+import retirementAgent from "./agents/retirementAgent.js";
+
 /*
 Family Wealth AI OS
 
