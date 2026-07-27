@@ -2,7 +2,7 @@
 
 Family Wealth AI OS
 
-V4.0 Build 008.1
+V4.0 Build 008.3-D
 
 Investment Agent
 
@@ -10,11 +10,15 @@ Investment Agent
 
 const investmentAgent = {
 
-    name:"Investment Agent",
+    name:"Investment Center Agent",
 
     investments:[],
 
+    // ======================
+
     // 初始化
+
+    // ======================
 
     init(){
 
@@ -22,7 +26,11 @@ const investmentAgent = {
 
     },
 
+    // ======================
+
     // 读取数据
+
+    // ======================
 
     load(){
 
@@ -40,7 +48,11 @@ const investmentAgent = {
 
     },
 
+    // ======================
+
     // 保存数据
+
+    // ======================
 
     save(){
 
@@ -54,7 +66,11 @@ const investmentAgent = {
 
     },
 
+    // ======================
+
     // 添加投资
+
+    // ======================
 
     add(investment){
 
@@ -80,7 +96,11 @@ const investmentAgent = {
 
             currency:
 
-            investment.currency || "USD",
+            investment.currency || "",
+
+            owner:
+
+            investment.owner || "",
 
             buyDate:
 
@@ -88,15 +108,27 @@ const investmentAgent = {
 
             buyPrice:
 
-            Number(investment.buyPrice || 0),
+            Number(
+
+                investment.buyPrice || 0
+
+            ),
 
             quantity:
 
-            Number(investment.quantity || 0),
+            Number(
+
+                investment.quantity || 0
+
+            ),
 
             buyAmount:
 
-            Number(investment.buyAmount || 0),
+            Number(
+
+                investment.buyAmount || 0
+
+            ),
 
             sellDate:
 
@@ -104,33 +136,31 @@ const investmentAgent = {
 
             sellPrice:
 
-            Number(investment.sellPrice || 0),
+            Number(
 
-            sellAmount:
+                investment.sellPrice || 0
 
-            Number(investment.sellAmount || 0),
-
-            currentPrice:
-
-            Number(investment.currentPrice || 0),
+            ),
 
             currentValue:
 
-            Number(investment.currentValue || 0),
+            Number(
+
+                investment.currentValue || 0
+
+            ),
 
             note:
 
-            investment.note || "",
-
-            createDate:
-
-            investment.createDate ||
-
-            new Date().toISOString()
+            investment.note || ""
 
         };
 
-        this.investments.push(newInvestment);
+        this.investments.push(
+
+            newInvestment
+
+        );
 
         this.save();
 
@@ -138,7 +168,11 @@ const investmentAgent = {
 
     },
 
+    // ======================
+
     // 查看投资
+
+    // ======================
 
     view(){
 
@@ -146,7 +180,11 @@ const investmentAgent = {
 
     },
 
+    // ======================
+
     // 编辑投资
+
+    // ======================
 
     edit(id,newData){
 
@@ -176,11 +214,17 @@ const investmentAgent = {
 
     },
 
+    // ======================
+
     // 删除投资
+
+    // ======================
 
     delete(id){
 
-        this.investments=this.investments.filter(
+        this.investments =
+
+        this.investments.filter(
 
             i=>i.id!==id
 
@@ -192,13 +236,19 @@ const investmentAgent = {
 
     },
 
-    // 投资统计
+    // ======================
+
+    // 投资组合统计
+
+    // ======================
 
     summary(){
 
-        let totalCost=0;
+        let totalCost = 0;
 
-        let totalValue=0;
+        let totalValue = 0;
+
+        let totalProfit = 0;
 
         this.investments.forEach(item=>{
 
@@ -216,39 +266,21 @@ const investmentAgent = {
 
         });
 
-        return {
+        totalProfit =
 
-            count:this.investments.length,
+        totalValue - totalCost;
 
-            totalCost:totalCost,
+        let rate = 0;
 
-            totalValue:totalValue,
+        if(totalCost>0){
 
-            profit:
-
-            totalValue-totalCost
-
-        };
-
-    },
-
-    // 收益分析
-
-    analyze(){
-
-        let data=this.summary();
-
-        let rate=0;
-
-        if(data.totalCost>0){
-
-            rate=
+            rate =
 
             (
 
-                data.profit /
+                totalProfit /
 
-                data.totalCost *
+                totalCost *
 
                 100
 
@@ -258,13 +290,79 @@ const investmentAgent = {
 
         return {
 
+            count:
+
+            this.investments.length,
+
+            totalCost:
+
+            totalCost,
+
+            totalValue:
+
+            totalValue,
+
+            profit:
+
+            totalProfit,
+
+            returnRate:
+
+            rate
+
+        };
+
+    },
+
+    // ======================
+
+    // 分类统计
+
+    // ======================
+
+    allocation(){
+
+        let result={};
+
+        this.investments.forEach(item=>{
+
+            let type=item.type || "其他";
+
+            if(!result[type]){
+
+                result[type]=0;
+
+            }
+
+            result[type]+=Number(
+
+                item.currentValue || 0
+
+            );
+
+        });
+
+        return result;
+
+    },
+
+    // ======================
+
+    // AI分析接口
+
+    // ======================
+
+    analyze(){
+
+        let data=this.summary();
+
+        return {
+
             message:
 
-            "投资分析完成",
+            "投资组合分析完成",
 
-            data:data,
-
-            returnRate:rate+"%"
+            data:data
 
         };
 
