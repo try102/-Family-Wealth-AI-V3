@@ -573,6 +573,46 @@ function updateInvestmentDisplay(){
 
     investments.forEach(function(item,index){
 
+        let profit = 0;
+
+        let baseCost = Number(
+
+            item.buyAmount || 0
+
+        );
+
+        if(item.sellAmount > 0){
+
+            profit =
+
+            Number(item.sellAmount)
+
+            - baseCost;
+
+        }else{
+
+            profit =
+
+            Number(item.currentValue || 0)
+
+            - baseCost;
+
+        }
+
+        let returnRate = 0;
+
+        if(baseCost > 0){
+
+            returnRate =
+
+            (
+
+                profit / baseCost * 100
+
+            ).toFixed(2);
+
+        }
+
         let div=document.createElement(
 
             "div"
@@ -583,7 +623,11 @@ function updateInvestmentDisplay(){
 
 <hr>
 
-<h3>${item.name}</h3>
+<h3>
+
+${item.name}
+
+</h3>
 
 类型：
 
@@ -609,21 +653,27 @@ ${item.buyDate}
 
 <br>
 
-卖出日期：
-
-${item.sellDate}
-
-<br>
-
-卖出金额：
-
-¥${Number(item.sellAmount).toLocaleString()}
-
-<br>
-
 当前价值：
 
 ¥${Number(item.currentValue).toLocaleString()}
+
+<br>
+
+收益：
+
+¥${Number(profit).toLocaleString()}
+
+<br>
+
+收益率：
+
+${returnRate}%
+
+<br>
+
+卖出日期：
+
+${item.sellDate}
 
 <br>
 
@@ -652,7 +702,6 @@ ${item.note}
     });
 
 }
-
 // 编辑投资
 
 function editInvestment(index){
@@ -704,7 +753,6 @@ function deleteInvestment(index){
 // Dashboard
 
 // ==================================================
-
 function updateDashboard(){
 
     let totalAssets=0;
@@ -731,15 +779,41 @@ function updateDashboard(){
 
     });
 
-    let totalInvestment=0;
+    let totalInvestmentProfit=0;
 
     investments.forEach(function(item){
 
-        totalInvestment += Number(
+        let cost = Number(
+
+            item.buyAmount || 0
+
+        );
+
+        let value = Number(
 
             item.currentValue || 0
 
         );
+
+        let sell = Number(
+
+            item.sellAmount || 0
+
+        );
+
+        if(sell > 0){
+
+            totalInvestmentProfit +=
+
+            sell - cost;
+
+        }else{
+
+            totalInvestmentProfit +=
+
+            value - cost;
+
+        }
 
     });
 
@@ -773,9 +847,23 @@ function updateDashboard(){
 
         (
 
-            totalAssets +
+            totalAssets
 
-            totalInvestment
+            +
+
+            investments.reduce(
+
+                function(sum,item){
+
+                    return sum +
+
+                    Number(item.currentValue || 0);
+
+                },
+
+                0
+
+            )
 
         ).toLocaleString();
 
@@ -794,6 +882,22 @@ function updateDashboard(){
         "¥"+
 
         totalIncome.toLocaleString();
+
+    }
+
+    let investmentBox=document.getElementById(
+
+        "investmentReturn"
+
+    );
+
+    if(investmentBox){
+
+        investmentBox.innerHTML =
+
+        "¥"+
+
+        totalInvestmentProfit.toLocaleString();
 
     }
 
