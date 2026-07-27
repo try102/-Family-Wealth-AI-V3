@@ -2,7 +2,7 @@
 
 Family Wealth AI OS
 
-V4.0 Build 008.1
+V4.0 Build 008.3-C
 
 Income Agent
 
@@ -62,31 +62,29 @@ const incomeAgent = {
 
             id:Date.now(),
 
-            name:income.name || "",
+            name:
 
-            category:income.category || "",
+            income.name || "",
 
-            source:income.source || "",
+            category:
 
-            amount:Number(
+            income.category || "",
 
-                income.amount || 0
+            source:
 
-            ),
+            income.source || "",
 
-            period:income.period || "",
+            amount:
 
-            currency:
+            Number(income.amount || 0),
 
-            income.currency || "CNY",
+            period:
 
-            note:income.note || "",
+            income.period || "",
 
-            createDate:
+            note:
 
-            income.createDate ||
-
-            new Date().toISOString()
+            income.note || ""
 
         };
 
@@ -98,7 +96,7 @@ const incomeAgent = {
 
     },
 
-    // 查看
+    // 查看收入
 
     view(){
 
@@ -106,7 +104,7 @@ const incomeAgent = {
 
     },
 
-    // 编辑
+    // 编辑收入
 
     edit(id,newData){
 
@@ -136,7 +134,7 @@ const incomeAgent = {
 
     },
 
-    // 删除
+    // 删除收入
 
     delete(id){
 
@@ -182,15 +180,13 @@ const incomeAgent = {
 
     analyze(){
 
-        let result=this.summary();
-
         return {
 
             message:
 
             "收入分析完成",
 
-            data:result
+            data:this.summary()
 
         };
 
