@@ -2,7 +2,7 @@
 
 Family Wealth AI OS
 
-V4.0 Build 008.1
+V4.0 Build 008.3-E
 
 Tax Agent
 
@@ -10,11 +10,15 @@ Tax Agent
 
 const taxAgent = {
 
-    name:"Tax Agent",
+    name:"Tax Center Agent",
 
-    taxRecords:[],
+    taxes:[],
+
+    // ======================
 
     // 初始化
+
+    // ======================
 
     init(){
 
@@ -22,93 +26,129 @@ const taxAgent = {
 
     },
 
-    // 读取
+    // ======================
+
+    // 读取数据
+
+    // ======================
 
     load(){
 
         let data = localStorage.getItem(
 
-            "wealth_tax"
+            "wealth_taxes"
 
         );
 
         if(data){
 
-            this.taxRecords = JSON.parse(data);
+            this.taxes = JSON.parse(data);
 
         }
 
     },
 
-    // 保存
+    // ======================
+
+    // 保存数据
+
+    // ======================
 
     save(){
 
         localStorage.setItem(
 
-            "wealth_tax",
+            "wealth_taxes",
 
-            JSON.stringify(this.taxRecords)
+            JSON.stringify(this.taxes)
 
         );
 
     },
 
+    // ======================
+
     // 添加税务记录
 
-    add(record){
+    // ======================
 
-        let newRecord={
+    add(tax){
+
+        let newTax={
 
             id:Date.now(),
 
             year:
 
-            record.year || "",
+            tax.year || "",
 
-            type:
+            country:
 
-            record.type || "",
+            tax.country || "",
 
             category:
 
-            record.category || "",
+            tax.category || "",
 
-            amount:
+            income:
 
-            Number(record.amount || 0),
+            Number(
+
+                tax.income || 0
+
+            ),
+
+            taxAmount:
+
+            Number(
+
+                tax.taxAmount || 0
+
+            ),
+
+            deduction:
+
+            Number(
+
+                tax.deduction || 0
+
+            ),
 
             note:
 
-            record.note || "",
-
-            createDate:
-
-            new Date().toISOString()
+            tax.note || ""
 
         };
 
-        this.taxRecords.push(newRecord);
+        this.taxes.push(newTax);
 
         this.save();
 
-        return newRecord;
+        return newTax;
 
     },
 
-    // 查看
+    // ======================
+
+    // 查看税务记录
+
+    // ======================
 
     view(){
 
-        return this.taxRecords;
+        return this.taxes;
 
     },
 
+    // ======================
+
     // 编辑
+
+    // ======================
 
     edit(id,newData){
 
-        let item=this.taxRecords.find(
+        let item=this.taxes.find(
 
             t=>t.id===id
 
@@ -134,11 +174,17 @@ const taxAgent = {
 
     },
 
+    // ======================
+
     // 删除
+
+    // ======================
 
     delete(id){
 
-        this.taxRecords=this.taxRecords.filter(
+        this.taxes =
+
+        this.taxes.filter(
 
             t=>t.id!==id
 
@@ -150,17 +196,37 @@ const taxAgent = {
 
     },
 
+    // ======================
+
     // 税务统计
+
+    // ======================
 
     summary(){
 
-        let total=0;
+        let totalIncome = 0;
 
-        this.taxRecords.forEach(item=>{
+        let totalTax = 0;
 
-            total += Number(
+        let totalDeduction = 0;
 
-                item.amount || 0
+        this.taxes.forEach(item=>{
+
+            totalIncome += Number(
+
+                item.income || 0
+
+            );
+
+            totalTax += Number(
+
+                item.taxAmount || 0
+
+            );
+
+            totalDeduction += Number(
+
+                item.deduction || 0
 
             );
 
@@ -168,15 +234,23 @@ const taxAgent = {
 
         return {
 
-            count:this.taxRecords.length,
+            count:this.taxes.length,
 
-            totalTax:total
+            totalIncome:totalIncome,
+
+            totalTax:totalTax,
+
+            totalDeduction:totalDeduction
 
         };
 
     },
 
+    // ======================
+
     // AI分析接口
+
+    // ======================
 
     analyze(){
 
