@@ -2,7 +2,7 @@
 
 Family Wealth AI OS
 
-V4.0 Build 008.1
+V4.0 Build 008.3-A
 
 Assets Agent
 
@@ -62,33 +62,49 @@ const assetsAgent = {
 
             id:Date.now(),
 
-            name:asset.name || "",
+            name:
 
-            category:asset.category || "",
+            asset.name || "",
 
-            type:asset.type || "",
+            category:
 
-            owner:asset.owner || "",
+            asset.category || "",
 
-            country:asset.country || "",
+            type:
 
-            currency:asset.currency || "",
+            asset.type || "",
 
-            institution:asset.institution || "",
+            owner:
 
-            account:asset.account || "",
+            asset.owner || "",
 
-            cost:Number(asset.cost || 0),
+            country:
 
-            value:Number(asset.value || 0),
+            asset.country || "",
 
-            note:asset.note || "",
+            currency:
 
-            createDate:
+            asset.currency || "",
 
-            asset.createDate ||
+            institution:
 
-            new Date().toISOString()
+            asset.institution || "",
+
+            account:
+
+            asset.account || "",
+
+            cost:
+
+            Number(asset.cost || 0),
+
+            value:
+
+            Number(asset.value || 0),
+
+            note:
+
+            asset.note || ""
 
         };
 
@@ -100,7 +116,7 @@ const assetsAgent = {
 
     },
 
-    // 查看全部
+    // 查看资产
 
     view(){
 
@@ -108,7 +124,7 @@ const assetsAgent = {
 
     },
 
-    // 编辑
+    // 编辑资产
 
     edit(id,newData){
 
@@ -138,11 +154,11 @@ const assetsAgent = {
 
     },
 
-    // 删除
+    // 删除资产
 
     delete(id){
 
-        this.assets = this.assets.filter(
+        this.assets=this.assets.filter(
 
             a=>a.id!==id
 
@@ -174,25 +190,7 @@ const assetsAgent = {
 
             count:this.assets.length,
 
-            totalAssets:total
-
-        };
-
-    },
-
-    // AI分析接口
-
-    analyze(){
-
-        let result=this.summary();
-
-        return {
-
-            message:
-
-            "资产分析完成",
-
-            data:result
+            totalValue:total
 
         };
 
