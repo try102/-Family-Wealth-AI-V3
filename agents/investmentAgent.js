@@ -2,27 +2,35 @@
 
 Family Wealth AI OS
 
-V4.0 Alpha Build 005
+V4.0 Build 008.1
 
-Investment Center Agent
+Investment Agent
 
 */
 
 const investmentAgent = {
 
-    key: "wealth_investments",
+    name:"Investment Agent",
 
-    investments: [],
+    investments:[],
 
-    // ======================
+    // 初始化
 
-    // 初始化读取
+    init(){
 
-    // ======================
+        this.load();
+
+    },
+
+    // 读取数据
 
     load(){
 
-        let data = localStorage.getItem(this.key);
+        let data = localStorage.getItem(
+
+            "wealth_investments"
+
+        );
 
         if(data){
 
@@ -32,17 +40,13 @@ const investmentAgent = {
 
     },
 
-    // ======================
-
     // 保存数据
-
-    // ======================
 
     save(){
 
         localStorage.setItem(
 
-            this.key,
+            "wealth_investments",
 
             JSON.stringify(this.investments)
 
@@ -50,87 +54,105 @@ const investmentAgent = {
 
     },
 
-    // ======================
-
     // 添加投资
 
-    // ======================
+    add(investment){
 
-    addInvestment(data){
+        let newInvestment={
 
-        let investment = {
+            id:Date.now(),
 
-            id: Date.now(),
+            name:
 
-            name: data.name || "",
+            investment.name || "",
 
-            type: data.type || "",
+            ticker:
 
-            ticker: data.ticker || "",
+            investment.ticker || "",
 
-            market: data.market || "",
+            type:
 
-            owner: data.owner || "",
+            investment.type || "",
 
-            // 买入信息
+            market:
 
-            buyDate: data.buyDate || "",
+            investment.market || "",
 
-            buyPrice: Number(data.buyPrice || 0),
+            currency:
 
-            buyQuantity: Number(data.buyQuantity || 0),
+            investment.currency || "USD",
 
-            buyAmount: Number(data.buyAmount || 0),
+            buyDate:
 
-            // 卖出信息
+            investment.buyDate || "",
 
-            sellDate: data.sellDate || "",
+            buyPrice:
 
-            sellPrice: Number(data.sellPrice || 0),
+            Number(investment.buyPrice || 0),
 
-            sellQuantity: Number(data.sellQuantity || 0),
+            quantity:
 
-            sellAmount: Number(data.sellAmount || 0),
+            Number(investment.quantity || 0),
 
-            // 当前价值
+            buyAmount:
 
-            currentValue: Number(data.currentValue || 0),
+            Number(investment.buyAmount || 0),
 
-            note: data.note || ""
+            sellDate:
+
+            investment.sellDate || "",
+
+            sellPrice:
+
+            Number(investment.sellPrice || 0),
+
+            sellAmount:
+
+            Number(investment.sellAmount || 0),
+
+            currentPrice:
+
+            Number(investment.currentPrice || 0),
+
+            currentValue:
+
+            Number(investment.currentValue || 0),
+
+            note:
+
+            investment.note || "",
+
+            createDate:
+
+            investment.createDate ||
+
+            new Date().toISOString()
 
         };
 
-        this.investments.push(investment);
+        this.investments.push(newInvestment);
 
         this.save();
 
-        return "投资记录添加成功";
+        return newInvestment;
 
     },
 
-    // ======================
-
     // 查看投资
 
-    // ======================
-
-    viewInvestments(){
+    view(){
 
         return this.investments;
 
     },
 
-    // ======================
-
     // 编辑投资
 
-    // ======================
+    edit(id,newData){
 
-    editInvestment(id, updateData){
+        let item=this.investments.find(
 
-        let item = this.investments.find(
-
-            investment => investment.id === id
+            i=>i.id===id
 
         );
 
@@ -140,63 +162,109 @@ const investmentAgent = {
 
         }
 
-        Object.assign(item, updateData);
+        Object.assign(
 
-        this.save();
+            item,
 
-        return "投资记录更新成功";
-
-    },
-
-    // ======================
-
-    // 删除投资
-
-    // ======================
-
-    deleteInvestment(id){
-
-        this.investments = this.investments.filter(
-
-            investment => investment.id !== id
+            newData
 
         );
 
         this.save();
 
-        return "投资记录删除成功";
+        return item;
 
     },
 
-    // ======================
+    // 删除投资
 
-    // 投资汇总
+    delete(id){
 
-    // ======================
+        this.investments=this.investments.filter(
+
+            i=>i.id!==id
+
+        );
+
+        this.save();
+
+        return "删除成功";
+
+    },
+
+    // 投资统计
 
     summary(){
 
-        let totalCost = 0;
+        let totalCost=0;
 
-        let totalValue = 0;
+        let totalValue=0;
 
         this.investments.forEach(item=>{
 
-            totalCost += Number(item.buyAmount || 0);
+            totalCost += Number(
 
-            totalValue += Number(item.currentValue || 0);
+                item.buyAmount || 0
+
+            );
+
+            totalValue += Number(
+
+                item.currentValue || 0
+
+            );
 
         });
 
         return {
 
-            totalCost,
+            count:this.investments.length,
 
-            totalValue,
+            totalCost:totalCost,
 
-            profit: totalValue - totalCost,
+            totalValue:totalValue,
 
-            count: this.investments.length
+            profit:
+
+            totalValue-totalCost
+
+        };
+
+    },
+
+    // 收益分析
+
+    analyze(){
+
+        let data=this.summary();
+
+        let rate=0;
+
+        if(data.totalCost>0){
+
+            rate=
+
+            (
+
+                data.profit /
+
+                data.totalCost *
+
+                100
+
+            ).toFixed(2);
+
+        }
+
+        return {
+
+            message:
+
+            "投资分析完成",
+
+            data:data,
+
+            returnRate:rate+"%"
 
         };
 
@@ -204,6 +272,4 @@ const investmentAgent = {
 
 };
 
-// 初始化
-
-investmentAgent.load();
+export default investmentAgent;
