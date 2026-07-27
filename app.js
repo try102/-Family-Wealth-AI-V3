@@ -932,7 +932,193 @@ ${item}
 // Dashboard
 
 // ======================
+// ======================
 
+// Investment Dashboard
+
+// ======================
+
+function updateInvestmentDashboard(){
+
+    let box=document.getElementById(
+
+        "investmentDashboard"
+
+    );
+
+    if(!box){
+
+        return;
+
+    }
+
+    let data =
+
+    investmentAgent.dashboardSummary();
+
+    let risk =
+
+    investmentAgent.riskSummary();
+
+    let performance =
+
+    investmentAgent.performanceSummary();
+
+    box.innerHTML=`
+
+<hr>
+
+<h3>
+
+📈 投资总览
+
+</h3>
+
+<p>
+
+投资总成本：
+
+¥${Number(
+
+data.totalCost
+
+).toLocaleString()}
+
+</p>
+
+<p>
+
+当前投资价值：
+
+¥${Number(
+
+data.totalValue
+
+).toLocaleString()}
+
+</p>
+
+<p>
+
+累计收益：
+
+¥${Number(
+
+data.profit
+
+).toLocaleString()}
+
+</p>
+
+<p>
+
+收益率：
+
+${data.returnRate}%
+
+</p>
+
+<p>
+
+投资数量：
+
+${data.investmentCount}
+
+</p>
+
+<p>
+
+盈利项目：
+
+${data.profitCount}
+
+</p>
+
+<p>
+
+亏损项目：
+
+${data.lossCount}
+
+</p>
+
+<h3>
+
+⚠ 投资风险分析
+
+</h3>
+
+<p>
+
+风险等级：
+
+${risk.level}
+
+</p>
+
+<p>
+
+最大类别：
+
+${risk.maxCategory}
+
+</p>
+
+<p>
+
+集中度：
+
+${risk.maxRatio}%
+
+</p>
+
+<ul>
+
+${risk.advice.map(item=>`
+
+<li>
+
+${item}
+
+</li>
+
+`).join("")}
+
+</ul>
+
+<h3>
+
+📊 投资表现
+
+</h3>
+
+<p>
+
+盈利项目：
+
+${performance.profitCount}
+
+</p>
+
+<p>
+
+亏损项目：
+
+${performance.lossCount}
+
+</p>
+
+<p>
+
+平均收益率：
+
+${performance.averageReturnRate}%
+
+</p>
+
+`;
+
+}
 function updateDashboard(){
 
     let assetSummary =
