@@ -1051,3 +1051,14 @@ function clearIncomeInput(){
     });
 
 }
+window.addNewAsset = addNewAsset;
+
+window.editAsset = editAsset;
+
+window.deleteAsset = deleteAsset;
+
+window.addIncome = addIncome;
+
+window.editIncome = editIncome;
+
+window.deleteIncome = deleteIncome;
