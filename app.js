@@ -8,13 +8,15 @@ import taxAgent from "./agents/taxAgent.js";
 
 import retirementAgent from "./agents/retirementAgent.js";
 
+import cfoAgent from "./agents/cfoAgent.js";
+
 /*
 
 Family Wealth AI OS
 
-V4.0 Alpha Build 008.4
+V4.0 Alpha Build 009.2-B
 
-Agent Architecture Upgrade
+AI CFO Integration
 
 */
 
@@ -35,6 +37,8 @@ window.onload=function(){
     taxAgent.init();
 
     retirementAgent.init();
+
+    cfoAgent.init();
 
     updateAssetDisplay();
 
@@ -299,7 +303,7 @@ function updateIncomeDisplay(){
 
     list.innerHTML="";
 
-    let incomes = incomeAgent.view();
+    let incomes=incomeAgent.view();
 
     incomes.forEach(function(item){
 
@@ -361,7 +365,7 @@ ${item.period}
 
 function editIncome(id){
 
-    let item = incomeAgent.view().find(
+    let item=incomeAgent.view().find(
 
         i=>i.id===id
 
@@ -507,11 +511,13 @@ function updateInvestmentDisplay(){
 
     list.innerHTML="";
 
-    let investments = investmentAgent.view();
+    let investments=
+
+    investmentAgent.view();
 
     investments.forEach(function(item){
 
-        let profit =
+        let profit=
 
         Number(item.currentValue || 0)
 
@@ -519,9 +525,9 @@ function updateInvestmentDisplay(){
 
         Number(item.buyAmount || 0);
 
-        let rate = 0;
+        let rate=0;
 
-        if(Number(item.buyAmount || 0)>0){
+        if(item.buyAmount>0){
 
             rate=(
 
@@ -622,7 +628,7 @@ ${item.sellDate || ""}
 
 function editInvestment(id){
 
-    let item = investmentAgent.view().find(
+    let item=investmentAgent.view().find(
 
         i=>i.id===id
 
@@ -664,12 +670,6 @@ function editInvestment(id){
 
 }
 
-// ======================
-
-// 删除投资
-
-// ======================
-
 function deleteInvestment(id){
 
     if(confirm("确定删除该投资记录？")){
@@ -681,6 +681,110 @@ function deleteInvestment(id){
         updateDashboard();
 
     }
+
+}
+
+// ======================
+
+// AI CFO 财富报告
+
+// ======================
+
+function generateCFOReport(){
+
+    let report = cfoAgent.report(
+
+        assetsAgent,
+
+        incomeAgent,
+
+        investmentAgent
+
+    );
+
+    let box=document.getElementById(
+
+        "cfoReport"
+
+    );
+
+    if(!box){
+
+        return;
+
+    }
+
+    box.innerHTML=`
+
+<hr>
+
+<h3>${report.title}</h3>
+
+<p>
+
+当前总资产：
+
+¥${Number(report.totalAssets).toLocaleString()}
+
+</p>
+
+<p>
+
+年度收入：
+
+¥${Number(report.totalIncome).toLocaleString()}
+
+</p>
+
+<p>
+
+投资收益：
+
+¥${Number(report.investmentProfit).toLocaleString()}
+
+</p>
+
+<p>
+
+资产数量：
+
+${report.assetCount}
+
+</p>
+
+<p>
+
+投资数量：
+
+${report.investmentCount}
+
+</p>
+
+<p>
+
+财富健康评分：
+
+${report.wealthScore}/100
+
+</p>
+
+<h4>
+
+AI建议：
+
+</h4>
+
+<ul>
+
+${report.advice.map(
+
+item=>`<li>${item}</li>`
+
+).join("")}
+
+</ul>
+
+`;
 
 }
 
@@ -724,9 +828,9 @@ function updateDashboard(){
 
     if(totalBox){
 
-        totalBox.innerHTML =
+        totalBox.innerHTML=
 
-        "¥" +
+        "¥"+
 
         Number(totalAssets).toLocaleString();
 
@@ -740,9 +844,9 @@ function updateDashboard(){
 
     if(netBox){
 
-        netBox.innerHTML =
+        netBox.innerHTML=
 
-        "¥" +
+        "¥"+
 
         Number(totalAssets).toLocaleString();
 
@@ -756,9 +860,9 @@ function updateDashboard(){
 
     if(incomeBox){
 
-        incomeBox.innerHTML =
+        incomeBox.innerHTML=
 
-        "¥" +
+        "¥"+
 
         Number(totalIncome).toLocaleString();
 
@@ -772,9 +876,9 @@ function updateDashboard(){
 
     if(returnBox){
 
-        returnBox.innerHTML =
+        returnBox.innerHTML=
 
-        "¥" +
+        "¥"+
 
         Number(investmentProfit).toLocaleString();
 
@@ -801,12 +905,6 @@ function getValue(id){
     return "";
 
 }
-
-// ======================
-
-// 清空资产输入
-
-// ======================
 
 function clearAssetInput(){
 
@@ -836,7 +934,7 @@ function clearAssetInput(){
 
     ];
 
-    ids.forEach(function(id){
+    ids.forEach(id=>{
 
         let e=document.getElementById(id);
 
@@ -849,12 +947,6 @@ function clearAssetInput(){
     });
 
 }
-
-// ======================
-
-// 清空收入输入
-
-// ======================
 
 function clearIncomeInput(){
 
@@ -872,7 +964,7 @@ function clearIncomeInput(){
 
     ];
 
-    ids.forEach(function(id){
+    ids.forEach(id=>{
 
         let e=document.getElementById(id);
 
@@ -885,12 +977,6 @@ function clearIncomeInput(){
     });
 
 }
-
-// ======================
-
-// 清空投资输入
-
-// ======================
 
 function clearInvestmentInput(){
 
@@ -922,7 +1008,7 @@ function clearInvestmentInput(){
 
     ];
 
-    ids.forEach(function(id){
+    ids.forEach(id=>{
 
         let e=document.getElementById(id);
 
@@ -938,24 +1024,46 @@ function clearInvestmentInput(){
 
 // ======================
 
-// 暴露给HTML按钮
+// 暴露给HTML
 
 // ======================
 
-window.addNewAsset = addNewAsset;
+window.addNewAsset =
 
-window.editAsset = editAsset;
+addNewAsset;
 
-window.deleteAsset = deleteAsset;
+window.editAsset =
 
-window.addIncome = addIncome;
+editAsset;
 
-window.editIncome = editIncome;
+window.deleteAsset =
 
-window.deleteIncome = deleteIncome;
+deleteAsset;
 
-window.addInvestment = addInvestment;
+window.addIncome =
 
-window.editInvestment = editInvestment;
+addIncome;
 
-window.deleteInvestment = deleteInvestment;
+window.editIncome =
+
+editIncome;
+
+window.deleteIncome =
+
+deleteIncome;
+
+window.addInvestment =
+
+addInvestment;
+
+window.editInvestment =
+
+editInvestment;
+
+window.deleteInvestment =
+
+deleteInvestment;
+
+window.generateCFOReport =
+
+generateCFOReport;
