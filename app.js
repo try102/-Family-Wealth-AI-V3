@@ -489,9 +489,11 @@ function addInvestment(){
 
     clearInvestmentInput();
 
-    updateInvestmentDisplay();
+   updateInvestmentDisplay();
 
-    updateDashboard();
+updateInvestmentDashboard();
+
+updateDashboard();
 
 }
 
@@ -1392,3 +1394,6 @@ deleteInvestment;
 window.generateCFOReport =
 
 generateCFOReport;
+window.updateInvestmentDashboard =
+
+updateInvestmentDashboard;
