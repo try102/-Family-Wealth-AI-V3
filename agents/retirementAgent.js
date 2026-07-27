@@ -2,7 +2,7 @@
 
 Family Wealth AI OS
 
-V4.0 Build 008.1
+V4.0 Build 008.3-F
 
 Retirement Agent
 
@@ -10,11 +10,15 @@ Retirement Agent
 
 const retirementAgent = {
 
-    name:"Retirement Agent",
+    name:"Retirement Planning Agent",
 
     plans:[],
 
+    // ======================
+
     // 初始化
+
+    // ======================
 
     init(){
 
@@ -22,7 +26,11 @@ const retirementAgent = {
 
     },
 
+    // ======================
+
     // 读取数据
+
+    // ======================
 
     load(){
 
@@ -40,7 +48,11 @@ const retirementAgent = {
 
     },
 
+    // ======================
+
     // 保存数据
+
+    // ======================
 
     save(){
 
@@ -54,7 +66,11 @@ const retirementAgent = {
 
     },
 
-    // 添加退休计划
+    // ======================
+
+    // 添加退休规划
+
+    // ======================
 
     add(plan){
 
@@ -68,35 +84,63 @@ const retirementAgent = {
 
             retirementAge:
 
-            Number(plan.retirementAge || 0),
+            Number(
+
+                plan.retirementAge || 0
+
+            ),
 
             currentAge:
 
-            Number(plan.currentAge || 0),
+            Number(
 
-            targetAmount:
+                plan.currentAge || 0
 
-            Number(plan.targetAmount || 0),
+            ),
 
-            monthlyExpense:
+            currentAssets:
 
-            Number(plan.monthlyExpense || 0),
+            Number(
 
-            expectedIncome:
+                plan.currentAssets || 0
 
-            Number(plan.expectedIncome || 0),
+            ),
+
+            annualExpense:
+
+            Number(
+
+                plan.annualExpense || 0
+
+            ),
+
+            annualIncome:
+
+            Number(
+
+                plan.annualIncome || 0
+
+            ),
+
+            medicalExpense:
+
+            Number(
+
+                plan.medicalExpense || 0
+
+            ),
 
             expectedReturn:
 
-            Number(plan.expectedReturn || 0),
+            Number(
+
+                plan.expectedReturn || 0
+
+            ),
 
             note:
 
-            plan.note || "",
-
-            createDate:
-
-            new Date().toISOString()
+            plan.note || ""
 
         };
 
@@ -108,7 +152,11 @@ const retirementAgent = {
 
     },
 
-    // 查看
+    // ======================
+
+    // 查看退休规划
+
+    // ======================
 
     view(){
 
@@ -116,7 +164,11 @@ const retirementAgent = {
 
     },
 
+    // ======================
+
     // 编辑
+
+    // ======================
 
     edit(id,newData){
 
@@ -128,7 +180,7 @@ const retirementAgent = {
 
         if(!item){
 
-            return "未找到退休计划";
+            return "未找到退休规划";
 
         }
 
@@ -146,11 +198,17 @@ const retirementAgent = {
 
     },
 
+    // ======================
+
     // 删除
+
+    // ======================
 
     delete(id){
 
-        this.plans=this.plans.filter(
+        this.plans =
+
+        this.plans.filter(
 
             p=>p.id!==id
 
@@ -162,21 +220,65 @@ const retirementAgent = {
 
     },
 
-    // 退休规划统计
+    // ======================
+
+    // 退休统计
+
+    // ======================
 
     summary(){
 
+        let totalAssets = 0;
+
+        let totalExpense = 0;
+
+        let totalIncome = 0;
+
+        this.plans.forEach(item=>{
+
+            totalAssets += Number(
+
+                item.currentAssets || 0
+
+            );
+
+            totalExpense += Number(
+
+                item.annualExpense || 0
+
+            );
+
+            totalIncome += Number(
+
+                item.annualIncome || 0
+
+            );
+
+        });
+
         return {
 
-            count:this.plans.length
+            count:this.plans.length,
+
+            totalAssets:totalAssets,
+
+            annualExpense:totalExpense,
+
+            annualIncome:totalIncome
 
         };
 
     },
 
+    // ======================
+
     // AI分析接口
 
+    // ======================
+
     analyze(){
+
+        let data=this.summary();
 
         return {
 
@@ -184,7 +286,7 @@ const retirementAgent = {
 
             "退休规划分析完成",
 
-            data:this.summary()
+            data:data
 
         };
 
