@@ -1,5 +1,6 @@
-/*
+import assetsAgent from "./agents/assetsAgent.js";
 
+/*
 Family Wealth AI OS
 
 V4.0 Alpha Build 006
