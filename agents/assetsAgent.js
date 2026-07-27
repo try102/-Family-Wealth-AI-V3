@@ -2,9 +2,11 @@
 
 Family Wealth AI OS
 
-V4.0 Build 008.3-A
+V4.0 Alpha Build 009.5
 
 Assets Agent
+
+资产管理 + 资产配置分析
 
 */
 
@@ -12,187 +14,247 @@ const assetsAgent = {
 
     name:"Assets Agent",
 
-    assets:[],
+    // ======================
 
     // 初始化
 
+    // ======================
+
     init(){
 
-        this.load();
+        if(!localStorage.getItem("assets")){
 
-    },
+            localStorage.setItem(
 
-    // 读取数据
+                "assets",
 
-    load(){
+                JSON.stringify([])
 
-        let data = localStorage.getItem(
-
-            "wealth_assets"
-
-        );
-
-        if(data){
-
-            this.assets = JSON.parse(data);
+            );
 
         }
 
+        return "Assets Agent Ready";
+
     },
 
-    // 保存数据
+    // ======================
 
-    save(){
+    // 获取数据
+
+    // ======================
+
+    getData(){
+
+        return JSON.parse(
+
+            localStorage.getItem("assets") || "[]"
+
+        );
+
+    },
+
+    save(data){
 
         localStorage.setItem(
 
-            "wealth_assets",
+            "assets",
 
-            JSON.stringify(this.assets)
+            JSON.stringify(data)
 
         );
 
     },
+
+    // ======================
 
     // 添加资产
 
+    // ======================
+
     add(asset){
 
-        let newAsset={
+        let assets=this.getData();
 
-            id:Date.now(),
+        asset.id=Date.now();
 
-            name:
+        assets.push(asset);
 
-            asset.name || "",
-
-            category:
-
-            asset.category || "",
-
-            type:
-
-            asset.type || "",
-
-            owner:
-
-            asset.owner || "",
-
-            country:
-
-            asset.country || "",
-
-            currency:
-
-            asset.currency || "",
-
-            institution:
-
-            asset.institution || "",
-
-            account:
-
-            asset.account || "",
-
-            cost:
-
-            Number(asset.cost || 0),
-
-            value:
-
-            Number(asset.value || 0),
-
-            note:
-
-            asset.note || ""
-
-        };
-
-        this.assets.push(newAsset);
-
-        this.save();
-
-        return newAsset;
+        this.save(assets);
 
     },
+
+    // ======================
 
     // 查看资产
 
+    // ======================
+
     view(){
 
-        return this.assets;
+        return this.getData();
 
     },
+
+    // ======================
 
     // 编辑资产
 
+    // ======================
+
     edit(id,newData){
 
-        let item=this.assets.find(
+        let assets=this.getData();
 
-            a=>a.id===id
+        let index=
+
+        assets.findIndex(
+
+            item=>item.id===id
 
         );
 
-        if(!item){
+        if(index!==-1){
 
-            return "未找到资产";
+            assets[index]={
+
+                ...assets[index],
+
+                ...newData
+
+            };
 
         }
 
-        Object.assign(
-
-            item,
-
-            newData
-
-        );
-
-        this.save();
-
-        return item;
+        this.save(assets);
 
     },
+
+    // ======================
 
     // 删除资产
 
+    // ======================
+
     delete(id){
 
-        this.assets=this.assets.filter(
+        let assets=this.getData();
 
-            a=>a.id!==id
+        assets=
+
+        assets.filter(
+
+            item=>item.id!==id
 
         );
 
-        this.save();
-
-        return "删除成功";
+        this.save(assets);
 
     },
 
-    // 统计
+    // ======================
+
+    // 总资产统计
+
+    // ======================
 
     summary(){
 
-        let total=0;
+        let assets=this.getData();
 
-        this.assets.forEach(item=>{
+        let totalValue=0;
 
-            total += Number(
+        assets.forEach(item=>{
 
-                item.value || 0
+            totalValue +=
 
-            );
+            Number(item.value || 0);
 
         });
 
         return {
 
-            count:this.assets.length,
+            count:
 
-            totalValue:total
+            assets.length,
+
+            totalValue:
+
+            totalValue
 
         };
+
+    },
+
+    // ======================
+
+    // 新增：资产配置分析
+
+    // ======================
+
+    allocationSummary(){
+
+        let assets=this.getData();
+
+        let result={};
+
+        let total=
+
+        this.summary().totalValue;
+
+        assets.forEach(item=>{
+
+            let category=
+
+            item.category || "其他";
+
+            if(!result[category]){
+
+                result[category]=0;
+
+            }
+
+            result[category]+=
+
+            Number(item.value || 0);
+
+        });
+
+        let allocation={};
+
+        Object.keys(result).forEach(category=>{
+
+            if(total>0){
+
+                allocation[category]={
+
+                    value:
+
+                    result[category],
+
+                    percentage:
+
+                    (
+
+                        result[category]
+
+                        /
+
+                        total
+
+                        *
+
+                        100
+
+                    ).toFixed(2)
+
+                };
+
+            }
+
+        });
+
+        return allocation;
 
     }
 
