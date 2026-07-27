@@ -1,3 +1,4 @@
+alert("APP加载成功")
 import assetsAgent from "./agents/assetsAgent.js";
 
 import incomeAgent from "./agents/incomeAgent.js";
