@@ -2,15 +2,23 @@
 
 Family Wealth AI OS
 
-V4.0 Alpha Build 005
+V4.0 Alpha Build 006
 
-Assets + Income Management
+Assets + Income + Investment Management
 
 */
+
+// ======================
+
+// 数据
+
+// ======================
 
 let assets = [];
 
 let incomes = [];
+
+let investments = [];
 
 // ======================
 
@@ -25,6 +33,8 @@ window.onload = function(){
     updateAssetDisplay();
 
     updateIncomeDisplay();
+
+    updateInvestmentDisplay();
 
     updateDashboard();
 
@@ -55,6 +65,16 @@ function loadData(){
     if(incomeData){
 
         incomes = JSON.parse(incomeData);
+
+    }
+
+    let investmentData =
+
+    localStorage.getItem("wealth_investments");
+
+    if(investmentData){
+
+        investments = JSON.parse(investmentData);
 
     }
 
@@ -90,11 +110,25 @@ function saveIncome(){
 
 }
 
-// ======================
+function saveInvestment(){
 
-// 资产添加
+    localStorage.setItem(
 
-// ======================
+        "wealth_investments",
+
+        JSON.stringify(investments)
+
+    );
+
+}
+
+// ==================================================
+
+// Assets Center
+
+// ==================================================
+
+// 添加资产
 
 function addNewAsset(){
 
@@ -144,11 +178,7 @@ function addNewAsset(){
 
 }
 
-// ======================
-
-// 资产显示
-
-// ======================
+// 显示资产
 
 function updateAssetDisplay(){
 
@@ -216,11 +246,7 @@ ${item.type}
 
 }
 
-// ======================
-
 // 编辑资产
-
-// ======================
 
 function editAsset(index){
 
@@ -234,7 +260,9 @@ function editAsset(index){
 
     if(value!==null){
 
-        assets[index].value=Number(value);
+        assets[index].value=
+
+        Number(value);
 
         saveAssets();
 
@@ -246,11 +274,7 @@ function editAsset(index){
 
 }
 
-// ======================
-
 // 删除资产
-
-// ======================
 
 function deleteAsset(index){
 
@@ -267,11 +291,12 @@ function deleteAsset(index){
     }
 
 }
-// ======================
 
-// 收入添加
+// ==================================================
 
-// ======================
+// Income Center
+
+// ==================================================
 
 function addIncome(){
 
@@ -313,11 +338,7 @@ function addIncome(){
 
 }
 
-// ======================
-
-// 收入显示
-
-// ======================
+// 显示收入
 
 function updateIncomeDisplay(){
 
@@ -347,11 +368,7 @@ function updateIncomeDisplay(){
 
 <hr>
 
-<h3>
-
-${item.name}
-
-</h3>
+<h3>${item.name}</h3>
 
 类别：
 
@@ -396,12 +413,11 @@ ${item.period}
     });
 
 }
+// ==================================================
 
-// ======================
+// Income 编辑 / 删除
 
-// 编辑收入
-
-// ======================
+// ==================================================
 
 function editIncome(index){
 
@@ -429,12 +445,6 @@ function editIncome(index){
 
 }
 
-// ======================
-
-// 删除收入
-
-// ======================
-
 function deleteIncome(index){
 
     if(confirm("确定删除该收入记录？")){
@@ -451,11 +461,249 @@ function deleteIncome(index){
 
 }
 
-// ======================
+// ==================================================
+
+// Investment Center
+
+// ==================================================
+
+// 添加投资
+
+function addInvestment(){
+
+    let investment={
+
+        name:getValue("investmentName"),
+
+        type:getValue("investmentType"),
+
+        ticker:getValue("investmentTicker"),
+
+        market:getValue("investmentMarket"),
+
+        owner:getValue("investmentOwner"),
+
+        buyDate:getValue("investmentBuyDate"),
+
+        buyPrice:Number(
+
+            getValue("investmentBuyPrice")
+
+        ),
+
+        buyQuantity:Number(
+
+            getValue("investmentBuyQuantity")
+
+        ),
+
+        buyAmount:Number(
+
+            getValue("investmentBuyAmount")
+
+        ),
+
+        sellDate:getValue("investmentSellDate"),
+
+        sellPrice:Number(
+
+            getValue("investmentSellPrice")
+
+        ),
+
+        sellQuantity:Number(
+
+            getValue("investmentSellQuantity")
+
+        ),
+
+        sellAmount:Number(
+
+            getValue("investmentSellAmount")
+
+        ),
+
+        currentValue:Number(
+
+            getValue("investmentCurrentValue")
+
+        ),
+
+        note:getValue("investmentNote")
+
+    };
+
+    if(!investment.name){
+
+        alert("请输入投资名称");
+
+        return;
+
+    }
+
+    investments.push(investment);
+
+    saveInvestment();
+
+    clearInvestmentInput();
+
+    updateInvestmentDisplay();
+
+    updateDashboard();
+
+}
+
+// 显示投资
+
+function updateInvestmentDisplay(){
+
+    let list=document.getElementById(
+
+        "investmentList"
+
+    );
+
+    if(!list){
+
+        return;
+
+    }
+
+    list.innerHTML="";
+
+    investments.forEach(function(item,index){
+
+        let div=document.createElement(
+
+            "div"
+
+        );
+
+        div.innerHTML=`
+
+<hr>
+
+<h3>${item.name}</h3>
+
+类型：
+
+${item.type}
+
+<br>
+
+代码：
+
+${item.ticker}
+
+<br>
+
+买入日期：
+
+${item.buyDate}
+
+<br>
+
+买入成本：
+
+¥${Number(item.buyAmount).toLocaleString()}
+
+<br>
+
+卖出日期：
+
+${item.sellDate}
+
+<br>
+
+卖出金额：
+
+¥${Number(item.sellAmount).toLocaleString()}
+
+<br>
+
+当前价值：
+
+¥${Number(item.currentValue).toLocaleString()}
+
+<br>
+
+备注：
+
+${item.note}
+
+<br><br>
+
+<button onclick="editInvestment(${index})">
+
+编辑
+
+</button>
+
+<button onclick="deleteInvestment(${index})">
+
+删除
+
+</button>
+
+`;
+
+        list.appendChild(div);
+
+    });
+
+}
+
+// 编辑投资
+
+function editInvestment(index){
+
+    let value = prompt(
+
+        "修改当前投资价值",
+
+        investments[index].currentValue
+
+    );
+
+    if(value!==null){
+
+        investments[index].currentValue=
+
+        Number(value);
+
+        saveInvestment();
+
+        updateInvestmentDisplay();
+
+        updateDashboard();
+
+    }
+
+}
+
+// 删除投资
+
+function deleteInvestment(index){
+
+    if(confirm("确定删除该投资记录？")){
+
+        investments.splice(index,1);
+
+        saveInvestment();
+
+        updateInvestmentDisplay();
+
+        updateDashboard();
+
+    }
+
+}
+
+// ==================================================
 
 // Dashboard
 
-// ======================
+// ==================================================
 
 function updateDashboard(){
 
@@ -478,6 +726,18 @@ function updateDashboard(){
         totalIncome += Number(
 
             item.amount || 0
+
+        );
+
+    });
+
+    let totalInvestment=0;
+
+    investments.forEach(function(item){
+
+        totalInvestment += Number(
+
+            item.currentValue || 0
 
         );
 
@@ -511,7 +771,13 @@ function updateDashboard(){
 
         "¥"+
 
-        totalAssets.toLocaleString();
+        (
+
+            totalAssets +
+
+            totalInvestment
+
+        ).toLocaleString();
 
     }
 
@@ -533,11 +799,67 @@ function updateDashboard(){
 
 }
 
-// ======================
+// ==================================================
+
+// 清空投资输入
+
+// ==================================================
+
+function clearInvestmentInput(){
+
+    let ids=[
+
+"investmentName",
+
+"investmentType",
+
+"investmentTicker",
+
+"investmentMarket",
+
+"investmentOwner",
+
+"investmentBuyDate",
+
+"investmentBuyPrice",
+
+"investmentBuyQuantity",
+
+"investmentBuyAmount",
+
+"investmentSellDate",
+
+"investmentSellPrice",
+
+"investmentSellQuantity",
+
+"investmentSellAmount",
+
+"investmentCurrentValue",
+
+"investmentNote"
+
+];
+
+    ids.forEach(function(id){
+
+        let e=document.getElementById(id);
+
+        if(e){
+
+            e.value="";
+
+        }
+
+    });
+
+}
+
+// ==================================================
 
 // 工具函数
 
-// ======================
+// ==================================================
 
 function getValue(id){
 
@@ -581,17 +903,17 @@ function clearAssetInput(){
 
 ];
 
-ids.forEach(function(id){
+    ids.forEach(function(id){
 
-    let e=document.getElementById(id);
+        let e=document.getElementById(id);
 
-    if(e){
+        if(e){
 
-        e.value="";
+            e.value="";
 
-    }
+        }
 
-});
+    });
 
 }
 
@@ -611,16 +933,16 @@ function clearIncomeInput(){
 
 ];
 
-ids.forEach(function(id){
+    ids.forEach(function(id){
 
-    let e=document.getElementById(id);
+        let e=document.getElementById(id);
 
-    if(e){
+        if(e){
 
-        e.value="";
+            e.value="";
 
-    }
+        }
 
-});
+    });
 
 }
