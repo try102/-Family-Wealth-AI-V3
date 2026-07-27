@@ -12,9 +12,9 @@ import retirementAgent from "./agents/retirementAgent.js";
 
 Family Wealth AI OS
 
-V4.0 Alpha Build 008.2
+V4.0 Build 008.2-B
 
-Agent Architecture
+Investment Center Upgrade
 
 */
 
@@ -62,7 +62,11 @@ function loadData(){
 
     let assetData =
 
-    localStorage.getItem("wealth_assets");
+    localStorage.getItem(
+
+        "wealth_assets"
+
+    );
 
     if(assetData){
 
@@ -72,7 +76,11 @@ function loadData(){
 
     let incomeData =
 
-    localStorage.getItem("wealth_incomes");
+    localStorage.getItem(
+
+        "wealth_incomes"
+
+    );
 
     if(incomeData){
 
@@ -198,7 +206,11 @@ function updateAssetDisplay(){
 
     assets.forEach(function(item,index){
 
-        let div=document.createElement("div");
+        let div=document.createElement(
+
+            "div"
+
+        );
 
         div.innerHTML=`
 
@@ -258,7 +270,7 @@ ${item.type}
 
 function editAsset(index){
 
-    let value=prompt(
+    let value = prompt(
 
         "修改当前价值",
 
@@ -268,7 +280,7 @@ function editAsset(index){
 
     if(value!==null){
 
-        assets[index].value=Number(value);
+        assets[index].value = Number(value);
 
         saveAssets();
 
@@ -279,6 +291,7 @@ function editAsset(index){
     }
 
 }
+
 // ======================
 
 // 删除资产
@@ -300,7 +313,6 @@ function deleteAsset(index){
     }
 
 }
-
 // ======================
 
 // 收入添加
@@ -371,7 +383,11 @@ function updateIncomeDisplay(){
 
     incomes.forEach(function(item,index){
 
-        let div=document.createElement("div");
+        let div=document.createElement(
+
+            "div"
+
+        );
 
         div.innerHTML=`
 
@@ -543,6 +559,8 @@ function addInvestment(){
 
     investmentAgent.add(investment);
 
+    clearInvestmentInput();
+
     updateInvestmentDisplay();
 
     updateDashboard();
@@ -575,9 +593,39 @@ function updateInvestmentDisplay(){
 
     investmentAgent.view();
 
-    investments.forEach(function(item){
+    investments.forEach(function(item,index){
 
-        let div=document.createElement("div");
+        let profit =
+
+        Number(item.currentValue || 0)
+
+        -
+
+        Number(item.buyAmount || 0);
+
+        let rate = 0;
+
+        if(Number(item.buyAmount || 0)>0){
+
+            rate =
+
+            (
+
+                profit /
+
+                item.buyAmount *
+
+                100
+
+            ).toFixed(2);
+
+        }
+
+        let div=document.createElement(
+
+            "div"
+
+        );
 
         div.innerHTML=`
 
@@ -609,6 +657,18 @@ ${item.type}
 
 <br>
 
+收益：
+
+¥${profit.toLocaleString()}
+
+<br>
+
+收益率：
+
+${rate}%
+
+<br>
+
 买入日期：
 
 ${item.buyDate}
@@ -617,9 +677,21 @@ ${item.buyDate}
 
 卖出日期：
 
-${item.sellDate}
+${item.sellDate || ""}
 
-<br>
+<br><br>
+
+<button onclick="editInvestment(${item.id})">
+
+编辑
+
+</button>
+
+<button onclick="deleteInvestment(${item.id})">
+
+删除
+
+</button>
 
 `;
 
@@ -628,6 +700,78 @@ ${item.sellDate}
     });
 
 }
+// ======================
+
+// 投资编辑
+
+// ======================
+
+function editInvestment(id){
+
+    let item = investmentAgent.view().find(
+
+        i => i.id === id
+
+    );
+
+    if(!item){
+
+        alert("未找到投资记录");
+
+        return;
+
+    }
+
+    let value = prompt(
+
+        "修改当前价值",
+
+        item.currentValue
+
+    );
+
+    if(value !== null){
+
+        investmentAgent.edit(
+
+            id,
+
+            {
+
+                currentValue:Number(value)
+
+            }
+
+        );
+
+        updateInvestmentDisplay();
+
+        updateDashboard();
+
+    }
+
+}
+
+// ======================
+
+// 删除投资
+
+// ======================
+
+function deleteInvestment(id){
+
+    if(confirm("确定删除该投资记录？")){
+
+        investmentAgent.delete(id);
+
+        updateInvestmentDisplay();
+
+        updateDashboard();
+
+    }
+
+}
+
 // ======================
 
 // Dashboard
@@ -660,17 +804,17 @@ function updateDashboard(){
 
     });
 
-    let investmentReturn = 0;
+    let investmentProfit = 0;
 
-    let investmentData =
+    let investmentSummary =
 
     investmentAgent.summary();
 
-    if(investmentData){
+    if(investmentSummary){
 
-        investmentReturn =
+        investmentProfit =
 
-        investmentData.profit || 0;
+        investmentSummary.profit || 0;
 
     }
 
@@ -734,7 +878,7 @@ function updateDashboard(){
 
         "¥" +
 
-        investmentReturn.toLocaleString();
+        investmentProfit.toLocaleString();
 
     }
 
@@ -846,7 +990,57 @@ function clearIncomeInput(){
 
 // ======================
 
-// module模式下暴露按钮函数
+// 清空投资输入
+
+// ======================
+
+function clearInvestmentInput(){
+
+    let ids=[
+
+        "investmentName",
+
+        "investmentTicker",
+
+        "investmentType",
+
+        "investmentMarket",
+
+        "investmentBuyDate",
+
+        "investmentBuyPrice",
+
+        "investmentQuantity",
+
+        "investmentBuyAmount",
+
+        "investmentSellDate",
+
+        "investmentSellPrice",
+
+        "investmentCurrentValue",
+
+        "investmentNote"
+
+    ];
+
+    ids.forEach(function(id){
+
+        let e=document.getElementById(id);
+
+        if(e){
+
+            e.value="";
+
+        }
+
+    });
+
+}
+
+// ======================
+
+// module模式暴露函数
 
 // ======================
 
@@ -864,4 +1058,6 @@ window.deleteIncome = deleteIncome;
 
 window.addInvestment = addInvestment;
 
-window.updateInvestmentDisplay = updateInvestmentDisplay;
+window.editInvestment = editInvestment;
+
+window.deleteInvestment = deleteInvestment;
