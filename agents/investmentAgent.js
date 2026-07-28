@@ -2,17 +2,19 @@
 
 Family Wealth AI OS
 
-V5.3.1
+V5.4
 
-Investment Center Agent
+Investment Agent
 
-交易记录 + 库存管理 + 稳定版
+投资交易 + 库存统一接口版
 
 */
 
-const investmentAgent = {
+const investmentAgent={
 
-    name:"Investment Center Agent V5.3.1",
+    name:"Investment Agent V5.4",
+
+    storageKey:"wealth_investments",
 
     investments:[],
 
@@ -26,11 +28,13 @@ const investmentAgent = {
 
         this.load();
 
+        return "Investment Agent Ready";
+
     },
 
     // ======================
 
-    // 读取
+    // 读取数据
 
     // ======================
 
@@ -40,7 +44,7 @@ const investmentAgent = {
 
         localStorage.getItem(
 
-            "wealth_investments"
+            this.storageKey
 
         );
 
@@ -49,6 +53,14 @@ const investmentAgent = {
             this.investments=
 
             JSON.parse(data);
+
+        }
+
+        else{
+
+            this.investments=[];
+
+            this.save();
 
         }
 
@@ -64,7 +76,7 @@ const investmentAgent = {
 
         localStorage.setItem(
 
-            "wealth_investments",
+            this.storageKey,
 
             JSON.stringify(
 
@@ -78,25 +90,19 @@ const investmentAgent = {
 
     // ======================
 
-    // 剩余数量
+    // 买入金额
 
     // ======================
 
-    calculateRemainingQuantity(item){
+    buyAmount(item){
 
-        let buy=
+        return (
 
-        Number(item.buyQuantity||0);
+            Number(item.buyPrice||0)
 
-        let sell=
+            *
 
-        Number(item.sellQuantity||0);
-
-        return Math.max(
-
-            0,
-
-            buy-sell
+            Number(item.buyQuantity||0)
 
         );
 
@@ -104,35 +110,19 @@ const investmentAgent = {
 
     // ======================
 
-    // 买入成本
+    // 卖出金额
 
     // ======================
 
-    calculateBuyAmount(item){
+    sellAmount(item){
 
-        let price=
+        return (
 
-        Number(item.buyPrice||0);
+            Number(item.sellPrice||0)
 
-        let quantity=
+            *
 
-        Number(item.buyQuantity||0);
-
-        if(
-
-            price>0 &&
-
-            quantity>0
-
-        ){
-
-            return price*quantity;
-
-        }
-
-        return Number(
-
-            item.buyAmount||0
+            Number(item.sellQuantity||0)
 
         );
 
@@ -140,35 +130,42 @@ const investmentAgent = {
 
     // ======================
 
-    // 当前价值
+    // 当前持仓数量
 
     // ======================
 
-    calculateCurrentValue(item){
+    remainingQuantity(item){
 
-        let remain=
+        return (
 
-        this.calculateRemainingQuantity(item);
+            Number(item.buyQuantity||0)
 
-        let price=
+            -
 
-        Number(item.currentPrice||0);
+            Number(item.sellQuantity||0)
 
-        if(
+        );
 
-            remain>0 &&
+    },
+        // ======================
 
-            price>0
+    // 当前市值
 
-        ){
+    // ======================
 
-            return remain*price;
+    currentValue(item){
 
-        }
+        return (
 
-        return Number(
+            this.remainingQuantity(item)
 
-            item.currentValue||0
+            *
+
+            Number(
+
+                item.currentPrice || 0
+
+            )
 
         );
 
@@ -184,41 +181,45 @@ const investmentAgent = {
 
         let item={
 
-            id:Date.now(),
+            id:
+
+            Date.now(),
 
             name:
 
-            investment.name||"",
+            investment.name || "",
 
             ticker:
 
-            investment.ticker||"",
+            investment.ticker || "",
 
             type:
 
-            investment.type||"其他",
+            investment.type || "其他",
 
             market:
 
-            investment.market||"",
+            investment.market || "",
 
             currency:
 
-            investment.currency||"",
+            investment.currency || "CNY",
 
             owner:
 
-            investment.owner||"",
+            investment.owner || "",
+
+            // 买入
 
             buyDate:
 
-            investment.buyDate||"",
+            investment.buyDate || "",
 
             buyPrice:
 
             Number(
 
-                investment.buyPrice||0
+                investment.buyPrice || 0
 
             ),
 
@@ -226,21 +227,21 @@ const investmentAgent = {
 
             Number(
 
-                investment.buyQuantity||0
+                investment.buyQuantity || 0
 
             ),
 
-            buyAmount:0,
+            // 卖出
 
             sellDate:
 
-            investment.sellDate||"",
+            investment.sellDate || "",
 
             sellPrice:
 
             Number(
 
-                investment.sellPrice||0
+                investment.sellPrice || 0
 
             ),
 
@@ -248,33 +249,25 @@ const investmentAgent = {
 
             Number(
 
-                investment.sellQuantity||0
+                investment.sellQuantity || 0
 
             ),
+
+            // 当前价格
 
             currentPrice:
 
             Number(
 
-                investment.currentPrice||0
+                investment.currentPrice || 0
 
             ),
 
-            currentValue:0,
-
             note:
 
-            investment.note||""
+            investment.note || ""
 
         };
-
-        item.buyAmount=
-
-        this.calculateBuyAmount(item);
-
-        item.currentValue=
-
-        this.calculateCurrentValue(item);
 
         this.investments.push(item);
 
@@ -326,14 +319,6 @@ const investmentAgent = {
 
         );
 
-        item.buyAmount=
-
-        this.calculateBuyAmount(item);
-
-        item.currentValue=
-
-        this.calculateCurrentValue(item);
-
         this.save();
 
         return item;
@@ -361,79 +346,127 @@ const investmentAgent = {
         return "删除成功";
 
     },
-        // ======================
-
-    // 投资库存
 
     // ======================
 
-    inventory(){
+    // 单项投资分析
 
-        return this.investments.map(item=>{
+    // ======================
 
-            let remain=
+    analyzeItem(item){
 
-            this.calculateRemainingQuantity(
+        let buy=
 
-                item
+        this.buyAmount(item);
 
-            );
+        let sell=
 
-            let cost=
+        this.sellAmount(item);
 
-            Number(
+        let remain=
 
-                item.buyPrice||0
+        this.remainingQuantity(item);
 
-            )*remain;
+        let marketValue=
 
-            let value=
+        this.currentValue(item);
 
-            this.calculateCurrentValue(
+        // 已实现收益
 
-                item
+        let realized=0;
 
-            );
+        if(
 
-            return{
+            item.buyQuantity>0 &&
 
-                id:item.id,
+            item.sellQuantity>0
 
-                name:item.name,
+        ){
 
-                ticker:item.ticker,
+            let avgCost=
 
-                type:item.type,
+            buy /
 
-                quantity:remain,
+            item.buyQuantity;
 
-                buyPrice:Number(
+            realized=
 
-                    item.buyPrice||0
+            (
 
-                ),
+                Number(item.sellPrice||0)
 
-                currentPrice:Number(
+                -
 
-                    item.currentPrice||0
+                avgCost
 
-                ),
+            )
 
-                cost,
+            *
 
-                value,
+            item.sellQuantity;
 
-                unrealizedProfit:
+        }
 
-                value-cost
+        // 未实现收益
 
-            };
+        let unrealized=
 
-        });
+        marketValue
+
+        -
+
+        (
+
+            remain
+
+            *
+
+            (
+
+                buy /
+
+                (
+
+                    item.buyQuantity || 1
+
+                )
+
+            )
+
+        );
+
+        return{
+
+            name:item.name,
+
+            ticker:item.ticker,
+
+            buyAmount:buy,
+
+            sellAmount:sell,
+
+            remainingQuantity:remain,
+
+            marketValue,
+
+            realizedProfit:
+
+            realized,
+
+            unrealizedProfit:
+
+            unrealized,
+
+            totalProfit:
+
+            realized+
+
+            unrealized
+
+        };
 
     },
-
-    // ======================
+        // ======================
 
     // 投资汇总
 
@@ -445,43 +478,43 @@ const investmentAgent = {
 
         let totalValue=0;
 
-        let investmentCount=
-
-        this.investments.length;
+        let totalProfit=0;
 
         this.investments.forEach(item=>{
 
-            totalCost+=
+            let data=
 
-            Number(
+            this.analyzeItem(item);
 
-                item.buyAmount||0
+            totalCost +=
 
-            );
+            data.buyAmount;
 
-            totalValue+=
+            totalValue +=
 
-            this.calculateCurrentValue(
+            data.marketValue;
 
-                item
+            totalProfit +=
 
-            );
+            data.totalProfit;
 
         });
-
-        let profit=
-
-        totalValue-totalCost;
 
         let returnRate=0;
 
         if(totalCost>0){
 
-            returnRate=(
+            returnRate=
 
-                profit/
+            (
 
-                totalCost*
+                totalProfit
+
+                /
+
+                totalCost
+
+                *
 
                 100
 
@@ -491,15 +524,17 @@ const investmentAgent = {
 
         return{
 
-            investmentCount,
+            count:
 
-            count:investmentCount,
+            this.investments.length,
 
             totalCost,
 
             totalValue,
 
-            profit,
+            profit:
+
+            totalProfit,
 
             returnRate
 
@@ -509,7 +544,23 @@ const investmentAgent = {
 
     // ======================
 
-    // Dashboard
+    // 投资库存
+
+    // ======================
+
+    inventory(){
+
+        return this.investments.map(item=>{
+
+            return this.analyzeItem(item);
+
+        });
+
+    },
+
+    // ======================
+
+    // Dashboard接口
 
     // ======================
 
@@ -518,113 +569,176 @@ const investmentAgent = {
         return this.summary();
 
     },
-        // ======================
 
-    // 风险分析
+    // ======================
+
+    // 投资表现
+
+    // ======================
+
+    performanceSummary(){
+
+        let profitCount=0;
+
+        let lossCount=0;
+
+        let totalRate=0;
+
+        this.investments.forEach(item=>{
+
+            let data=
+
+            this.analyzeItem(item);
+
+            if(data.totalProfit>=0){
+
+                profitCount++;
+
+            }
+
+            else{
+
+                lossCount++;
+
+            }
+
+            let cost=
+
+            data.buyAmount;
+
+            if(cost>0){
+
+                totalRate +=
+
+                data.totalProfit
+
+                /
+
+                cost
+
+                *
+
+                100;
+
+            }
+
+        });
+
+        let average=0;
+
+        if(this.investments.length>0){
+
+            average=
+
+            (
+
+                totalRate
+
+                /
+
+                this.investments.length
+
+            ).toFixed(2);
+
+        }
+
+        return{
+
+            profitCount,
+
+            lossCount,
+
+            averageReturnRate:
+
+            average
+
+        };
+
+    },
+
+    // ======================
+
+    // 风险分析接口
 
     // ======================
 
     riskSummary(){
 
-        let allocation={};
-
-        let totalValue=0;
+        let category={};
 
         this.investments.forEach(item=>{
 
-            let type=item.type||"其他";
+            let type=
 
-            let value=
+            item.type || "其他";
 
-            this.calculateCurrentValue(item);
+            if(!category[type]){
 
-            totalValue+=value;
-
-            if(!allocation[type]){
-
-                allocation[type]=0;
+                category[type]=0;
 
             }
 
-            allocation[type]+=value;
+            category[type]+=
+
+            this.currentValue(item);
 
         });
 
-        if(totalValue===0){
-
-            return{
-
-                level:"无",
-
-                maxCategory:"无",
-
-                maxRatio:"0.00",
-
-                advice:[
-
-                    "暂无投资数据"
-
-                ]
-
-            };
-
-        }
-
-        let maxCategory="";
+        let maxCategory="其他";
 
         let maxValue=0;
 
-        Object.keys(allocation)
+        Object.keys(category)
 
         .forEach(key=>{
 
-            if(allocation[key]>maxValue){
+            if(category[key]>maxValue){
 
                 maxValue=
 
-                allocation[key];
+                category[key];
 
-                maxCategory=key;
+                maxCategory=
+
+                key;
 
             }
 
         });
 
-        let ratio=
+        let total=
 
-        (
+        this.summary().totalValue;
 
-            maxValue/
+        let ratio=0;
 
-            totalValue*
+        if(total>0){
 
-            100
+            ratio=
 
-        ).toFixed(2);
+            (
 
-        let level="低";
+                maxValue
 
-        let advice=[];
+                /
 
-        if(ratio>=80){
+                total
 
-            level="高";
+                *
 
-            advice.push(
+                100
 
-                "单一类别占比超过80%，建议尽快分散投资。"
-
-            );
+            ).toFixed(2);
 
         }
 
-        else if(ratio>=60){
+        let advice=[];
 
-            level="中";
+        if(Number(ratio)>60){
 
             advice.push(
 
-                "投资较集中，可适当增加其它资产类别。"
+                "单一类别集中度较高，需要关注风险"
 
             );
 
@@ -632,11 +746,9 @@ const investmentAgent = {
 
         else{
 
-            level="低";
-
             advice.push(
 
-                "投资组合较均衡。"
+                "投资类别分布较合理"
 
             );
 
@@ -644,14 +756,56 @@ const investmentAgent = {
 
         return{
 
-            level,
+            level:
+
+            Number(ratio)>60
+
+            ?
+
+            "高"
+
+            :
+
+            "正常",
 
             maxCategory,
 
-            maxRatio:ratio,
+            maxRatio:
+
+            ratio,
 
             advice
 
         };
 
     },
+
+    // ======================
+
+    // AI分析入口
+
+    // ======================
+
+    analyze(){
+
+        return{
+
+            summary:
+
+            this.summary(),
+
+            inventory:
+
+            this.inventory(),
+
+            risk:
+
+            this.riskSummary()
+
+        };
+
+    }
+
+};
+
+export default investmentAgent;
