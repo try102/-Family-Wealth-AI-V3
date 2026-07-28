@@ -2,7 +2,7 @@
 
 Family Wealth AI OS
 
-V5.2
+V5.3
 
 AI CFO + Investment Inventory Integration
 
@@ -162,13 +162,13 @@ function updateAssetDisplay(){
 
 类别：
 
-${item.category}
+${item.category || "其他"}
 
 <br>
 
 类型：
 
-${item.type}
+${item.type || ""}
 
 <br>
 
@@ -176,7 +176,7 @@ ${item.type}
 
 ¥${Number(
 
-item.value||0
+item.value || 0
 
 ).toLocaleString()}
 
@@ -263,6 +263,7 @@ function deleteAsset(id){
     }
 
 }
+
 // ======================
 
 // 收入中心
@@ -341,13 +342,13 @@ function updateIncomeDisplay(){
 
 类别：
 
-${item.category}
+${item.category || ""}
 
 <br>
 
 来源：
 
-${item.source}
+${item.source || ""}
 
 <br>
 
@@ -355,7 +356,7 @@ ${item.source}
 
 ¥${Number(
 
-item.amount||0
+item.amount || 0
 
 ).toLocaleString()}
 
@@ -363,7 +364,7 @@ item.amount||0
 
 周期：
 
-${item.period}
+${item.period || ""}
 
 <br><br>
 
@@ -389,7 +390,7 @@ ${item.period}
 
 function editIncome(id){
 
-    let item =
+    let item=
 
     incomeAgent.view()
 
@@ -448,10 +449,9 @@ function deleteIncome(id){
     }
 
 }
-
 // ======================
 
-// 投资中心 V5.2
+// 投资中心 V5.3
 
 // ======================
 
@@ -459,63 +459,97 @@ function addInvestment(){
 
     let investment={
 
-        name:getValue("investmentName"),
+        name:
 
-        ticker:getValue("investmentTicker"),
+        getValue("investmentName"),
 
-        type:getValue("investmentType"),
+        ticker:
 
-        market:getValue("investmentMarket"),
+        getValue("investmentTicker"),
 
-        currency:getValue("investmentCurrency"),
+        type:
 
-        buyDate:getValue("investmentBuyDate"),
+        getValue("investmentType"),
 
-        buyPrice:Number(
+        market:
+
+        getValue("investmentMarket"),
+
+        currency:
+
+        getValue("investmentCurrency"),
+
+        buyDate:
+
+        getValue("investmentBuyDate"),
+
+        buyPrice:
+
+        Number(
 
             getValue("investmentBuyPrice")
 
         ),
 
-        buyQuantity:Number(
+        buyQuantity:
+
+        Number(
 
             getValue("investmentBuyQuantity")
 
         ),
 
-        buyAmount:Number(
+        buyAmount:
+
+        Number(
 
             getValue("investmentBuyAmount")
 
         ),
 
-        currentPrice:Number(
+        // 卖出信息
 
-            getValue("investmentCurrentPrice")
+        sellDate:
 
-        ),
+        getValue("investmentSellDate"),
 
-        currentQuantity:Number(
+        sellPrice:
 
-            getValue("investmentCurrentQuantity")
-
-        ),
-
-        currentValue:Number(
-
-            getValue("investmentCurrentValue")
-
-        ),
-
-        sellDate:getValue("investmentSellDate"),
-
-        sellPrice:Number(
+        Number(
 
             getValue("investmentSellPrice")
 
         ),
 
-        note:getValue("investmentNote")
+        sellQuantity:
+
+        Number(
+
+            getValue("investmentSellQuantity")
+
+        ),
+
+        // 当前库存
+
+        currentPrice:
+
+        Number(
+
+            getValue("investmentCurrentPrice")
+
+        ),
+
+        currentValue:
+
+        Number(
+
+            getValue("investmentCurrentValue")
+
+        ),
+
+        note:
+
+        getValue("investmentNote")
 
     };
 
@@ -559,11 +593,33 @@ function updateInvestmentDisplay(){
 
     .forEach(item=>{
 
+        let buyQuantity =
+
+        Number(
+
+            item.buyQuantity || 0
+
+        );
+
+        let sellQuantity =
+
+        Number(
+
+            item.sellQuantity || 0
+
+        );
+
+        let remaining =
+
+        buyQuantity -
+
+        sellQuantity;
+
         let profit =
 
         Number(
 
-            item.currentValue||0
+            item.currentValue || 0
 
         )
 
@@ -571,7 +627,7 @@ function updateInvestmentDisplay(){
 
         Number(
 
-            item.buyAmount||0
+            item.buyAmount || 0
 
         );
 
@@ -605,19 +661,23 @@ function updateInvestmentDisplay(){
 
 代码：
 
-${item.ticker}
+${item.ticker || ""}
 
 <br>
 
 类型：
 
-${item.type}
+${item.type || "其他"}
+
+<br><br>
+
+📥 买入记录
 
 <br>
 
 买入数量：
 
-${item.buyQuantity}
+${buyQuantity}
 
 <br>
 
@@ -625,15 +685,39 @@ ${item.buyQuantity}
 
 ¥${Number(
 
-item.buyAmount||0
+item.buyAmount || 0
 
 ).toLocaleString()}
 
+<br><br>
+
+📤 卖出记录
+
 <br>
 
-当前持仓数量：
+卖出数量：
 
-${item.currentQuantity}
+${sellQuantity}
+
+<br>
+
+卖出价格：
+
+¥${Number(
+
+item.sellPrice || 0
+
+).toLocaleString()}
+
+<br><br>
+
+📦 当前库存
+
+<br>
+
+剩余数量：
+
+${remaining}
 
 <br>
 
@@ -641,7 +725,7 @@ ${item.currentQuantity}
 
 ¥${Number(
 
-item.currentPrice||0
+item.currentPrice || 0
 
 ).toLocaleString()}
 
@@ -651,11 +735,11 @@ item.currentPrice||0
 
 ¥${Number(
 
-item.currentValue||0
+item.currentValue || 0
 
 ).toLocaleString()}
 
-<br>
+<br><br>
 
 收益：
 
@@ -754,6 +838,7 @@ function deleteInvestment(id){
     }
 
 }
+
 // ======================
 
 // 投资 Dashboard
@@ -774,15 +859,15 @@ function updateInvestmentDashboard(){
 
     }
 
-    let data =
+    let data=
 
     investmentAgent.dashboardSummary();
 
-    let risk =
+    let risk=
 
     investmentAgent.riskSummary();
 
-    let performance =
+    let performance=
 
     investmentAgent.performanceSummary();
 
@@ -798,7 +883,7 @@ function updateInvestmentDashboard(){
 
 ¥${Number(
 
-data.totalCost||0
+data.totalCost || 0
 
 ).toLocaleString()}
 
@@ -810,7 +895,7 @@ data.totalCost||0
 
 ¥${Number(
 
-data.totalValue||0
+data.totalValue || 0
 
 ).toLocaleString()}
 
@@ -822,7 +907,7 @@ data.totalValue||0
 
 ¥${Number(
 
-data.profit||0
+data.profit || 0
 
 ).toLocaleString()}
 
@@ -832,7 +917,7 @@ data.profit||0
 
 收益率：
 
-${data.returnRate||0}%
+${data.returnRate || 0}%
 
 </p>
 
@@ -842,7 +927,7 @@ ${data.returnRate||0}%
 
 持仓品种：
 
-${data.investmentCount}
+${data.count || 0}
 
 </p>
 
@@ -874,13 +959,15 @@ ${risk.maxRatio}%
 
 <ul>
 
-${risk.advice.map(
+${
 
-item=>
+risk.advice.map(
 
-`<li>${item}</li>`
+item=>`<li>${item}</li>`
 
-).join("")}
+).join("")
+
+}
 
 </ul>
 
@@ -890,7 +977,7 @@ item=>
 
 盈利项目：
 
-${performance.profitCount}
+${performance.profitCount || 0}
 
 </p>
 
@@ -898,7 +985,7 @@ ${performance.profitCount}
 
 亏损项目：
 
-${performance.lossCount}
+${performance.lossCount || 0}
 
 </p>
 
@@ -906,14 +993,13 @@ ${performance.lossCount}
 
 平均收益率：
 
-${performance.averageReturnRate}%
+${performance.averageReturnRate || 0}%
 
 </p>
 
 `;
 
 }
-
 // ======================
 
 // AI CFO
@@ -958,7 +1044,7 @@ function generateCFOReport(){
 
 ¥${Number(
 
-report.totalAssets||0
+report.totalAssets || 0
 
 ).toLocaleString()}
 
@@ -970,7 +1056,7 @@ report.totalAssets||0
 
 ¥${Number(
 
-report.netWorth||0
+report.netWorth || 0
 
 ).toLocaleString()}
 
@@ -982,7 +1068,7 @@ report.netWorth||0
 
 ¥${Number(
 
-report.totalIncome||0
+report.totalIncome || 0
 
 ).toLocaleString()}
 
@@ -994,7 +1080,7 @@ report.totalIncome||0
 
 ¥${Number(
 
-report.investmentProfit||0
+report.investmentProfit || 0
 
 ).toLocaleString()}
 
@@ -1004,7 +1090,7 @@ report.investmentProfit||0
 
 资产数量：
 
-${report.assetCount}
+${report.assetCount || 0}
 
 </p>
 
@@ -1012,7 +1098,7 @@ ${report.assetCount}
 
 投资数量：
 
-${report.investmentCount}
+${report.investmentCount || 0}
 
 </p>
 
@@ -1020,7 +1106,7 @@ ${report.investmentCount}
 
 财富健康评分：
 
-${report.wealthScore}/100
+${report.wealthScore || 0}/100
 
 </p>
 
@@ -1032,13 +1118,19 @@ AI建议：
 
 <ul>
 
-${report.advice.map(
+${
 
-item=>
+(report.advice || [])
 
-`<li>${item}</li>`
+.map(
 
-).join("")}
+item=>`<li>${item}</li>`
+
+)
+
+.join("")
+
+}
 
 </ul>
 
@@ -1100,7 +1192,7 @@ function updateDashboard(){
 
         "¥"+Number(
 
-            wealth.totalAssets||0
+            wealth.totalAssets || 0
 
         ).toLocaleString();
 
@@ -1120,7 +1212,7 @@ function updateDashboard(){
 
         "¥"+Number(
 
-            wealth.netWorth||0
+            wealth.netWorth || 0
 
         ).toLocaleString();
 
@@ -1140,7 +1232,7 @@ function updateDashboard(){
 
         "¥"+Number(
 
-            wealth.income||0
+            wealth.income || 0
 
         ).toLocaleString();
 
@@ -1160,7 +1252,7 @@ function updateDashboard(){
 
         "¥"+Number(
 
-            wealth.investmentProfit||0
+            wealth.investmentProfit || 0
 
         ).toLocaleString();
 
@@ -1170,7 +1262,7 @@ function updateDashboard(){
 
 // ======================
 
-// 清空输入
+// 清空资产输入
 
 // ======================
 
@@ -1200,15 +1292,27 @@ function clearAssetInput(){
 
 "assetNote"
 
-].forEach(id=>{
+]
+
+.forEach(id=>{
 
 let e=document.getElementById(id);
 
-if(e)e.value="";
+if(e){
+
+    e.value="";
+
+}
 
 });
 
 }
+
+// ======================
+
+// 清空收入输入
+
+// ======================
 
 function clearIncomeInput(){
 
@@ -1224,15 +1328,27 @@ function clearIncomeInput(){
 
 "incomePeriod"
 
-].forEach(id=>{
+]
+
+.forEach(id=>{
 
 let e=document.getElementById(id);
 
-if(e)e.value="";
+if(e){
+
+    e.value="";
+
+}
 
 });
 
 }
+
+// ======================
+
+// 清空投资输入
+
+// ======================
 
 function clearInvestmentInput(){
 
@@ -1256,23 +1372,29 @@ function clearInvestmentInput(){
 
 "investmentBuyAmount",
 
-"investmentCurrentPrice",
-
-"investmentCurrentQuantity",
-
-"investmentCurrentValue",
-
 "investmentSellDate",
 
 "investmentSellPrice",
 
+"investmentSellQuantity",
+
+"investmentCurrentPrice",
+
+"investmentCurrentValue",
+
 "investmentNote"
 
-].forEach(id=>{
+]
+
+.forEach(id=>{
 
 let e=document.getElementById(id);
 
-if(e)e.value="";
+if(e){
+
+    e.value="";
+
+}
 
 });
 
@@ -1280,7 +1402,7 @@ if(e)e.value="";
 
 // ======================
 
-// 暴露给 HTML
+// 暴露给HTML
 
 // ======================
 
