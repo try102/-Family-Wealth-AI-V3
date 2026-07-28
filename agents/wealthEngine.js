@@ -2,101 +2,17 @@
 
 Family Wealth AI OS
 
-V5.2
+V5.4
 
-Wealth Engine V5.2
+Wealth Engine
 
 家庭财富统一总账引擎
 
 */
 
-const wealthEngine = {
+const wealthEngine={
 
-    name:"Wealth Engine V5.2",
-
-    // ======================
-
-    // 分类标准化
-
-    // ======================
-
-    normalizeCategory(category){
-
-        if(!category){
-
-            return "其他";
-
-        }
-
-        let c =
-
-        category.toLowerCase();
-
-        if(
-
-            c.includes("stock") ||
-
-            c.includes("股票")
-
-        ){
-
-            return "股票";
-
-        }
-
-        if(
-
-            c.includes("fund") ||
-
-            c.includes("基金") ||
-
-            c.includes("etf")
-
-        ){
-
-            return "基金";
-
-        }
-
-        if(
-
-            c.includes("bond") ||
-
-            c.includes("债券")
-
-        ){
-
-            return "债券";
-
-        }
-
-        if(
-
-            c.includes("cash") ||
-
-            c.includes("现金")
-
-        ){
-
-            return "现金";
-
-        }
-
-        if(
-
-            c.includes("real") ||
-
-            c.includes("房")
-
-        ){
-
-            return "房地产";
-
-        }
-
-        return category;
-
-    },
+    name:"Wealth Engine V5.4",
 
     // ======================
 
@@ -114,15 +30,15 @@ const wealthEngine = {
 
     ){
 
-        let assetData =
+        let assets =
 
         assetsAgent.summary();
 
-        let investmentData =
+        let investment =
 
         investmentAgent.summary();
 
-        let incomeData =
+        let income =
 
         incomeAgent.summary();
 
@@ -130,7 +46,7 @@ const wealthEngine = {
 
         Number(
 
-            assetData.totalValue || 0
+            assets.totalValue || 0
 
         );
 
@@ -138,17 +54,19 @@ const wealthEngine = {
 
         Number(
 
-            investmentData.totalValue || 0
+            investment.totalValue || 0
 
         );
 
         let totalAssets =
 
-        normalAssets +
+        normalAssets
+
+        +
 
         investmentAssets;
 
-        return {
+        return{
 
             totalAssets,
 
@@ -160,11 +78,11 @@ const wealthEngine = {
 
             investmentAssets,
 
-            income:
+            totalIncome:
 
             Number(
 
-                incomeData.totalIncome || 0
+                income.totalIncome || 0
 
             ),
 
@@ -172,79 +90,23 @@ const wealthEngine = {
 
             Number(
 
-                investmentData.profit || 0
+                investment.profit || 0
 
             ),
 
             assetCount:
 
-            assetData.count || 0,
+            assets.count || 0,
 
             investmentCount:
 
-            investmentData.count || 0
+            investment.count || 0,
+
+            incomeCount:
+
+            income.count || 0
 
         };
-
-    },
-
-    // ======================
-
-    // 投资库存
-
-    // ======================
-
-    investmentInventory(
-
-        investmentAgent
-
-    ){
-
-        return investmentAgent.view()
-
-        .map(item=>{
-
-            return {
-
-                name:item.name,
-
-                ticker:item.ticker || "",
-
-                type:
-
-                this.normalizeCategory(
-
-                    item.type
-
-                ),
-
-                quantity:
-
-                Number(
-
-                    item.currentQuantity || 0
-
-                ),
-
-                price:
-
-                Number(
-
-                    item.currentPrice || 0
-
-                ),
-
-                value:
-
-                Number(
-
-                    item.currentValue || 0
-
-                )
-
-            };
-
-        });
 
     },
 
@@ -268,13 +130,9 @@ const wealthEngine = {
 
         .forEach(item=>{
 
-            let category =
+            let category=
 
-            this.normalizeCategory(
-
-                item.category
-
-            );
+            item.category || "其他";
 
             if(!result[category]){
 
@@ -296,13 +154,9 @@ const wealthEngine = {
 
         .forEach(item=>{
 
-            let category =
+            let category=
 
-            this.normalizeCategory(
-
-                item.type
-
-            );
+            item.type || "投资";
 
             if(!result[category]){
 
@@ -314,7 +168,11 @@ const wealthEngine = {
 
             Number(
 
-                item.currentValue || 0
+                investmentAgent.currentValue(item)
+
+                ||
+
+                0
 
             );
 
@@ -326,7 +184,7 @@ const wealthEngine = {
 
     // ======================
 
-    // 所有人资产
+    // 所有人配置
 
     // ======================
 
@@ -344,7 +202,7 @@ const wealthEngine = {
 
         .forEach(item=>{
 
-            let owner =
+            let owner=
 
             item.owner || "未分类";
 
@@ -368,7 +226,7 @@ const wealthEngine = {
 
         .forEach(item=>{
 
-            let owner =
+            let owner=
 
             item.owner || "未分类";
 
@@ -382,7 +240,11 @@ const wealthEngine = {
 
             Number(
 
-                item.currentValue || 0
+                investmentAgent.currentValue(item)
+
+                ||
+
+                0
 
             );
 
@@ -412,7 +274,7 @@ const wealthEngine = {
 
         .forEach(item=>{
 
-            let country =
+            let country=
 
             item.country || "其他";
 
@@ -436,7 +298,7 @@ const wealthEngine = {
 
         .forEach(item=>{
 
-            let country =
+            let country=
 
             item.market || "其他";
 
@@ -450,7 +312,11 @@ const wealthEngine = {
 
             Number(
 
-                item.currentValue || 0
+                investmentAgent.currentValue(item)
+
+                ||
+
+                0
 
             );
 
@@ -462,7 +328,7 @@ const wealthEngine = {
 
     // ======================
 
-    // 完整财富报告接口
+    // 完整报告
 
     // ======================
 
@@ -476,7 +342,7 @@ const wealthEngine = {
 
     ){
 
-        return {
+        return{
 
             summary:
 
@@ -495,14 +361,6 @@ const wealthEngine = {
             this.assetAllocation(
 
                 assetsAgent,
-
-                investmentAgent
-
-            ),
-
-            investmentInventory:
-
-            this.investmentInventory(
 
                 investmentAgent
 
