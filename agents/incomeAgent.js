@@ -2,65 +2,105 @@
 
 Family Wealth AI OS
 
-V4.0 Build 008.3-C
+V5.4
 
 Income Agent
+
+收入管理统一接口版
 
 */
 
 const incomeAgent = {
 
-    name:"Income Agent",
+    name:"Income Agent V5.4",
+
+    storageKey:"wealth_incomes",
 
     incomes:[],
 
+    // ======================
+
     // 初始化
+
+    // ======================
 
     init(){
 
         this.load();
 
+        return "Income Agent Ready";
+
     },
 
-    // 读取数据
+    // ======================
+
+    // 读取
+
+    // ======================
 
     load(){
 
-        let data = localStorage.getItem(
+        let data=
 
-            "wealth_incomes"
+        localStorage.getItem(
+
+            this.storageKey
 
         );
 
         if(data){
 
-            this.incomes = JSON.parse(data);
+            this.incomes=
+
+            JSON.parse(data);
+
+        }
+
+        else{
+
+            this.incomes=[];
+
+            this.save();
 
         }
 
     },
 
-    // 保存数据
+    // ======================
+
+    // 保存
+
+    // ======================
 
     save(){
 
         localStorage.setItem(
 
-            "wealth_incomes",
+            this.storageKey,
 
-            JSON.stringify(this.incomes)
+            JSON.stringify(
+
+                this.incomes
+
+            )
 
         );
 
     },
 
+    // ======================
+
     // 添加收入
+
+    // ======================
 
     add(income){
 
-        let newIncome={
+        let item={
 
-            id:Date.now(),
+            id:
+
+            Date.now(),
 
             name:
 
@@ -76,11 +116,19 @@ const incomeAgent = {
 
             amount:
 
-            Number(income.amount || 0),
+            Number(
+
+                income.amount || 0
+
+            ),
 
             period:
 
             income.period || "",
+
+            owner:
+
+            income.owner || "",
 
             note:
 
@@ -88,15 +136,19 @@ const incomeAgent = {
 
         };
 
-        this.incomes.push(newIncome);
+        this.incomes.push(item);
 
         this.save();
 
-        return newIncome;
+        return item;
 
     },
 
-    // 查看收入
+    // ======================
+
+    // 查看
+
+    // ======================
 
     view(){
 
@@ -104,11 +156,17 @@ const incomeAgent = {
 
     },
 
-    // 编辑收入
+    // ======================
+
+    // 编辑
+
+    // ======================
 
     edit(id,newData){
 
-        let item=this.incomes.find(
+        let item=
+
+        this.incomes.find(
 
             i=>i.id===id
 
@@ -128,17 +186,35 @@ const incomeAgent = {
 
         );
 
+        if(newData.amount!==undefined){
+
+            item.amount=
+
+            Number(
+
+                newData.amount
+
+            );
+
+        }
+
         this.save();
 
         return item;
 
     },
 
-    // 删除收入
+    // ======================
+
+    // 删除
+
+    // ======================
 
     delete(id){
 
-        this.incomes=this.incomes.filter(
+        this.incomes=
+
+        this.incomes.filter(
 
             i=>i.id!==id
 
@@ -150,15 +226,21 @@ const incomeAgent = {
 
     },
 
+    // ======================
+
     // 收入统计
+
+    // ======================
 
     summary(){
 
-        let total=0;
+        let totalIncome=0;
 
         this.incomes.forEach(item=>{
 
-            total += Number(
+            totalIncome +=
+
+            Number(
 
                 item.amount || 0
 
@@ -166,27 +248,35 @@ const incomeAgent = {
 
         });
 
-        return {
+        return{
 
-            count:this.incomes.length,
+            count:
 
-            totalIncome:total
+            this.incomes.length,
+
+            totalIncome
 
         };
 
     },
 
-    // AI分析接口
+    // ======================
+
+    // AI接口
+
+    // ======================
 
     analyze(){
 
-        return {
+        return{
+
+            summary:
+
+            this.summary(),
 
             message:
 
-            "收入分析完成",
-
-            data:this.summary()
+            "收入分析完成"
 
         };
 
