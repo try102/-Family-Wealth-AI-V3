@@ -1,597 +1,438 @@
-import assetsAgent from "./agents/assetsAgent.js";
-
-import incomeAgent from "./agents/incomeAgent.js";
-
-import investmentAgent from "./agents/investmentAgent.js";
-
-import taxAgent from "./agents/taxAgent.js";
-
-import retirementAgent from "./agents/retirementAgent.js";
-
-import cfoAgent from "./agents/cfoAgent.js";
-
-import wealthEngine from "./agents/wealthEngine.js";
-
 /*
 
 Family Wealth AI OS
 
-V5.1 Alpha Build
+V5.2
 
-AI CFO + Wealth Engine Unified Version
+Investment Center Agent
+
+交易记录 + 投资库存仓库统一版
 
 */
 
-// ======================
+const investmentAgent = {
 
-// 系统启动
+    name:"Investment Center Agent",
 
-// ======================
+    investments:[],
 
-window.onload=function(){
+    // ======================
 
-    assetsAgent.init();
+    // 初始化
 
-    incomeAgent.init();
+    // ======================
 
-    investmentAgent.init();
+    init(){
 
-    taxAgent.init();
+        this.load();
 
-    retirementAgent.init();
+    },
 
-    cfoAgent.init();
+    // ======================
 
-    updateAssetDisplay();
+    // 读取数据
 
-    updateIncomeDisplay();
+    // ======================
 
-    updateInvestmentDisplay();
+    load(){
 
-    updateInvestmentDashboard();
+        let data =
 
-    updateDashboard();
+        localStorage.getItem(
 
-};
-
-// ======================
-
-// 资产中心
-
-// ======================
-
-function addNewAsset(){
-
-    let asset={
-
-        name:getValue("assetName"),
-
-        category:getValue("assetCategory"),
-
-        type:getValue("assetType"),
-
-        owner:getValue("assetOwner"),
-
-        country:getValue("assetCountry"),
-
-        currency:getValue("assetCurrency"),
-
-        institution:getValue("assetInstitution"),
-
-        account:getValue("assetAccount"),
-
-        cost:Number(
-
-            getValue("assetCost")
-
-        ),
-
-        value:Number(
-
-            getValue("assetValue")
-
-        ),
-
-        note:getValue("assetNote")
-
-    };
-
-    if(!asset.name){
-
-        alert("请输入资产名称");
-
-        return;
-
-    }
-
-    assetsAgent.add(asset);
-
-    clearAssetInput();
-
-    updateAssetDisplay();
-
-    updateDashboard();
-
-}
-
-function updateAssetDisplay(){
-
-    let list=document.getElementById(
-
-        "assetList"
-
-    );
-
-    if(!list){
-
-        return;
-
-    }
-
-    list.innerHTML="";
-
-    assetsAgent.view()
-
-    .forEach(item=>{
-
-        let div=document.createElement(
-
-            "div"
+            "wealth_investments"
 
         );
 
-        div.innerHTML=`
+        if(data){
 
-<hr>
+            this.investments =
 
-<h3>${item.name}</h3>
+            JSON.parse(data);
 
-类别：
+        }
 
-${item.category}
+    },
 
-<br>
+    // ======================
 
-类型：
+    // 保存
 
-${item.type}
+    // ======================
 
-<br>
+    save(){
 
-当前价值：
+        localStorage.setItem(
 
-¥${Number(item.value||0).toLocaleString()}
+            "wealth_investments",
 
-<br><br>
+            JSON.stringify(
 
-<button onclick="editAsset(${item.id})">
+                this.investments
 
-编辑
-
-</button>
-
-<button onclick="deleteAsset(${item.id})">
-
-删除
-
-</button>
-
-`;
-
-        list.appendChild(div);
-
-    });
-
-}
-
-function editAsset(id){
-
-    let item =
-
-    assetsAgent.view()
-
-    .find(
-
-        a=>a.id===id
-
-    );
-
-    if(!item){
-
-        return;
-
-    }
-
-    let value=prompt(
-
-        "修改当前价值",
-
-        item.value
-
-    );
-
-    if(value!==null){
-
-        assetsAgent.edit(
-
-            id,
-
-            {
-
-                value:Number(value)
-
-            }
+            )
 
         );
 
-        updateAssetDisplay();
+    },
 
-        updateDashboard();
+    // ======================
 
-    }
+    // 计算买入成本
 
-}
+    // ======================
 
-function deleteAsset(id){
+    calculateBuyAmount(item){
 
-    if(confirm("确定删除该资产？")){
+        let price =
 
-        assetsAgent.delete(id);
+        Number(item.buyPrice || 0);
 
-        updateAssetDisplay();
+        let quantity =
 
-        updateDashboard();
+        Number(item.buyQuantity || 0);
 
-    }
+        if(
 
-}
+            price > 0 &&
 
-// ======================
+            quantity > 0
 
-// 收入中心
+        ){
 
-// ======================
+            return price * quantity;
 
-function addIncome(){
+        }
 
-    let income={
+        return Number(
 
-        name:getValue("incomeName"),
-
-        category:getValue("incomeCategory"),
-
-        source:getValue("incomeSource"),
-
-        amount:Number(
-
-            getValue("incomeAmount")
-
-        ),
-
-        period:getValue("incomePeriod")
-
-    };
-
-    if(!income.name){
-
-        alert("请输入收入名称");
-
-        return;
-
-    }
-
-    incomeAgent.add(income);
-
-    clearIncomeInput();
-
-    updateIncomeDisplay();
-
-    updateDashboard();
-
-}
-  
-function updateIncomeDisplay(){
-
-    let list=document.getElementById(
-
-        "incomeList"
-
-    );
-
-    if(!list){
-
-        return;
-
-    }
-
-    list.innerHTML="";
-
-    incomeAgent.view()
-
-    .forEach(item=>{
-
-        let div=document.createElement(
-
-            "div"
+            item.buyAmount || 0
 
         );
 
-        div.innerHTML=`
+    },
 
-<hr>
+    // ======================
 
-<h3>${item.name}</h3>
+    // 计算当前库存价值
 
-类别：
+    // ======================
 
-${item.category}
+    calculateCurrentValue(item){
 
-<br>
+        let price =
 
-来源：
+        Number(item.currentPrice || 0);
 
-${item.source}
+        let quantity =
 
-<br>
+        Number(item.currentQuantity || 0);
 
-金额：
+        if(
 
-¥${Number(item.amount||0).toLocaleString()}
+            price > 0 &&
 
-<br>
+            quantity > 0
 
-周期：
+        ){
 
-${item.period}
+            return price * quantity;
 
-<br><br>
+        }
 
-<button onclick="editIncome(${item.id})">
+        return Number(
 
-编辑
-
-</button>
-
-<button onclick="deleteIncome(${item.id})">
-
-删除
-
-</button>
-
-`;
-
-        list.appendChild(div);
-
-    });
-
-}
-
-function editIncome(id){
-
-    let item =
-
-    incomeAgent.view()
-
-    .find(
-
-        i=>i.id===id
-
-    );
-
-    if(!item){
-
-        return;
-
-    }
-
-    let amount=prompt(
-
-        "修改收入金额",
-
-        item.amount
-
-    );
-
-    if(amount!==null){
-
-        incomeAgent.edit(
-
-            id,
-
-            {
-
-                amount:Number(amount)
-
-            }
+            item.currentValue || 0
 
         );
 
-        updateIncomeDisplay();
+    },
 
-        updateDashboard();
+    // ======================
 
-    }
+    // 添加投资
 
-}
+    // ======================
 
-function deleteIncome(id){
+    add(investment){
 
-    if(confirm("确定删除该收入记录？")){
+        let item={
 
-        incomeAgent.delete(id);
+            id:Date.now(),
 
-        updateIncomeDisplay();
+            name:
 
-        updateDashboard();
+            investment.name || "",
 
-    }
+            ticker:
 
-}
+            investment.ticker || "",
 
-// ======================
+            type:
 
-// 投资中心
+            investment.type || "其他",
 
-// ======================
+            market:
 
-function addInvestment(){
+            investment.market || "",
 
-    let investment={
+            currency:
 
-        name:getValue("investmentName"),
+            investment.currency || "CNY",
 
-        ticker:getValue("investmentTicker"),
+            owner:
 
-        type:getValue("investmentType"),
+            investment.owner || "",
 
-        market:getValue("investmentMarket"),
+            // 买入交易
 
-        buyDate:getValue("investmentBuyDate"),
+            buyDate:
 
-        buyPrice:Number(
+            investment.buyDate || "",
 
-            getValue("investmentBuyPrice")
+            buyPrice:
 
-        ),
+            Number(
 
-        quantity:Number(
+                investment.buyPrice || 0
 
-            getValue("investmentQuantity")
+            ),
 
-        ),
+            buyQuantity:
 
-        buyAmount:Number(
+            Number(
 
-            getValue("investmentBuyAmount")
+                investment.buyQuantity ||
 
-        ),
+                investment.quantity ||
 
-        sellDate:getValue("investmentSellDate"),
+                0
 
-        sellPrice:Number(
+            ),
 
-            getValue("investmentSellPrice")
+            buyAmount:0,
 
-        ),
+            // 当前库存
 
-        currentPrice:Number(
+            currentPrice:
 
-            getValue("investmentCurrentPrice")
+            Number(
 
-        ),
+                investment.currentPrice || 0
 
-        currentValue:Number(
+            ),
 
-            getValue("investmentCurrentValue")
+            currentQuantity:
 
-        ),
+            Number(
 
-        note:getValue("investmentNote")
+                investment.currentQuantity ||
 
-    };
+                investment.quantity ||
 
-    // 自动计算买入金额
+                0
 
-    if(
+            ),
 
-        investment.buyAmount===0 &&
+            currentValue:0,
 
-        investment.buyPrice>0 &&
+            // 卖出信息
 
-        investment.quantity>0
+            sellDate:
 
-    ){
+            investment.sellDate || "",
 
-        investment.buyAmount =
+            sellPrice:
 
-        investment.buyPrice *
+            Number(
 
-        investment.quantity;
+                investment.sellPrice || 0
 
-    }
+            ),
 
-    // 自动计算当前价值
+            note:
 
-    if(
+            investment.note || ""
 
-        investment.currentValue===0 &&
+        };
 
-        investment.currentPrice>0 &&
+        item.buyAmount =
 
-        investment.quantity>0
+        this.calculateBuyAmount(item);
 
-    ){
+        item.currentValue =
 
-        investment.currentValue =
+        this.calculateCurrentValue(item);
 
-        investment.currentPrice *
+        this.investments.push(item);
 
-        investment.quantity;
+        this.save();
 
-    }
+        return item;
 
-    if(!investment.name){
+    },
 
-        alert("请输入投资名称");
+    // ======================
 
-        return;
+    // 查看
 
-    }
+    // ======================
 
-    investmentAgent.add(investment);
+    view(){
 
-    clearInvestmentInput();
+        return this.investments;
 
-    updateInvestmentDisplay();
+    },
 
-    updateInvestmentDashboard();
+    // ======================
 
-    updateDashboard();
+    // 编辑
 
-}
-// ======================
+    // ======================
 
-// 投资显示
+    edit(id,newData){
 
-// ======================
+        let item =
 
-function updateInvestmentDisplay(){
+        this.investments.find(
 
-    let list=document.getElementById(
+            i=>i.id===id
 
-        "investmentList"
+        );
 
-    );
+        if(!item){
 
-    if(!list){
+            return "未找到投资记录";
 
-        return;
+        }
 
-    }
+        Object.assign(
 
-    list.innerHTML="";
+            item,
 
-    investmentAgent.view()
+            newData
 
-    .forEach(item=>{
+        );
+
+        item.buyAmount =
+
+        this.calculateBuyAmount(item);
+
+        item.currentValue =
+
+        this.calculateCurrentValue(item);
+
+        this.save();
+
+        return item;
+
+    },
+
+    // ======================
+
+    // 删除
+
+    // ======================
+
+    delete(id){
+
+        this.investments =
+
+        this.investments.filter(
+
+            i=>i.id!==id
+
+        );
+
+        this.save();
+
+        return "删除成功";
+
+    },
+
+    // ======================
+
+    // 投资库存汇总
+
+    // ======================
+
+    inventorySummary(){
+
+        let totalValue=0;
+
+        this.investments.forEach(item=>{
+
+            totalValue +=
+
+            Number(
+
+                item.currentValue || 0
+
+            );
+
+        });
+
+        return {
+
+            count:
+
+            this.investments.length,
+
+            totalValue:
+
+            totalValue
+
+        };
+
+    },
+
+    // ======================
+
+    // 投资统计
+
+    // ======================
+
+    summary(){
+
+        let totalCost=0;
+
+        let totalValue=0;
+
+        this.investments.forEach(item=>{
+
+            totalCost +=
+
+            Number(
+
+                item.buyAmount || 0
+
+            );
+
+            totalValue +=
+
+            Number(
+
+                item.currentValue || 0
+
+            );
+
+        });
 
         let profit =
 
-        Number(item.currentValue || 0)
+        totalValue-totalCost;
 
-        -
+        let returnRate=0;
 
-        Number(item.buyAmount || 0);
+        if(totalCost>0){
 
-        let rate=0;
+            returnRate =
 
-        if(item.buyAmount>0){
-
-            rate=(
+            (
 
                 profit /
 
-                item.buyAmount *
+                totalCost *
 
                 100
 
@@ -599,608 +440,380 @@ function updateInvestmentDisplay(){
 
         }
 
-        let div=document.createElement(
+        return {
 
-            "div"
+            count:
 
-        );
+            this.investments.length,
 
-        div.innerHTML=`
+            totalCost,
 
-<hr>
+            totalValue,
 
-<h3>${item.name}</h3>
+            profit,
 
-代码：
+            returnRate
 
-${item.ticker}
+        };
 
-<br>
+    },
 
-类型：
+    // ======================
 
-${item.type}
+    // 分类配置
 
-<br>
+    // ======================
 
-买入金额：
+    allocation(){
 
-¥${Number(item.buyAmount||0).toLocaleString()}
+        let result={};
 
-<br>
+        let total =
 
-当前价值：
+        this.inventorySummary()
 
-¥${Number(item.currentValue||0).toLocaleString()}
+        .totalValue;
 
-<br>
+        this.investments.forEach(item=>{
 
-收益：
+            let type =
 
-¥${profit.toLocaleString()}
+            item.type || "其他";
 
-<br>
+            if(!result[type]){
 
-收益率：
-
-${rate}%
-
-<br><br>
-
-<button onclick="editInvestment(${item.id})">
-
-编辑
-
-</button>
-
-<button onclick="deleteInvestment(${item.id})">
-
-删除
-
-</button>
-
-`;
-
-        list.appendChild(div);
-
-    });
-
-}
-
-function editInvestment(id){
-
-    let item =
-
-    investmentAgent.view()
-
-    .find(
-
-        i=>i.id===id
-
-    );
-
-    if(!item){
-
-        return;
-
-    }
-
-    let value=prompt(
-
-        "修改当前价值",
-
-        item.currentValue
-
-    );
-
-    if(value!==null){
-
-        investmentAgent.edit(
-
-            id,
-
-            {
-
-                currentValue:Number(value)
+                result[type]=0;
 
             }
 
-        );
+            result[type]+=
 
-        updateInvestmentDisplay();
+            Number(
 
-        updateInvestmentDashboard();
+                item.currentValue || 0
 
-        updateDashboard();
+            );
+
+        });
+
+        let output={};
+
+        Object.keys(result)
+
+        .forEach(type=>{
+
+            output[type]={
+
+                value:
+
+                result[type],
+
+                percentage:
+
+                total>0
+
+                ?
+
+                (
+
+                    result[type] /
+
+                    total *
+
+                    100
+
+                ).toFixed(2)
+
+                :
+
+                0
+
+            };
+
+        });
+
+        return output;
+
+    },
+
+    // ======================
+
+    // Dashboard
+
+    // ======================
+
+    dashboardSummary(){
+
+        let data =
+
+        this.summary();
+
+        let profitCount=0;
+
+        let lossCount=0;
+
+        this.investments.forEach(item=>{
+
+            let profit =
+
+            Number(
+
+                item.currentValue || 0
+
+            )
+
+            -
+
+            Number(
+
+                item.buyAmount || 0
+
+            );
+
+            if(profit>0)
+
+                profitCount++;
+
+            if(profit<0)
+
+                lossCount++;
+
+        });
+
+        return {
+
+            totalCost:
+
+            data.totalCost,
+
+            totalValue:
+
+            data.totalValue,
+
+            profit:
+
+            data.profit,
+
+            returnRate:
+
+            data.returnRate,
+
+            investmentCount:
+
+            data.count,
+
+            profitCount,
+
+            lossCount
+
+        };
+
+    },
+
+    // ======================
+
+    // 风险分析
+
+    // ======================
+
+    riskSummary(){
+
+        let allocation =
+
+        this.allocation();
+
+        let maxCategory="";
+
+        let maxRatio=0;
+
+        Object.keys(allocation)
+
+        .forEach(type=>{
+
+            let ratio =
+
+            Number(
+
+                allocation[type].percentage
+
+            );
+
+            if(ratio>maxRatio){
+
+                maxRatio=ratio;
+
+                maxCategory=type;
+
+            }
+
+        });
+
+        let level="低";
+
+        let advice=[];
+
+        if(maxRatio>60){
+
+            level="高";
+
+            advice.push(
+
+                "单一投资类别占比较高，需要关注集中风险"
+
+            );
+
+        }
+
+        else if(maxRatio>40){
+
+            level="中";
+
+            advice.push(
+
+                "投资组合存在一定集中度"
+
+            );
+
+        }
+
+        else{
+
+            advice.push(
+
+                "投资配置较分散"
+
+            );
+
+        }
+
+        return {
+
+            level,
+
+            maxCategory,
+
+            maxRatio,
+
+            advice
+
+        };
+
+    },
+
+    // ======================
+
+    // 表现分析
+
+    // ======================
+
+    performanceSummary(){
+
+        let profitCount=0;
+
+        let lossCount=0;
+
+        let totalRate=0;
+
+        let count=0;
+
+        this.investments.forEach(item=>{
+
+            let cost =
+
+            Number(item.buyAmount||0);
+
+            let value =
+
+            Number(item.currentValue||0);
+
+            let profit =
+
+            value-cost;
+
+            if(profit>0)
+
+                profitCount++;
+
+            if(profit<0)
+
+                lossCount++;
+
+            if(cost>0){
+
+                totalRate +=
+
+                profit/cost;
+
+                count++;
+
+            }
+
+        });
+
+        return {
+
+            profitCount,
+
+            lossCount,
+
+            averageReturnRate:
+
+            count>0
+
+            ?
+
+            (
+
+                totalRate/count*100
+
+            ).toFixed(2)
+
+            :
+
+            0
+
+        };
+
+    },
+
+    // ======================
+
+    // AI接口
+
+    // ======================
+
+    analyze(){
+
+        return {
+
+            message:
+
+            "投资组合分析完成",
+
+            summary:
+
+            this.summary(),
+
+            inventory:
+
+            this.inventorySummary(),
+
+            allocation:
+
+            this.allocation(),
+
+            risk:
+
+            this.riskSummary(),
+
+            performance:
+
+            this.performanceSummary()
+
+        };
 
     }
 
-}
+};
 
-function deleteInvestment(id){
-
-    if(confirm("确定删除该投资记录？")){
-
-        investmentAgent.delete(id);
-
-        updateInvestmentDisplay();
-
-        updateInvestmentDashboard();
-
-        updateDashboard();
-
-    }
-
-}
-
-// ======================
-
-// 投资Dashboard
-
-// ======================
-
-function updateInvestmentDashboard(){
-
-    let box=document.getElementById(
-
-        "investmentDashboard"
-
-    );
-
-    if(!box){
-
-        return;
-
-    }
-
-    let data =
-
-    investmentAgent.dashboardSummary();
-
-    let risk =
-
-    investmentAgent.riskSummary();
-
-    let performance =
-
-    investmentAgent.performanceSummary();
-
-    box.innerHTML=`
-
-<hr>
-
-<h3>📈 投资总览</h3>
-
-<p>
-
-投资总成本：
-
-¥${Number(data.totalCost||0).toLocaleString()}
-
-</p>
-
-<p>
-
-当前投资价值：
-
-¥${Number(data.totalValue||0).toLocaleString()}
-
-</p>
-
-<p>
-
-累计收益：
-
-¥${Number(data.profit||0).toLocaleString()}
-
-</p>
-
-<p>
-
-收益率：
-
-${data.returnRate||0}%
-
-</p>
-
-<h3>⚠ 投资风险分析</h3>
-
-<p>
-
-风险等级：
-
-${risk.level}
-
-</p>
-
-<p>
-
-最大类别：
-
-${risk.maxCategory}
-
-</p>
-
-<p>
-
-集中度：
-
-${risk.maxRatio}%
-
-</p>
-
-<ul>
-
-${risk.advice.map(
-
-item=>`<li>${item}</li>`
-
-).join("")}
-
-</ul>
-
-<h3>📊 投资表现</h3>
-
-<p>
-
-盈利项目：
-
-${performance.profitCount}
-
-</p>
-
-<p>
-
-亏损项目：
-
-${performance.lossCount}
-
-</p>
-
-<p>
-
-平均收益率：
-
-${performance.averageReturnRate}%
-
-</p>
-
-`;
-
-}
-
-// ======================
-
-// AI CFO
-
-// ======================
-
-function generateCFOReport(){
-
-    let report =
-
-    cfoAgent.report(
-
-        assetsAgent,
-
-        incomeAgent,
-
-        investmentAgent
-
-    );
-
-    let box=document.getElementById(
-
-        "cfoReport"
-
-    );
-
-    if(!box){
-
-        return;
-
-    }
-
-    box.innerHTML=`
-
-<hr>
-
-<h3>${report.title}</h3>
-
-<p>
-
-当前总资产：
-
-¥${Number(report.totalAssets||0).toLocaleString()}
-
-</p>
-
-<p>
-
-净资产：
-
-¥${Number(report.netWorth||0).toLocaleString()}
-
-</p>
-
-<p>
-
-年度收入：
-
-¥${Number(report.totalIncome||0).toLocaleString()}
-
-</p>
-
-<p>
-
-投资收益：
-
-¥${Number(report.investmentProfit||0).toLocaleString()}
-
-</p>
-
-<p>
-
-资产数量：
-
-${report.assetCount}
-
-</p>
-
-<p>
-
-投资数量：
-
-${report.investmentCount}
-
-</p>
-
-<p>
-
-财富健康评分：
-
-${report.wealthScore}/100
-
-</p>
-
-<h4>AI建议：</h4>
-
-<ul>
-
-${report.advice.map(
-
-item=>`<li>${item}</li>`
-
-).join("")}
-
-</ul>
-
-`;
-
-}
-
-// ======================
-
-// 财富驾驶舱
-
-// ======================
-
-function updateDashboard(){
-
-    let wealth;
-
-    try{
-
-        wealth =
-
-        wealthEngine.summary(
-
-            assetsAgent,
-
-            investmentAgent,
-
-            incomeAgent
-
-        );
-
-    }
-
-    catch(e){
-
-        console.log(e);
-
-        return;
-
-    }
-
-    document.getElementById(
-
-        "totalAssets"
-
-    ).innerHTML =
-
-    "¥"+Number(
-
-        wealth.totalAssets||0
-
-    ).toLocaleString();
-
-    document.getElementById(
-
-        "netWorth"
-
-    ).innerHTML =
-
-    "¥"+Number(
-
-        wealth.netWorth||0
-
-    ).toLocaleString();
-
-    document.getElementById(
-
-        "totalIncome"
-
-    ).innerHTML =
-
-    "¥"+Number(
-
-        wealth.income||0
-
-    ).toLocaleString();
-
-    document.getElementById(
-
-        "investmentReturn"
-
-    ).innerHTML =
-
-    "¥"+Number(
-
-        wealth.investmentProfit||0
-
-    ).toLocaleString();
-
-}
-
-// ======================
-
-// 工具函数
-
-// ======================
-
-function getValue(id){
-
-    let e=document.getElementById(id);
-
-    return e ? e.value : "";
-
-}
-
-function clearAssetInput(){
-
-[
-
-"assetName",
-
-"assetCategory",
-
-"assetType",
-
-"assetOwner",
-
-"assetCountry",
-
-"assetCurrency",
-
-"assetInstitution",
-
-"assetAccount",
-
-"assetCost",
-
-"assetValue",
-
-"assetNote"
-
-].forEach(id=>{
-
-let e=document.getElementById(id);
-
-if(e)e.value="";
-
-});
-
-}
-
-function clearIncomeInput(){
-
-[
-
-"incomeName",
-
-"incomeCategory",
-
-"incomeSource",
-
-"incomeAmount",
-
-"incomePeriod"
-
-].forEach(id=>{
-
-let e=document.getElementById(id);
-
-if(e)e.value="";
-
-});
-
-}
-
-function clearInvestmentInput(){
-
-[
-
-"investmentName",
-
-"investmentTicker",
-
-"investmentType",
-
-"investmentMarket",
-
-"investmentBuyDate",
-
-"investmentBuyPrice",
-
-"investmentQuantity",
-
-"investmentBuyAmount",
-
-"investmentSellDate",
-
-"investmentSellPrice",
-
-"investmentCurrentPrice",
-
-"investmentCurrentValue",
-
-"investmentNote"
-
-].forEach(id=>{
-
-let e=document.getElementById(id);
-
-if(e)e.value="";
-
-});
-
-}
-
-// ======================
-
-// 暴露给HTML
-
-// ======================
-
-window.addNewAsset=addNewAsset;
-
-window.editAsset=editAsset;
-
-window.deleteAsset=deleteAsset;
-
-window.addIncome=addIncome;
-
-window.editIncome=editIncome;
-
-window.deleteIncome=deleteIncome;
-
-window.addInvestment=addInvestment;
-
-window.editInvestment=editInvestment;
-
-window.deleteInvestment=deleteInvestment;
-
-window.generateCFOReport=
-
-generateCFOReport;
+export default investmentAgent;
