@@ -2,21 +2,21 @@
 
 Family Wealth AI OS
 
-V5.2
+V5.4
 
 AI CFO Agent
 
-Wealth Engine V5.2 Integration
+Wealth Engine Integration
 
-财富智能分析中心
+财富分析中心
 
 */
 
 import wealthEngine from "./wealthEngine.js";
 
-const cfoAgent = {
+const cfoAgent={
 
-    name:"AI CFO Agent V5.2",
+    name:"AI CFO Agent V5.4",
 
     // ======================
 
@@ -46,9 +46,9 @@ const cfoAgent = {
 
     ){
 
-        let wealthReport =
+        let wealth =
 
-        wealthEngine.report(
+        wealthEngine.summary(
 
             assetsAgent,
 
@@ -58,29 +58,21 @@ const cfoAgent = {
 
         );
 
-        let wealth =
+        let allocation =
 
-        wealthReport.summary;
+        wealthEngine.assetAllocation(
 
-        let assets =
+            assetsAgent,
 
-        assetsAgent.summary();
+            investmentAgent
 
-        let income =
-
-        incomeAgent.summary();
-
-        let investment =
-
-        investmentAgent.summary();
+        );
 
         let assetScore =
 
         this.assetScore(
 
-            wealth,
-
-            assets
+            wealth
 
         );
 
@@ -88,7 +80,7 @@ const cfoAgent = {
 
         this.incomeScore(
 
-            income
+            wealth
 
         );
 
@@ -96,73 +88,57 @@ const cfoAgent = {
 
         this.investmentScore(
 
-            investment
+            wealth
 
         );
 
-        // 未来连接退休Agent
+        let planningScore=20;
 
-        let planningScore = 20;
+        let totalScore=
 
-        let totalScore =
+        assetScore
 
-        assetScore +
+        +
 
-        incomeScore +
+        incomeScore
 
-        investmentScore +
+        +
+
+        investmentScore
+
+        +
 
         planningScore;
 
-        return {
+        return{
 
             title:
 
             "AI CFO 财富报告",
 
-            // 财富总览
-
             totalAssets:
 
-            Number(
-
-                wealth.totalAssets || 0
-
-            ),
+            wealth.totalAssets,
 
             netWorth:
 
-            Number(
-
-                wealth.netWorth || 0
-
-            ),
+            wealth.netWorth,
 
             totalIncome:
 
-            Number(
-
-                wealth.income || 0
-
-            ),
+            wealth.totalIncome,
 
             investmentProfit:
 
-            Number(
-
-                wealth.investmentProfit || 0
-
-            ),
+            wealth.investmentProfit,
 
             assetCount:
 
-            wealth.assetCount || 0,
+            wealth.assetCount,
 
             investmentCount:
 
-            wealth.investmentCount || 0,
-
-            // 财富评分
+            wealth.investmentCount,
 
             wealthScore:
 
@@ -188,49 +164,21 @@ const cfoAgent = {
 
             },
 
-            // 资产配置
-
-            allocation:
-
-            wealthReport.allocation,
+            allocation,
 
             allocationAdvice:
 
             this.allocationAdvice(
 
-                wealthReport.allocation
+                allocation
 
             ),
-
-            // 投资库存
-
-            investmentInventory:
-
-            wealthReport.investmentInventory,
-
-            // 所有人资产
-
-            ownerAllocation:
-
-            wealthReport.ownerAllocation,
-
-            // 国家配置
-
-            countryAllocation:
-
-            wealthReport.countryAllocation,
-
-            // AI建议
 
             advice:
 
             this.generateAdvice(
 
-                wealth,
-
-                income,
-
-                investment
+                wealth
 
             )
 
@@ -244,13 +192,7 @@ const cfoAgent = {
 
     // ======================
 
-    assetScore(
-
-        wealth,
-
-        assets
-
-    ){
+    assetScore(wealth){
 
         let score=0;
 
@@ -266,7 +208,7 @@ const cfoAgent = {
 
         if(
 
-            wealth.totalAssets>10000
+            wealth.totalAssets>100000
 
         ){
 
@@ -276,7 +218,7 @@ const cfoAgent = {
 
         if(
 
-            assets.count>=3
+            wealth.assetCount>=3
 
         ){
 
@@ -300,13 +242,13 @@ const cfoAgent = {
 
     // ======================
 
-    incomeScore(income){
+    incomeScore(wealth){
 
         let score=0;
 
         if(
 
-            income.count>0
+            wealth.incomeCount>0
 
         ){
 
@@ -316,7 +258,7 @@ const cfoAgent = {
 
         if(
 
-            income.totalIncome>50000
+            wealth.totalIncome>50000
 
         ){
 
@@ -326,7 +268,7 @@ const cfoAgent = {
 
         if(
 
-            income.count>=2
+            wealth.incomeCount>=2
 
         ){
 
@@ -350,13 +292,13 @@ const cfoAgent = {
 
     // ======================
 
-    investmentScore(investment){
+    investmentScore(wealth){
 
         let score=0;
 
         if(
 
-            investment.count>0
+            wealth.investmentCount>0
 
         ){
 
@@ -366,7 +308,7 @@ const cfoAgent = {
 
         if(
 
-            investment.profit>=0
+            wealth.investmentProfit>=0
 
         ){
 
@@ -376,7 +318,7 @@ const cfoAgent = {
 
         if(
 
-            investment.count>=3
+            wealth.investmentCount>=3
 
         ){
 
@@ -410,11 +352,11 @@ const cfoAgent = {
 
         .forEach(key=>{
 
-            total +=
+            total+=
 
             Number(
 
-                allocation[key] || 0
+                allocation[key]
 
             );
 
@@ -422,47 +364,43 @@ const cfoAgent = {
 
         Object.keys(allocation)
 
-        .forEach(category=>{
+        .forEach(key=>{
 
-            let value =
+            let ratio=
 
-            Number(
+            total>0
 
-                allocation[category] || 0
+            ?
 
-            );
+            allocation[key]
 
-            if(total>0){
+            /
 
-                let ratio =
+            total
 
-                value /
+            *
 
-                total *
+            100
 
-                100;
+            :
 
-                if(ratio>60){
+            0;
 
-                    advice.push(
+            if(ratio>60){
 
-                        category +
+                advice.push(
 
-                        "占比较高，需要关注集中风险"
+                    key+
 
-                    );
+                    "占比较高，需要关注集中风险"
 
-                }
+                );
 
             }
 
         });
 
-        if(
-
-            advice.length===0
-
-        ){
+        if(advice.length===0){
 
             advice.push(
 
@@ -482,15 +420,7 @@ const cfoAgent = {
 
     // ======================
 
-    generateAdvice(
-
-        wealth,
-
-        income,
-
-        investment
-
-    ){
+    generateAdvice(wealth){
 
         let advice=[];
 
@@ -510,23 +440,7 @@ const cfoAgent = {
 
         if(
 
-            income.count===0
-
-        ){
-
-            advice.push(
-
-                "建议录入收入来源"
-
-            );
-
-        }
-
-        if(
-
-            investment.count>0 &&
-
-            investment.profit<0
+            wealth.investmentProfit<0
 
         ){
 
@@ -540,9 +454,11 @@ const cfoAgent = {
 
         if(
 
-            investment.count>0 &&
+            wealth.investmentCount>0
 
-            investment.count<3
+            &&
+
+            wealth.investmentCount<3
 
         ){
 
@@ -554,15 +470,11 @@ const cfoAgent = {
 
         }
 
-        if(
-
-            advice.length===0
-
-        ){
+        if(advice.length===0){
 
             advice.push(
 
-                "当前财富结构运行正常，可进一步优化资产配置"
+                "当前财富结构运行正常，可进一步优化"
 
             );
 
@@ -574,7 +486,7 @@ const cfoAgent = {
 
     // ======================
 
-    // 报告入口
+    // 对外接口
 
     // ======================
 
