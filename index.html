@@ -18,7 +18,13 @@ Family Wealth AI OS V5.2
 
 body{
 
-font-family:Arial,"Microsoft YaHei";
+font-family:
+
+Arial,
+
+"Microsoft YaHei",
+
+sans-serif;
 
 padding:20px;
 
@@ -26,27 +32,25 @@ background:#f5f5f5;
 
 }
 
-.section{
+.card{
 
 background:white;
 
-padding:15px;
+padding:20px;
 
 margin-bottom:20px;
 
-border-radius:10px;
+border-radius:12px;
 
 }
 
 input,select{
 
-display:block;
-
-margin:8px 0;
+width:95%;
 
 padding:8px;
 
-width:90%;
+margin:5px;
 
 }
 
@@ -56,17 +60,21 @@ padding:8px 15px;
 
 margin:5px;
 
+cursor:pointer;
+
 }
 
-.card{
+h2{
 
-background:#fafafa;
+color:#333;
 
-padding:10px;
+}
 
-margin-top:10px;
+hr{
 
-border-radius:8px;
+border:0;
+
+border-top:1px solid #ddd;
 
 }
 
@@ -78,13 +86,11 @@ border-radius:8px;
 
 <h1>
 
-🏠 Family Wealth AI OS V5.2
+Family Wealth AI OS V5.2
 
 </h1>
 
-<!-- 财富驾驶舱 -->
-
-<div class="section">
+<div class="card">
 
 <h2>
 
@@ -142,9 +148,13 @@ border-radius:8px;
 
 </div>
 
+<!-- ===================== -->
+
 <!-- AI CFO -->
 
-<div class="section">
+<!-- ===================== -->
+
+<div class="card">
 
 <h2>
 
@@ -166,9 +176,13 @@ border-radius:8px;
 
 </div>
 
+<!-- ===================== -->
+
 <!-- 资产中心 -->
 
-<div class="section">
+<!-- ===================== -->
+
+<div class="card">
 
 <h2>
 
@@ -232,9 +246,13 @@ placeholder="备注">
 
 </div>
 
+<!-- ===================== -->
+
 <!-- 收入中心 -->
 
-<div class="section">
+<!-- ===================== -->
+
+<div class="card">
 
 <h2>
 
@@ -273,10 +291,13 @@ placeholder="周期">
 </div>
 
 </div>
+<!-- ===================== -->
 
-<!-- 投资中心 -->
+<!-- 投资中心 V5.2 -->
 
-<div class="section">
+<!-- ===================== -->
+
+<div class="card">
 
 <h2>
 
@@ -312,9 +333,9 @@ placeholder="货币">
 
 <input id="investmentBuyDate"
 
-placeholder="买入日期"
+type="date"
 
-type="date">
+placeholder="买入日期">
 
 <input id="investmentBuyPrice"
 
@@ -326,11 +347,11 @@ placeholder="买入数量">
 
 <input id="investmentBuyAmount"
 
-placeholder="买入金额(可选)">
+placeholder="买入金额（可直接输入）">
 
 <h3>
 
-当前库存
+当前持仓
 
 </h3>
 
@@ -344,7 +365,7 @@ placeholder="当前数量">
 
 <input id="investmentCurrentValue"
 
-placeholder="当前价值(可选)">
+placeholder="当前价值（可直接输入）">
 
 <h3>
 
@@ -354,9 +375,9 @@ placeholder="当前价值(可选)">
 
 <input id="investmentSellDate"
 
-placeholder="卖出日期"
+type="date"
 
-type="date">
+placeholder="卖出日期">
 
 <input id="investmentSellPrice"
 
@@ -372,31 +393,23 @@ placeholder="备注">
 
 </button>
 
-<h3>
+<div id="investmentDashboard">
 
-📦 投资库存 / 持仓
-
-</h3>
+</div>
 
 <div id="investmentList">
 
 </div>
 
-<h3>
-
-📊 投资分析
-
-</h3>
-
-<div id="investmentDashboard">
-
 </div>
 
-</div>
+<!-- ===================== -->
 
 <!-- 税务中心 -->
 
-<div class="section">
+<!-- ===================== -->
+
+<div class="card">
 
 <h2>
 
@@ -430,9 +443,13 @@ placeholder="备注">
 
 </div>
 
+<!-- ===================== -->
+
 <!-- 退休规划 -->
 
-<div class="section">
+<!-- ===================== -->
+
+<div class="card">
 
 <h2>
 
