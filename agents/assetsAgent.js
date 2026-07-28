@@ -217,12 +217,15 @@ const assetsAgent = {
                 asset.quantity || 0
 
             ),
+// 当前价值
 
-            // 当前价值
+value:
 
-            value:
+Number(
 
-            0,
+    asset.value || 0
+
+),
 
             note:
 
