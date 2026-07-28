@@ -289,42 +289,7 @@ function addIncome(){
     updateDashboard();
 
 }
-    let income={
-
-        name:getValue("incomeName"),
-
-        category:getValue("incomeCategory"),
-
-        source:getValue("incomeSource"),
-
-        amount:Number(
-
-            getValue("incomeAmount")
-
-        ),
-
-        period:getValue("incomePeriod")
-
-    };
-
-    if(!income.name){
-
-        alert("请输入收入名称");
-
-        return;
-
-    }
-
-    incomeAgent.add(income);
-
-    clearIncomeInput();
-
-    updateIncomeDisplay();
-
-    updateDashboard();
-
-}
-
+  
 function updateIncomeDisplay(){
 
     let list=document.getElementById(
