@@ -6,183 +6,151 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>
 
-Family Wealth AI OS V4.0
+Family Wealth AI OS V5.2
 
 </title>
 
-<link rel="stylesheet" href="style.css">
+<style>
+
+body{
+
+font-family:Arial,"Microsoft YaHei";
+
+padding:20px;
+
+background:#f5f5f5;
+
+}
+
+.section{
+
+background:white;
+
+padding:15px;
+
+margin-bottom:20px;
+
+border-radius:10px;
+
+}
+
+input,select{
+
+display:block;
+
+margin:8px 0;
+
+padding:8px;
+
+width:90%;
+
+}
+
+button{
+
+padding:8px 15px;
+
+margin:5px;
+
+}
+
+.card{
+
+background:#fafafa;
+
+padding:10px;
+
+margin-top:10px;
+
+border-radius:8px;
+
+}
+
+</style>
 
 </head>
 
 <body>
 
-<header>
-
 <h1>
 
-Family Wealth AI OS
+🏠 Family Wealth AI OS V5.2
 
 </h1>
 
-<p>
+<!-- 财富驾驶舱 -->
 
-家庭财富智能操作系统 V4.0
+<div class="section">
 
-</p>
-
-</header>
-
-<div class="layout">
-
-<nav>
-
-<h3>
-
-财富中心
-
-</h3>
-
-<button>
+<h2>
 
 🏠 财富驾驶舱
 
-</button>
-
-<button>
-
-💰 资产中心
-
-</button>
-
-<button>
-
-💵 收入中心
-
-</button>
-
-<button>
-
-📈 投资中心
-
-</button>
-
-<button>
-
-🧾 税务中心
-
-</button>
-
-<button>
-
-🏖 退休规划
-
-</button>
-
-<button>
-
-🤖 AI CFO
-
-</button>
-
-</nav>
-
-<main>
-
-<section class="card">
-
-<h2>
-
-财富驾驶舱
-
-</h2>
-
-<div class="dashboard">
-
-<div>
-
-<h3>
-
-净资产
-
-</h3>
-
-<p id="netWorth">
-
-¥0
-
-</p>
-
-</div>
-
-<div>
-
-<h3>
-
-总资产
-
-</h3>
-
-<p id="totalAssets">
-
-¥0
-
-</p>
-
-</div>
-
-<div>
-
-<h3>
-
-年度收入
-
-</h3>
-
-<p id="totalIncome">
-
-¥0
-
-</p>
-
-</div>
-
-<div>
-
-<h3>
-
-投资收益
-
-</h3>
-
-<p id="investmentReturn">
-
-¥0
-
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-<section class="card">
-
-<h2>
-
-🤖 AI CFO
-
 </h2>
 
 <p>
 
-家庭财富智能分析中心
+净资产：
+
+<span id="netWorth">
+
+¥0
+
+</span>
 
 </p>
+
+<p>
+
+总资产：
+
+<span id="totalAssets">
+
+¥0
+
+</span>
+
+</p>
+
+<p>
+
+年度收入：
+
+<span id="totalIncome">
+
+¥0
+
+</span>
+
+</p>
+
+<p>
+
+投资收益：
+
+<span id="investmentReturn">
+
+¥0
+
+</span>
+
+</p>
+
+</div>
+
+<!-- AI CFO -->
+
+<div class="section">
+
+<h2>
+
+🤖 AI CFO
+
+</h2>
 
 <button onclick="generateCFOReport()">
 
@@ -192,67 +160,65 @@ Family Wealth AI OS
 
 <div id="cfoReport">
 
-<p>
-
 等待生成财富分析报告...
-
-</p>
 
 </div>
 
-</section>
+</div>
 
-<section class="card">
+<!-- 资产中心 -->
+
+<div class="section">
 
 <h2>
 
-资产中心
+💰 资产中心
 
 </h2>
 
-<input id="assetName" placeholder="资产名称">
+<input id="assetName"
 
-<br><br>
+placeholder="资产名称">
 
-<input id="assetCategory" placeholder="资产类别">
+<input id="assetCategory"
 
-<br><br>
+placeholder="类别">
 
-<input id="assetType" placeholder="资产类型">
+<input id="assetType"
 
-<br><br>
+placeholder="类型">
 
-<input id="assetOwner" placeholder="所属人">
+<input id="assetOwner"
 
-<br><br>
+placeholder="所有人">
 
-<input id="assetCountry" placeholder="国家">
+<input id="assetCountry"
 
-<br><br>
+placeholder="国家">
 
-<input id="assetCurrency" placeholder="币种">
+<input id="assetCurrency"
 
-<br><br>
+placeholder="货币">
 
-<input id="assetInstitution" placeholder="机构">
+<input id="assetInstitution"
 
-<br><br>
+placeholder="机构">
 
-<input id="assetAccount" placeholder="账户">
+<input id="assetAccount"
 
-<br><br>
+placeholder="账号">
 
-<input id="assetCost" placeholder="买入成本">
+<input id="assetCost"
 
-<br><br>
+placeholder="成本">
 
-<input id="assetValue" placeholder="当前价值">
+<input id="assetValue"
 
-<br><br>
+placeholder="当前价值">
 
-<input id="assetNote" placeholder="备注">
+<input id="assetNote"
 
-<br><br>
+placeholder="备注">
 
 <button onclick="addNewAsset()">
 
@@ -264,34 +230,37 @@ Family Wealth AI OS
 
 </div>
 
-</section>
-<section class="card">
+</div>
+
+<!-- 收入中心 -->
+
+<div class="section">
 
 <h2>
 
-收入中心
+💵 收入中心
 
 </h2>
 
-<input id="incomeName" placeholder="收入名称">
+<input id="incomeName"
 
-<br><br>
+placeholder="收入名称">
 
-<input id="incomeCategory" placeholder="收入类别">
+<input id="incomeCategory"
 
-<br><br>
+placeholder="类别">
 
-<input id="incomeSource" placeholder="收入来源">
+<input id="incomeSource"
 
-<br><br>
+placeholder="来源">
 
-<input id="incomeAmount" placeholder="金额">
+<input id="incomeAmount"
 
-<br><br>
+placeholder="金额">
 
-<input id="incomePeriod" placeholder="周期（月/年）">
+<input id="incomePeriod"
 
-<br><br>
+placeholder="周期">
 
 <button onclick="addIncome()">
 
@@ -303,98 +272,135 @@ Family Wealth AI OS
 
 </div>
 
-</section>
+</div>
 
-<section class="card">
+<!-- 投资中心 -->
+
+<div class="section">
 
 <h2>
 
-投资中心
+📈 投资中心
 
 </h2>
 
-<input id="investmentName" placeholder="投资名称">
+<input id="investmentName"
 
-<br><br>
+placeholder="投资名称">
 
-<input id="investmentTicker" placeholder="股票代码">
+<input id="investmentTicker"
 
-<br><br>
+placeholder="代码">
 
-<input id="investmentType" placeholder="投资类型（股票/ETF/基金/债券）">
+<input id="investmentType"
 
-<br><br>
+placeholder="类型">
 
-<input id="investmentMarket" placeholder="市场">
+<input id="investmentMarket"
 
-<br><br>
+placeholder="市场">
 
-<label>
+<input id="investmentCurrency"
 
-买入日期
+placeholder="货币">
 
-</label>
+<h3>
 
-<input type="date" id="investmentBuyDate">
+买入信息
 
-<br><br>
+</h3>
 
-<input id="investmentBuyPrice" placeholder="买入价格">
+<input id="investmentBuyDate"
 
-<br><br>
+placeholder="买入日期"
 
-<input id="investmentQuantity" placeholder="数量">
+type="date">
 
-<br><br>
+<input id="investmentBuyPrice"
 
-<input id="investmentBuyAmount" placeholder="买入金额">
+placeholder="买入价格">
 
-<br><br>
+<input id="investmentBuyQuantity"
 
-<label>
+placeholder="买入数量">
 
-卖出日期
+<input id="investmentBuyAmount"
 
-</label>
+placeholder="买入金额(可选)">
 
-<input type="date" id="investmentSellDate">
+<h3>
 
-<br><br>
+当前库存
 
-<input id="investmentSellPrice" placeholder="卖出价格">
+</h3>
 
-<br><br>
+<input id="investmentCurrentPrice"
 
-<input id="investmentCurrentPrice" placeholder="当前价格">
+placeholder="当前价格">
 
-<br><br>
+<input id="investmentCurrentQuantity"
 
-<input id="investmentCurrentValue" placeholder="当前价值">
-<br><br>
+placeholder="当前数量">
 
-<input id="investmentNote" placeholder="备注">
+<input id="investmentCurrentValue"
 
-<br><br>
+placeholder="当前价值(可选)">
+
+<h3>
+
+卖出信息
+
+</h3>
+
+<input id="investmentSellDate"
+
+placeholder="卖出日期"
+
+type="date">
+
+<input id="investmentSellPrice"
+
+placeholder="卖出价格">
+
+<input id="investmentNote"
+
+placeholder="备注">
 
 <button onclick="addInvestment()">
 
 添加投资
 
 </button>
-<div id="investmentDashboard">
 
-</div>
+<h3>
+
+📦 投资库存 / 持仓
+
+</h3>
+
 <div id="investmentList">
 
 </div>
 
-</section>
+<h3>
 
-<section class="card">
+📊 投资分析
+
+</h3>
+
+<div id="investmentDashboard">
+
+</div>
+
+</div>
+
+<!-- 税务中心 -->
+
+<div class="section">
 
 <h2>
 
-税务中心
+🧾 税务中心
 
 </h2>
 
@@ -422,13 +428,15 @@ Family Wealth AI OS
 
 </p>
 
-</section>
+</div>
 
-<section class="card">
+<!-- 退休规划 -->
+
+<div class="section">
 
 <h2>
 
-退休规划
+🏖 退休规划
 
 </h2>
 
@@ -455,10 +463,6 @@ Family Wealth AI OS
 资产消耗模型
 
 </p>
-
-</section>
-
-</main>
 
 </div>
 
