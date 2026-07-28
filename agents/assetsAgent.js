@@ -106,11 +106,11 @@ const assetsAgent = {
 
         );
 
-        if(value>0){
+ if(value!==0){
 
-            return value;
+    return value;
 
-        }
+}
 
         let price =
 
