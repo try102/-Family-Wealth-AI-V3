@@ -2,9 +2,9 @@
 
 Family Wealth AI OS
 
-V5.0
+V5.2
 
-Wealth Engine V2.0
+Wealth Engine V5.2
 
 家庭财富统一总账引擎
 
@@ -12,7 +12,91 @@ Wealth Engine V2.0
 
 const wealthEngine = {
 
-    name:"Wealth Engine V2.0",
+    name:"Wealth Engine V5.2",
+
+    // ======================
+
+    // 分类标准化
+
+    // ======================
+
+    normalizeCategory(category){
+
+        if(!category){
+
+            return "其他";
+
+        }
+
+        let c =
+
+        category.toLowerCase();
+
+        if(
+
+            c.includes("stock") ||
+
+            c.includes("股票")
+
+        ){
+
+            return "股票";
+
+        }
+
+        if(
+
+            c.includes("fund") ||
+
+            c.includes("基金") ||
+
+            c.includes("etf")
+
+        ){
+
+            return "基金";
+
+        }
+
+        if(
+
+            c.includes("bond") ||
+
+            c.includes("债券")
+
+        ){
+
+            return "债券";
+
+        }
+
+        if(
+
+            c.includes("cash") ||
+
+            c.includes("现金")
+
+        ){
+
+            return "现金";
+
+        }
+
+        if(
+
+            c.includes("real") ||
+
+            c.includes("房")
+
+        ){
+
+            return "房地产";
+
+        }
+
+        return category;
+
+    },
 
     // ======================
 
@@ -66,25 +150,15 @@ const wealthEngine = {
 
         return {
 
-            // 总资产
-
             totalAssets,
-
-            // 净资产（暂未加入负债）
 
             netWorth:
 
             totalAssets,
 
-            // 普通资产
-
             normalAssets,
 
-            // 投资资产
-
             investmentAssets,
-
-            // 年度收入
 
             income:
 
@@ -94,17 +168,83 @@ const wealthEngine = {
 
             ),
 
-            // 投资收益
-
             investmentProfit:
 
             Number(
 
                 investmentData.profit || 0
 
-            )
+            ),
+
+            assetCount:
+
+            assetData.count || 0,
+
+            investmentCount:
+
+            investmentData.count || 0
 
         };
+
+    },
+
+    // ======================
+
+    // 投资库存
+
+    // ======================
+
+    investmentInventory(
+
+        investmentAgent
+
+    ){
+
+        return investmentAgent.view()
+
+        .map(item=>{
+
+            return {
+
+                name:item.name,
+
+                ticker:item.ticker || "",
+
+                type:
+
+                this.normalizeCategory(
+
+                    item.type
+
+                ),
+
+                quantity:
+
+                Number(
+
+                    item.currentQuantity || 0
+
+                ),
+
+                price:
+
+                Number(
+
+                    item.currentPrice || 0
+
+                ),
+
+                value:
+
+                Number(
+
+                    item.currentValue || 0
+
+                )
+
+            };
+
+        });
 
     },
 
@@ -130,7 +270,11 @@ const wealthEngine = {
 
             let category =
 
-            item.category || "其他";
+            this.normalizeCategory(
+
+                item.category
+
+            );
 
             if(!result[category]){
 
@@ -154,7 +298,11 @@ const wealthEngine = {
 
             let category =
 
-            item.type || "投资";
+            this.normalizeCategory(
+
+                item.type
+
+            );
 
             if(!result[category]){
 
@@ -314,7 +462,7 @@ const wealthEngine = {
 
     // ======================
 
-    // 完整报告
+    // 完整财富报告接口
 
     // ======================
 
@@ -342,11 +490,19 @@ const wealthEngine = {
 
             ),
 
-            assetAllocation:
+            allocation:
 
             this.assetAllocation(
 
                 assetsAgent,
+
+                investmentAgent
+
+            ),
+
+            investmentInventory:
+
+            this.investmentInventory(
 
                 investmentAgent
 
