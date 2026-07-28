@@ -2,13 +2,13 @@
 
 Family Wealth AI OS
 
-V5.0
+V5.2
 
 AI CFO Agent
 
-Wealth Engine 接入版
+Wealth Engine V5.2 Integration
 
-财富分析 + 资产配置分析
+财富智能分析中心
 
 */
 
@@ -16,7 +16,13 @@ import wealthEngine from "./wealthEngine.js";
 
 const cfoAgent = {
 
-    name:"AI CFO Agent",
+    name:"AI CFO Agent V5.2",
+
+    // ======================
+
+    // 初始化
+
+    // ======================
 
     init(){
 
@@ -40,9 +46,9 @@ const cfoAgent = {
 
     ){
 
-        let wealth =
+        let wealthReport =
 
-        wealthEngine.summary(
+        wealthEngine.report(
 
             assetsAgent,
 
@@ -51,6 +57,10 @@ const cfoAgent = {
             incomeAgent
 
         );
+
+        let wealth =
+
+        wealthReport.summary;
 
         let assets =
 
@@ -90,39 +100,27 @@ const cfoAgent = {
 
         );
 
+        // 未来连接退休Agent
+
         let planningScore = 20;
 
         let totalScore =
 
-        assetScore
+        assetScore +
 
-        +
+        incomeScore +
 
-        incomeScore
-
-        +
-
-        investmentScore
-
-        +
+        investmentScore +
 
         planningScore;
-
-        let allocation =
-
-        wealthEngine.assetAllocation(
-
-            assetsAgent,
-
-            investmentAgent
-
-        );
 
         return {
 
             title:
 
             "AI CFO 财富报告",
+
+            // 财富总览
 
             totalAssets:
 
@@ -158,11 +156,13 @@ const cfoAgent = {
 
             assetCount:
 
-            assets.count || 0,
+            wealth.assetCount || 0,
 
             investmentCount:
 
-            investment.count || 0,
+            wealth.investmentCount || 0,
+
+            // 财富评分
 
             wealthScore:
 
@@ -188,17 +188,39 @@ const cfoAgent = {
 
             },
 
+            // 资产配置
+
             allocation:
 
-            allocation,
+            wealthReport.allocation,
 
             allocationAdvice:
 
             this.allocationAdvice(
 
-                allocation
+                wealthReport.allocation
 
             ),
+
+            // 投资库存
+
+            investmentInventory:
+
+            wealthReport.investmentInventory,
+
+            // 所有人资产
+
+            ownerAllocation:
+
+            wealthReport.ownerAllocation,
+
+            // 国家配置
+
+            countryAllocation:
+
+            wealthReport.countryAllocation,
+
+            // AI建议
 
             advice:
 
@@ -371,9 +393,10 @@ const cfoAgent = {
         );
 
     },
-        // ======================
 
-    // 资产配置建议
+    // ======================
+
+    // 配置建议
 
     // ======================
 
@@ -381,85 +404,65 @@ const cfoAgent = {
 
         let advice=[];
 
+        let total=0;
+
+        Object.keys(allocation)
+
+        .forEach(key=>{
+
+            total +=
+
+            Number(
+
+                allocation[key] || 0
+
+            );
+
+        });
+
         Object.keys(allocation)
 
         .forEach(category=>{
 
-            let value = allocation[category];
+            let value =
 
-            // Wealth Engine V1.0 当前返回数字
+            Number(
 
-            // 后续升级百分比时兼容对象结构
+                allocation[category] || 0
 
-            let amount = 0;
-
-            if(typeof value==="object"){
-
-                amount =
-
-                Number(value.value || 0);
-
-            }
-
-            else{
-
-                amount =
-
-                Number(value || 0);
-
-            }
-
-            let total = 0;
-
-            Object.keys(allocation)
-
-            .forEach(key=>{
-
-                let item=allocation[key];
-
-                if(typeof item==="object"){
-
-                    total += Number(item.value || 0);
-
-                }
-
-                else{
-
-                    total += Number(item || 0);
-
-                }
-
-            });
-
-            let ratio=0;
+            );
 
             if(total>0){
 
-                ratio =
+                let ratio =
 
-                amount /
+                value /
 
                 total *
 
                 100;
 
-            }
+                if(ratio>60){
 
-            if(ratio>60){
+                    advice.push(
 
-                advice.push(
+                        category +
 
-                    category +
+                        "占比较高，需要关注集中风险"
 
-                    "占比较高，需要关注集中风险"
+                    );
 
-                );
+                }
 
             }
 
         });
 
-        if(advice.length===0){
+        if(
+
+            advice.length===0
+
+        ){
 
             advice.push(
 
@@ -551,7 +554,11 @@ const cfoAgent = {
 
         }
 
-        if(advice.length===0){
+        if(
+
+            advice.length===0
+
+        ){
 
             advice.push(
 
