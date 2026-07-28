@@ -2,21 +2,19 @@
 
 Family Wealth AI OS
 
-V5.4
+V5.4.1
 
 Assets Agent
 
-资产管理统一接口版
+资产管理 + 价值计算兼容版
 
 */
 
 const assetsAgent = {
 
-    name:"Assets Agent V5.4",
+    name:
 
-    storageKey:"assets",
-
-    assets:[],
+    "Assets Agent V5.4.1",
 
     // ======================
 
@@ -26,7 +24,21 @@ const assetsAgent = {
 
     init(){
 
-        this.load();
+        if(
+
+            !localStorage.getItem("assets")
+
+        ){
+
+            localStorage.setItem(
+
+                "assets",
+
+                JSON.stringify([])
+
+            );
+
+        }
 
         return "Assets Agent Ready";
 
@@ -34,35 +46,21 @@ const assetsAgent = {
 
     // ======================
 
-    // 读取数据
+    // 读取
 
     // ======================
 
-    load(){
+    getData(){
 
-        let data =
+        return JSON.parse(
 
-        localStorage.getItem(
+            localStorage.getItem("assets")
 
-            this.storageKey
+            ||
+
+            "[]"
 
         );
-
-        if(data){
-
-            this.assets =
-
-            JSON.parse(data);
-
-        }
-
-        else{
-
-            this.assets=[];
-
-            this.save();
-
-        }
 
     },
 
@@ -72,17 +70,13 @@ const assetsAgent = {
 
     // ======================
 
-    save(){
+    save(data){
 
         localStorage.setItem(
 
-            this.storageKey,
+            "assets",
 
-            JSON.stringify(
-
-                this.assets
-
-            )
+            JSON.stringify(data)
 
         );
 
@@ -90,45 +84,65 @@ const assetsAgent = {
 
     // ======================
 
-    // 自动计算价值
+    // 价值计算
 
     // ======================
 
-    calculateValue(item){
+    calculateValue(asset){
 
-        let price=
+        let value =
 
         Number(
 
-            item.price || 0
+            asset.value
+
+            ||
+
+            asset.currentValue
+
+            ||
+
+            0
 
         );
 
-        let quantity=
+        if(value>0){
+
+            return value;
+
+        }
+
+        let price =
 
         Number(
 
-            item.quantity || 0
+            asset.price || 0
+
+        );
+
+        let quantity =
+
+        Number(
+
+            asset.quantity || 0
 
         );
 
         if(
 
-            price>0 &&
+            price>0
+
+            &&
 
             quantity>0
 
         ){
 
-            return price*quantity;
+            return price * quantity;
 
         }
 
-        return Number(
-
-            item.value || 0
-
-        );
+        return 0;
 
     },
 
@@ -139,6 +153,10 @@ const assetsAgent = {
     // ======================
 
     add(asset){
+
+        let assets =
+
+        this.getData();
 
         let item={
 
@@ -168,7 +186,7 @@ const assetsAgent = {
 
             currency:
 
-            asset.currency || "CNY",
+            asset.currency || "",
 
             institution:
 
@@ -178,23 +196,17 @@ const assetsAgent = {
 
             asset.account || "",
 
+            value:
+
+            this.calculateValue(asset),
+
             price:
 
-            Number(
-
-                asset.price || 0
-
-            ),
+            Number(asset.price || 0),
 
             quantity:
 
-            Number(
-
-                asset.quantity || 0
-
-            ),
-
-            value:0,
+            Number(asset.quantity || 0),
 
             note:
 
@@ -202,87 +214,92 @@ const assetsAgent = {
 
         };
 
-        item.value=
+        assets.push(item);
 
-        this.calculateValue(item);
-
-        this.assets.push(item);
-
-        this.save();
+        this.save(assets);
 
         return item;
 
     },
+        // ======================
 
-    // ======================
-
-    // 查看
+    // 查看资产
 
     // ======================
 
     view(){
 
-        return this.assets;
+        return this.getData();
 
     },
 
     // ======================
 
-    // 编辑
+    // 编辑资产
 
     // ======================
 
     edit(id,newData){
 
-        let item=
+        let assets =
 
-        this.assets.find(
+        this.getData();
 
-            a=>a.id===id
+        let index =
+
+        assets.findIndex(
+
+            item => item.id === id
 
         );
 
-        if(!item){
+        if(index !== -1){
 
-            return "未找到资产";
+            assets[index] = {
+
+                ...assets[index],
+
+                ...newData
+
+            };
+
+            assets[index].value =
+
+            this.calculateValue(
+
+                assets[index]
+
+            );
 
         }
 
-        Object.assign(
+        this.save(assets);
 
-            item,
-
-            newData
-
-        );
-
-        item.value=
-
-        this.calculateValue(item);
-
-        this.save();
-
-        return item;
+        return assets;
 
     },
 
     // ======================
 
-    // 删除
+    // 删除资产
 
     // ======================
 
     delete(id){
 
-        this.assets=
+        let assets =
 
-        this.assets.filter(
+        this.getData();
 
-            a=>a.id!==id
+        assets =
+
+        assets.filter(
+
+            item => item.id !== id
 
         );
 
-        this.save();
+        this.save(assets);
 
         return "删除成功";
 
@@ -290,15 +307,19 @@ const assetsAgent = {
 
     // ======================
 
-    // 总资产统计
+    // 资产汇总
 
     // ======================
 
     summary(){
 
-        let totalValue=0;
+        let assets =
 
-        this.assets.forEach(item=>{
+        this.getData();
+
+        let totalValue = 0;
+
+        assets.forEach(item=>{
 
             totalValue +=
 
@@ -306,11 +327,13 @@ const assetsAgent = {
 
         });
 
-        return{
+        return {
 
             count:
 
-            this.assets.length,
+            assets.length,
+
+            totalValue:
 
             totalValue
 
@@ -320,29 +343,77 @@ const assetsAgent = {
 
     // ======================
 
-    // 分类统计
+    // 资产配置
 
     // ======================
 
-    allocation(){
+    allocationSummary(){
 
-        let result={};
+        let assets =
 
-        this.assets.forEach(item=>{
+        this.getData();
 
-            let category=
+        let categories={};
+
+        assets.forEach(item=>{
+
+            let category =
 
             item.category || "其他";
 
-            if(!result[category]){
+            if(!categories[category]){
 
-                result[category]=0;
+                categories[category]=0;
 
             }
 
-            result[category]+=
+            categories[category]+=
 
             this.calculateValue(item);
+
+        });
+
+        let total =
+
+        this.summary().totalValue;
+
+        let result={};
+
+        Object.keys(categories)
+
+        .forEach(category=>{
+
+            result[category]={
+
+                value:
+
+                categories[category],
+
+                percentage:
+
+                total>0
+
+                ?
+
+                (
+
+                    categories[category]
+
+                    /
+
+                    total
+
+                    *
+
+                    100
+
+                ).toFixed(2)
+
+                :
+
+                0
+
+            };
 
         });
 
