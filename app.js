@@ -139,6 +139,18 @@ function addNewAsset(){
 
             getValue("assetValue")
 
+            ||
+
+            getValue("assetCurrentValue")
+
+            ||
+
+            getValue("assetAmount")
+
+            ||
+
+            0
+
         ),
 
         note:getValue("assetNote")
