@@ -2,25 +2,37 @@
 
 Family Wealth AI OS
 
-V5.3
+V5.4
 
-AI CFO + Investment Inventory Integration
+Main Application
+
+统一接口连接层
 
 */
 
-import assetsAgent from "./agents/assetsAgent.js";
+import assetsAgent 
 
-import incomeAgent from "./agents/incomeAgent.js";
+from "./agents/assetsAgent.js";
 
-import investmentAgent from "./agents/investmentAgent.js";
+import incomeAgent 
 
-import taxAgent from "./agents/taxAgent.js";
+from "./agents/incomeAgent.js";
 
-import retirementAgent from "./agents/retirementAgent.js";
+import investmentAgent 
 
-import cfoAgent from "./agents/cfoAgent.js";
+from "./agents/investmentAgent.js";
 
-import wealthEngine from "./agents/wealthEngine.js";
+import taxAgent 
+
+from "./agents/taxAgent.js";
+
+import retirementAgent 
+
+from "./agents/retirementAgent.js";
+
+import cfoAgent 
+
+from "./agents/cfoAgent.js";
 
 // ======================
 
@@ -36,21 +48,21 @@ window.onload=function(){
 
     investmentAgent.init();
 
-    taxAgent.init();
+    if(taxAgent.init){
 
-    retirementAgent.init();
+        taxAgent.init();
+
+    }
+
+    if(retirementAgent.init){
+
+        retirementAgent.init();
+
+    }
 
     cfoAgent.init();
 
-    updateAssetDisplay();
-
-    updateIncomeDisplay();
-
-    updateInvestmentDisplay();
-
-    updateInvestmentDashboard();
-
-    updateDashboard();
+    refreshAll();
 
 };
 
@@ -62,12 +74,41 @@ window.onload=function(){
 
 function getValue(id){
 
-    let e=document.getElementById(id);
+    let el=
 
-    return e ? e.value : "";
+    document.getElementById(id);
+
+    return el
+
+    ?
+
+    el.value
+
+    :
+
+    "";
 
 }
 
+// ======================
+
+// 总刷新
+
+// ======================
+
+function refreshAll(){
+
+    updateAssetDisplay();
+
+    updateIncomeDisplay();
+
+    updateInvestmentDisplay();
+
+    updateInvestmentDashboard();
+
+    updateDashboard();
+
+}
 // ======================
 
 // 资产中心
@@ -94,12 +135,6 @@ function addNewAsset(){
 
         account:getValue("assetAccount"),
 
-        cost:Number(
-
-            getValue("assetCost")
-
-        ),
-
         value:Number(
 
             getValue("assetValue")
@@ -120,35 +155,59 @@ function addNewAsset(){
 
     assetsAgent.add(asset);
 
-    clearAssetInput();
+    clearInputs([
 
-    updateAssetDisplay();
+        "assetName",
 
-    updateDashboard();
+        "assetCategory",
+
+        "assetType",
+
+        "assetOwner",
+
+        "assetCountry",
+
+        "assetCurrency",
+
+        "assetInstitution",
+
+        "assetAccount",
+
+        "assetValue",
+
+        "assetNote"
+
+    ]);
+
+    refreshAll();
 
 }
 
 function updateAssetDisplay(){
 
-    let list=document.getElementById(
+    let box=
+
+    document.getElementById(
 
         "assetList"
 
     );
 
-    if(!list){
+    if(!box){
 
         return;
 
     }
 
-    list.innerHTML="";
+    box.innerHTML="";
 
     assetsAgent.view()
 
     .forEach(item=>{
 
-        let div=document.createElement(
+        let div=
+
+        document.createElement(
 
             "div"
 
@@ -176,7 +235,7 @@ ${item.type || ""}
 
 ¥${Number(
 
-item.value || 0
+item.value||0
 
 ).toLocaleString()}
 
@@ -196,7 +255,7 @@ item.value || 0
 
 `;
 
-        list.appendChild(div);
+        box.appendChild(div);
 
     });
 
@@ -220,9 +279,11 @@ function editAsset(id){
 
     }
 
-    let value=prompt(
+    let value=
 
-        "修改当前价值",
+    prompt(
+
+        "修改资产价值",
 
         item.value
 
@@ -242,9 +303,7 @@ function editAsset(id){
 
         );
 
-        updateAssetDisplay();
-
-        updateDashboard();
+        refreshAll();
 
     }
 
@@ -252,13 +311,11 @@ function editAsset(id){
 
 function deleteAsset(id){
 
-    if(confirm("确定删除该资产？")){
+    if(confirm("删除该资产？")){
 
         assetsAgent.delete(id);
 
-        updateAssetDisplay();
-
-        updateDashboard();
+        refreshAll();
 
     }
 
@@ -300,35 +357,49 @@ function addIncome(){
 
     incomeAgent.add(income);
 
-    clearIncomeInput();
+    clearInputs([
 
-    updateIncomeDisplay();
+        "incomeName",
 
-    updateDashboard();
+        "incomeCategory",
+
+        "incomeSource",
+
+        "incomeAmount",
+
+        "incomePeriod"
+
+    ]);
+
+    refreshAll();
 
 }
 
 function updateIncomeDisplay(){
 
-    let list=document.getElementById(
+    let box=
+
+    document.getElementById(
 
         "incomeList"
 
     );
 
-    if(!list){
+    if(!box){
 
         return;
 
     }
 
-    list.innerHTML="";
+    box.innerHTML="";
 
     incomeAgent.view()
 
     .forEach(item=>{
 
-        let div=document.createElement(
+        let div=
+
+        document.createElement(
 
             "div"
 
@@ -356,7 +427,7 @@ ${item.source || ""}
 
 ¥${Number(
 
-item.amount || 0
+item.amount||0
 
 ).toLocaleString()}
 
@@ -382,7 +453,7 @@ ${item.period || ""}
 
 `;
 
-        list.appendChild(div);
+        box.appendChild(div);
 
     });
 
@@ -406,7 +477,9 @@ function editIncome(id){
 
     }
 
-    let amount=prompt(
+    let amount=
+
+    prompt(
 
         "修改收入金额",
 
@@ -428,9 +501,7 @@ function editIncome(id){
 
         );
 
-        updateIncomeDisplay();
-
-        updateDashboard();
+        refreshAll();
 
     }
 
@@ -438,20 +509,18 @@ function editIncome(id){
 
 function deleteIncome(id){
 
-    if(confirm("确定删除该收入记录？")){
+    if(confirm("删除该收入？")){
 
         incomeAgent.delete(id);
 
-        updateIncomeDisplay();
-
-        updateDashboard();
+        refreshAll();
 
     }
 
 }
 // ======================
 
-// 投资中心 V5.3
+// 投资中心
 
 // ======================
 
@@ -499,16 +568,6 @@ function addInvestment(){
 
         ),
 
-        buyAmount:
-
-        Number(
-
-            getValue("investmentBuyAmount")
-
-        ),
-
-        // 卖出信息
-
         sellDate:
 
         getValue("investmentSellDate"),
@@ -529,21 +588,11 @@ function addInvestment(){
 
         ),
 
-        // 当前库存
-
         currentPrice:
 
         Number(
 
             getValue("investmentCurrentPrice")
-
-        ),
-
-        currentValue:
-
-        Number(
-
-            getValue("investmentCurrentValue")
 
         ),
 
@@ -555,99 +604,81 @@ function addInvestment(){
 
     if(!investment.name){
 
-        alert("请输入投资名称");
+        alert(
+
+            "请输入投资名称"
+
+        );
 
         return;
 
     }
 
-    investmentAgent.add(investment);
+    investmentAgent.add(
 
-    clearInvestmentInput();
+        investment
 
-    updateInvestmentDisplay();
+    );
 
-    updateInvestmentDashboard();
+    clearInputs([
 
-    updateDashboard();
+        "investmentName",
+
+        "investmentTicker",
+
+        "investmentType",
+
+        "investmentMarket",
+
+        "investmentCurrency",
+
+        "investmentBuyDate",
+
+        "investmentBuyPrice",
+
+        "investmentBuyQuantity",
+
+        "investmentSellDate",
+
+        "investmentSellPrice",
+
+        "investmentSellQuantity",
+
+        "investmentCurrentPrice",
+
+        "investmentNote"
+
+    ]);
+
+    refreshAll();
 
 }
 
 function updateInvestmentDisplay(){
 
-    let list=document.getElementById(
+    let box=
+
+    document.getElementById(
 
         "investmentList"
 
     );
 
-    if(!list){
+    if(!box){
 
         return;
 
     }
 
-    list.innerHTML="";
+    box.innerHTML="";
 
-    investmentAgent.view()
+    investmentAgent.inventory()
 
     .forEach(item=>{
 
-        let buyQuantity =
+        let div=
 
-        Number(
-
-            item.buyQuantity || 0
-
-        );
-
-        let sellQuantity =
-
-        Number(
-
-            item.sellQuantity || 0
-
-        );
-
-        let remaining =
-
-        buyQuantity -
-
-        sellQuantity;
-
-        let profit =
-
-        Number(
-
-            item.currentValue || 0
-
-        )
-
-        -
-
-        Number(
-
-            item.buyAmount || 0
-
-        );
-
-        let rate=0;
-
-        if(item.buyAmount>0){
-
-            rate=(
-
-                profit /
-
-                item.buyAmount *
-
-                100
-
-            ).toFixed(2);
-
-        }
-
-        let div=document.createElement(
+        document.createElement(
 
             "div"
 
@@ -667,47 +698,7 @@ ${item.ticker || ""}
 
 类型：
 
-${item.type || "其他"}
-
-<br><br>
-
-📥 买入记录
-
-<br>
-
-买入数量：
-
-${buyQuantity}
-
-<br>
-
-买入成本：
-
-¥${Number(
-
-item.buyAmount || 0
-
-).toLocaleString()}
-
-<br><br>
-
-📤 卖出记录
-
-<br>
-
-卖出数量：
-
-${sellQuantity}
-
-<br>
-
-卖出价格：
-
-¥${Number(
-
-item.sellPrice || 0
-
-).toLocaleString()}
+${item.type || ""}
 
 <br><br>
 
@@ -715,19 +706,9 @@ item.sellPrice || 0
 
 <br>
 
-剩余数量：
+持仓数量：
 
-${remaining}
-
-<br>
-
-当前价格：
-
-¥${Number(
-
-item.currentPrice || 0
-
-).toLocaleString()}
+${item.remainingQuantity}
 
 <br>
 
@@ -735,7 +716,7 @@ item.currentPrice || 0
 
 ¥${Number(
 
-item.currentValue || 0
+item.marketValue||0
 
 ).toLocaleString()}
 
@@ -743,21 +724,13 @@ item.currentValue || 0
 
 收益：
 
-¥${profit.toLocaleString()}
+¥${Number(
+
+item.totalProfit||0
+
+).toLocaleString()}
 
 <br>
-
-收益率：
-
-${rate}%
-
-<br><br>
-
-<button onclick="editInvestment(${item.id})">
-
-编辑
-
-</button>
 
 <button onclick="deleteInvestment(${item.id})">
 
@@ -767,73 +740,19 @@ ${rate}%
 
 `;
 
-        list.appendChild(div);
+        box.appendChild(div);
 
     });
 
 }
 
-function editInvestment(id){
-
-    let item=
-
-    investmentAgent.view()
-
-    .find(
-
-        i=>i.id===id
-
-    );
-
-    if(!item){
-
-        return;
-
-    }
-
-    let value=prompt(
-
-        "修改当前市值",
-
-        item.currentValue
-
-    );
-
-    if(value!==null){
-
-        investmentAgent.edit(
-
-            id,
-
-            {
-
-                currentValue:Number(value)
-
-            }
-
-        );
-
-        updateInvestmentDisplay();
-
-        updateInvestmentDashboard();
-
-        updateDashboard();
-
-    }
-
-}
-
 function deleteInvestment(id){
 
-    if(confirm("确定删除该投资记录？")){
+    if(confirm("删除投资记录？")){
 
         investmentAgent.delete(id);
 
-        updateInvestmentDisplay();
-
-        updateInvestmentDashboard();
-
-        updateDashboard();
+        refreshAll();
 
     }
 
@@ -841,13 +760,15 @@ function deleteInvestment(id){
 
 // ======================
 
-// 投资 Dashboard
+// 投资分析
 
 // ======================
 
 function updateInvestmentDashboard(){
 
-    let box=document.getElementById(
+    let box=
+
+    document.getElementById(
 
         "investmentDashboard"
 
@@ -861,15 +782,11 @@ function updateInvestmentDashboard(){
 
     let data=
 
-    investmentAgent.dashboardSummary();
+    investmentAgent.summary();
 
     let risk=
 
     investmentAgent.riskSummary();
-
-    let performance=
-
-    investmentAgent.performanceSummary();
 
     box.innerHTML=`
 
@@ -879,11 +796,11 @@ function updateInvestmentDashboard(){
 
 <p>
 
-投资总成本：
+投资成本：
 
 ¥${Number(
 
-data.totalCost || 0
+data.totalCost||0
 
 ).toLocaleString()}
 
@@ -891,11 +808,11 @@ data.totalCost || 0
 
 <p>
 
-当前投资价值：
+当前价值：
 
 ¥${Number(
 
-data.totalValue || 0
+data.totalValue||0
 
 ).toLocaleString()}
 
@@ -907,7 +824,7 @@ data.totalValue || 0
 
 ¥${Number(
 
-data.profit || 0
+data.profit||0
 
 ).toLocaleString()}
 
@@ -917,17 +834,7 @@ data.profit || 0
 
 收益率：
 
-${data.returnRate || 0}%
-
-</p>
-
-<h3>📦 投资库存</h3>
-
-<p>
-
-持仓品种：
-
-${data.count || 0}
+${data.returnRate}%
 
 </p>
 
@@ -943,14 +850,6 @@ ${risk.level}
 
 <p>
 
-最大类别：
-
-${risk.maxCategory}
-
-</p>
-
-<p>
-
 集中度：
 
 ${risk.maxRatio}%
@@ -959,47 +858,18 @@ ${risk.maxRatio}%
 
 <ul>
 
-${
+${risk.advice.map(
 
-risk.advice.map(
+x=>`<li>${x}</li>`
 
-item=>`<li>${item}</li>`
-
-).join("")
-
-}
+).join("")}
 
 </ul>
-
-<h3>📊 投资表现</h3>
-
-<p>
-
-盈利项目：
-
-${performance.profitCount || 0}
-
-</p>
-
-<p>
-
-亏损项目：
-
-${performance.lossCount || 0}
-
-</p>
-
-<p>
-
-平均收益率：
-
-${performance.averageReturnRate || 0}%
-
-</p>
 
 `;
 
 }
+
 // ======================
 
 // AI CFO
@@ -1008,7 +878,7 @@ ${performance.averageReturnRate || 0}%
 
 function generateCFOReport(){
 
-    let report =
+    let report=
 
     cfoAgent.report(
 
@@ -1020,7 +890,9 @@ function generateCFOReport(){
 
     );
 
-    let box=document.getElementById(
+    let box=
+
+    document.getElementById(
 
         "cfoReport"
 
@@ -1040,11 +912,11 @@ function generateCFOReport(){
 
 <p>
 
-当前总资产：
+总资产：
 
 ¥${Number(
 
-report.totalAssets || 0
+report.totalAssets||0
 
 ).toLocaleString()}
 
@@ -1056,7 +928,7 @@ report.totalAssets || 0
 
 ¥${Number(
 
-report.netWorth || 0
+report.netWorth||0
 
 ).toLocaleString()}
 
@@ -1068,7 +940,7 @@ report.netWorth || 0
 
 ¥${Number(
 
-report.totalIncome || 0
+report.totalIncome||0
 
 ).toLocaleString()}
 
@@ -1080,33 +952,9 @@ report.totalIncome || 0
 
 ¥${Number(
 
-report.investmentProfit || 0
+report.investmentProfit||0
 
 ).toLocaleString()}
-
-</p>
-
-<p>
-
-资产数量：
-
-${report.assetCount || 0}
-
-</p>
-
-<p>
-
-投资数量：
-
-${report.investmentCount || 0}
-
-</p>
-
-<p>
-
-财富健康评分：
-
-${report.wealthScore || 0}/100
 
 </p>
 
@@ -1118,19 +966,11 @@ AI建议：
 
 <ul>
 
-${
+${report.advice.map(
 
-(report.advice || [])
+x=>`<li>${x}</li>`
 
-.map(
-
-item=>`<li>${item}</li>`
-
-)
-
-.join("")
-
-}
+).join("")}
 
 </ul>
 
@@ -1146,13 +986,19 @@ item=>`<li>${item}</li>`
 
 function updateDashboard(){
 
-    let wealth;
+    let wealth=
 
-    try{
+    import("./agents/wealthEngine.js")
 
-        wealth =
+    .then(module=>{
 
-        wealthEngine.summary(
+        let engine=
+
+        module.default;
+
+        let data=
+
+        engine.summary(
 
             assetsAgent,
 
@@ -1162,247 +1008,79 @@ function updateDashboard(){
 
         );
 
-    }
+        let ids={
 
-    catch(e){
+            totalAssets:
 
-        console.log(
+            data.totalAssets,
 
-            "Wealth Engine error",
+            netWorth:
 
-            e
+            data.netWorth,
 
-        );
+            totalIncome:
 
-        return;
+            data.totalIncome,
 
-    }
+            investmentReturn:
 
-    let total=
+            data.investmentProfit
 
-    document.getElementById(
+        };
 
-        "totalAssets"
+        Object.keys(ids)
 
-    );
+        .forEach(id=>{
 
-    if(total){
+            let el=
 
-        total.innerHTML=
+            document.getElementById(id);
 
-        "¥"+Number(
+            if(el){
 
-            wealth.totalAssets || 0
+                el.innerHTML=
 
-        ).toLocaleString();
+                "¥"+Number(
 
-    }
+                    ids[id]||0
 
-    let net=
+                ).toLocaleString();
 
-    document.getElementById(
+            }
 
-        "netWorth"
+        });
 
-    );
-
-    if(net){
-
-        net.innerHTML=
-
-        "¥"+Number(
-
-            wealth.netWorth || 0
-
-        ).toLocaleString();
-
-    }
-
-    let income=
-
-    document.getElementById(
-
-        "totalIncome"
-
-    );
-
-    if(income){
-
-        income.innerHTML=
-
-        "¥"+Number(
-
-            wealth.income || 0
-
-        ).toLocaleString();
-
-    }
-
-    let profit=
-
-    document.getElementById(
-
-        "investmentReturn"
-
-    );
-
-    if(profit){
-
-        profit.innerHTML=
-
-        "¥"+Number(
-
-            wealth.investmentProfit || 0
-
-        ).toLocaleString();
-
-    }
+    });
 
 }
 
 // ======================
 
-// 清空资产输入
+// 清空输入
 
 // ======================
 
-function clearAssetInput(){
+function clearInputs(ids){
 
-[
+    ids.forEach(id=>{
 
-"assetName",
+        let el=
 
-"assetCategory",
+        document.getElementById(id);
 
-"assetType",
+        if(el){
 
-"assetOwner",
+            el.value="";
 
-"assetCountry",
+        }
 
-"assetCurrency",
-
-"assetInstitution",
-
-"assetAccount",
-
-"assetCost",
-
-"assetValue",
-
-"assetNote"
-
-]
-
-.forEach(id=>{
-
-let e=document.getElementById(id);
-
-if(e){
-
-    e.value="";
-
-}
-
-});
+    });
 
 }
 
 // ======================
 
-// 清空收入输入
-
-// ======================
-
-function clearIncomeInput(){
-
-[
-
-"incomeName",
-
-"incomeCategory",
-
-"incomeSource",
-
-"incomeAmount",
-
-"incomePeriod"
-
-]
-
-.forEach(id=>{
-
-let e=document.getElementById(id);
-
-if(e){
-
-    e.value="";
-
-}
-
-});
-
-}
-
-// ======================
-
-// 清空投资输入
-
-// ======================
-
-function clearInvestmentInput(){
-
-[
-
-"investmentName",
-
-"investmentTicker",
-
-"investmentType",
-
-"investmentMarket",
-
-"investmentCurrency",
-
-"investmentBuyDate",
-
-"investmentBuyPrice",
-
-"investmentBuyQuantity",
-
-"investmentBuyAmount",
-
-"investmentSellDate",
-
-"investmentSellPrice",
-
-"investmentSellQuantity",
-
-"investmentCurrentPrice",
-
-"investmentCurrentValue",
-
-"investmentNote"
-
-]
-
-.forEach(id=>{
-
-let e=document.getElementById(id);
-
-if(e){
-
-    e.value="";
-
-}
-
-});
-
-}
-
-// ======================
-
-// 暴露给HTML
+// 暴露函数
 
 // ======================
 
@@ -1433,10 +1111,6 @@ deleteIncome;
 window.addInvestment=
 
 addInvestment;
-
-window.editInvestment=
-
-editInvestment;
 
 window.deleteInvestment=
 
