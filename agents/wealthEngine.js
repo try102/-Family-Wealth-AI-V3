@@ -4,15 +4,15 @@ Family Wealth AI OS
 
 V5.0
 
-Wealth Engine V1.0
+Wealth Engine V2.0
 
-家庭财富总账引擎
+家庭财富统一总账引擎
 
 */
 
 const wealthEngine = {
 
-    name:"Wealth Engine",
+    name:"Wealth Engine V2.0",
 
     // ======================
 
@@ -42,7 +42,7 @@ const wealthEngine = {
 
         incomeAgent.summary();
 
-        let assetValue =
+        let normalAssets =
 
         Number(
 
@@ -50,7 +50,7 @@ const wealthEngine = {
 
         );
 
-        let investmentValue =
+        let investmentAssets =
 
         Number(
 
@@ -58,51 +58,51 @@ const wealthEngine = {
 
         );
 
+        let totalAssets =
+
+        normalAssets +
+
+        investmentAssets;
+
         return {
 
             // 总资产
 
-            totalAssets:
+            totalAssets,
 
-            assetValue
-
-            +
-
-            investmentValue,
-
-            // 当前净资产
+            // 净资产（暂未加入负债）
 
             netWorth:
 
-            assetValue
+            totalAssets,
 
-            +
+            // 普通资产
 
-            investmentValue,
-
-            // 非投资资产
-
-            normalAssets:
-
-            assetValue,
+            normalAssets,
 
             // 投资资产
 
-            investmentAssets:
+            investmentAssets,
 
-            investmentValue,
-
-            // 收入
+            // 年度收入
 
             income:
 
-            incomeData.totalIncome || 0,
+            Number(
+
+                incomeData.totalIncome || 0
+
+            ),
 
             // 投资收益
 
             investmentProfit:
 
-            investmentData.profit || 0
+            Number(
+
+                investmentData.profit || 0
+
+            )
 
         };
 
@@ -110,7 +110,7 @@ const wealthEngine = {
 
     // ======================
 
-    // 资产分类汇总
+    // 资产配置
 
     // ======================
 
@@ -124,11 +124,9 @@ const wealthEngine = {
 
         let result={};
 
-        let assets =
+        assetsAgent.view()
 
-        assetsAgent.view();
-
-        assets.forEach(item=>{
+        .forEach(item=>{
 
             let category =
 
@@ -140,9 +138,7 @@ const wealthEngine = {
 
             }
 
-            result[category]
-
-            +=
+            result[category]+=
 
             Number(
 
@@ -152,11 +148,9 @@ const wealthEngine = {
 
         });
 
-        let investments =
+        investmentAgent.view()
 
-        investmentAgent.view();
-
-        investments.forEach(item=>{
+        .forEach(item=>{
 
             let category =
 
@@ -168,9 +162,7 @@ const wealthEngine = {
 
             }
 
-            result[category]
-
-            +=
+            result[category]+=
 
             Number(
 
@@ -186,7 +178,7 @@ const wealthEngine = {
 
     // ======================
 
-    // 所有人分类
+    // 所有人资产
 
     // ======================
 
@@ -200,11 +192,9 @@ const wealthEngine = {
 
         let result={};
 
-        let assets =
+        assetsAgent.view()
 
-        assetsAgent.view();
-
-        assets.forEach(item=>{
+        .forEach(item=>{
 
             let owner =
 
@@ -216,9 +206,7 @@ const wealthEngine = {
 
             }
 
-            result[owner]
-
-            +=
+            result[owner]+=
 
             Number(
 
@@ -228,11 +216,9 @@ const wealthEngine = {
 
         });
 
-        let investments =
+        investmentAgent.view()
 
-        investmentAgent.view();
-
-        investments.forEach(item=>{
+        .forEach(item=>{
 
             let owner =
 
@@ -244,9 +230,7 @@ const wealthEngine = {
 
             }
 
-            result[owner]
-
-            +=
+            result[owner]+=
 
             Number(
 
@@ -262,7 +246,7 @@ const wealthEngine = {
 
     // ======================
 
-    // 国家地区分类
+    // 国家地区配置
 
     // ======================
 
@@ -276,11 +260,9 @@ const wealthEngine = {
 
         let result={};
 
-        let assets =
+        assetsAgent.view()
 
-        assetsAgent.view();
-
-        assets.forEach(item=>{
+        .forEach(item=>{
 
             let country =
 
@@ -292,9 +274,7 @@ const wealthEngine = {
 
             }
 
-            result[country]
-
-            +=
+            result[country]+=
 
             Number(
 
@@ -304,11 +284,9 @@ const wealthEngine = {
 
         });
 
-        let investments =
+        investmentAgent.view()
 
-        investmentAgent.view();
-
-        investments.forEach(item=>{
+        .forEach(item=>{
 
             let country =
 
@@ -320,9 +298,7 @@ const wealthEngine = {
 
             }
 
-            result[country]
-
-            +=
+            result[country]+=
 
             Number(
 
@@ -338,7 +314,7 @@ const wealthEngine = {
 
     // ======================
 
-    // 完整财富报告接口
+    // 完整报告
 
     // ======================
 
