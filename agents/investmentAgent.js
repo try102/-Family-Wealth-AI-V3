@@ -696,3 +696,140 @@ const investmentAgent = {
         };
 
     },
+    // ======================
+
+    // 收益表现分析
+
+    // ======================
+
+    performanceSummary(){
+
+        let profitCount=0;
+
+        let lossCount=0;
+
+        let totalRate=0;
+
+        let count=0;
+
+        this.investments.forEach(item=>{
+
+            let cost =
+
+            Number(
+
+                item.buyAmount || 0
+
+            );
+
+            let value =
+
+            Number(
+
+                item.currentValue || 0
+
+            );
+
+            let profit =
+
+            value -
+
+            cost;
+
+            if(profit>0){
+
+                profitCount++;
+
+            }
+
+            else if(profit<0){
+
+                lossCount++;
+
+            }
+
+            if(cost>0){
+
+                totalRate +=
+
+                profit /
+
+                cost;
+
+                count++;
+
+            }
+
+        });
+
+        return {
+
+            profitCount,
+
+            lossCount,
+
+            averageReturnRate:
+
+            count>0
+
+            ?
+
+            (
+
+                totalRate /
+
+                count *
+
+                100
+
+            ).toFixed(2)
+
+            :
+
+            0
+
+        };
+
+    },
+
+    // ======================
+
+    // AI投资分析接口
+
+    // ======================
+
+    analyze(){
+
+        return {
+
+            message:
+
+            "投资组合分析完成",
+
+            summary:
+
+            this.summary(),
+
+            dashboard:
+
+            this.dashboardSummary(),
+
+            allocation:
+
+            this.allocation(),
+
+            risk:
+
+            this.riskSummary(),
+
+            performance:
+
+            this.performanceSummary()
+
+        };
+
+    }
+
+};
+
+export default investmentAgent;
