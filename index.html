@@ -6,11 +6,11 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>
 
-Family Wealth AI OS V5.2
+Family Wealth AI OS V5.3
 
 </title>
 
@@ -18,15 +18,9 @@ Family Wealth AI OS V5.2
 
 body{
 
-font-family:
+font-family:Arial, sans-serif;
 
-Arial,
-
-"Microsoft YaHei",
-
-sans-serif;
-
-padding:20px;
+margin:20px;
 
 background:#f5f5f5;
 
@@ -40,17 +34,19 @@ padding:20px;
 
 margin-bottom:20px;
 
-border-radius:12px;
+border-radius:10px;
 
 }
 
 input,select{
 
-width:95%;
+display:block;
+
+margin:8px 0;
 
 padding:8px;
 
-margin:5px;
+width:90%;
 
 }
 
@@ -60,21 +56,11 @@ padding:8px 15px;
 
 margin:5px;
 
-cursor:pointer;
-
 }
 
-h2{
+h1,h2,h3{
 
 color:#333;
-
-}
-
-hr{
-
-border:0;
-
-border-top:1px solid #ddd;
 
 }
 
@@ -86,9 +72,15 @@ border-top:1px solid #ddd;
 
 <h1>
 
-Family Wealth AI OS V5.2
+Family Wealth AI OS V5.3
 
 </h1>
+
+<!-- ======================
+
+财富驾驶舱
+
+====================== -->
 
 <div class="card">
 
@@ -148,11 +140,11 @@ Family Wealth AI OS V5.2
 
 </div>
 
-<!-- ===================== -->
+<!-- ======================
 
-<!-- AI CFO -->
+AI CFO
 
-<!-- ===================== -->
+====================== -->
 
 <div class="card">
 
@@ -176,11 +168,11 @@ Family Wealth AI OS V5.2
 
 </div>
 
-<!-- ===================== -->
+<!-- ======================
 
-<!-- 资产中心 -->
+资产中心
 
-<!-- ===================== -->
+====================== -->
 
 <div class="card">
 
@@ -212,7 +204,7 @@ placeholder="国家">
 
 <input id="assetCurrency"
 
-placeholder="货币">
+placeholder="币种">
 
 <input id="assetInstitution"
 
@@ -245,12 +237,11 @@ placeholder="备注">
 </div>
 
 </div>
+<!-- ======================
 
-<!-- ===================== -->
+收入中心
 
-<!-- 收入中心 -->
-
-<!-- ===================== -->
+====================== -->
 
 <div class="card">
 
@@ -291,11 +282,12 @@ placeholder="周期">
 </div>
 
 </div>
-<!-- ===================== -->
 
-<!-- 投资中心 V5.2 -->
+<!-- ======================
 
-<!-- ===================== -->
+投资中心 V5.3
+
+====================== -->
 
 <div class="card">
 
@@ -304,6 +296,12 @@ placeholder="周期">
 📈 投资中心
 
 </h2>
+
+<h3>
+
+新增投资
+
+</h3>
 
 <input id="investmentName"
 
@@ -315,7 +313,7 @@ placeholder="代码">
 
 <input id="investmentType"
 
-placeholder="类型">
+placeholder="类型（股票/基金/债券等）">
 
 <input id="investmentMarket"
 
@@ -323,67 +321,97 @@ placeholder="市场">
 
 <input id="investmentCurrency"
 
-placeholder="货币">
+placeholder="币种">
 
 <h3>
 
-买入信息
+📥 买入信息
 
 </h3>
 
-<input id="investmentBuyDate"
+<input 
 
-type="date"
+id="investmentBuyDate"
 
-placeholder="买入日期">
+type="date">
 
-<input id="investmentBuyPrice"
+<input 
+
+id="investmentBuyPrice"
+
+type="number"
 
 placeholder="买入价格">
 
-<input id="investmentBuyQuantity"
+<input 
+
+id="investmentBuyQuantity"
+
+type="number"
 
 placeholder="买入数量">
 
-<input id="investmentBuyAmount"
+<input 
 
-placeholder="买入金额（可直接输入）">
+id="investmentBuyAmount"
 
-<h3>
+type="number"
 
-当前持仓
-
-</h3>
-
-<input id="investmentCurrentPrice"
-
-placeholder="当前价格">
-
-<input id="investmentCurrentQuantity"
-
-placeholder="当前数量">
-
-<input id="investmentCurrentValue"
-
-placeholder="当前价值（可直接输入）">
+placeholder="买入金额（可选）">
 
 <h3>
 
-卖出信息
+📤 卖出信息
 
 </h3>
 
-<input id="investmentSellDate"
+<input 
 
-type="date"
+id="investmentSellDate"
 
-placeholder="卖出日期">
+type="date">
 
-<input id="investmentSellPrice"
+<input 
+
+id="investmentSellPrice"
+
+type="number"
 
 placeholder="卖出价格">
 
-<input id="investmentNote"
+<input 
+
+id="investmentSellQuantity"
+
+type="number"
+
+placeholder="卖出数量">
+
+<h3>
+
+📦 当前持仓
+
+</h3>
+
+<input 
+
+id="investmentCurrentPrice"
+
+type="number"
+
+placeholder="当前价格">
+
+<input 
+
+id="investmentCurrentValue"
+
+type="number"
+
+placeholder="当前市值（可选）">
+
+<input 
+
+id="investmentNote"
 
 placeholder="备注">
 
@@ -393,98 +421,28 @@ placeholder="备注">
 
 </button>
 
-<div id="investmentDashboard">
-
-</div>
-
 <div id="investmentList">
 
 </div>
 
 </div>
 
-<!-- ===================== -->
+<!-- ======================
 
-<!-- 税务中心 -->
+投资分析
 
-<!-- ===================== -->
-
-<div class="card">
-
-<h2>
-
-🧾 税务中心
-
-</h2>
-
-<p>
-
-美国税务规划
-
-</p>
-
-<p>
-
-中国税务规划
-
-</p>
-
-<p>
-
-资本利得税
-
-</p>
-
-<p>
-
-税务优化
-
-</p>
-
-</div>
-
-<!-- ===================== -->
-
-<!-- 退休规划 -->
-
-<!-- ===================== -->
+====================== -->
 
 <div class="card">
 
 <h2>
 
-🏖 退休规划
+📊 投资分析
 
 </h2>
 
-<p>
-
-退休年龄规划
-
-</p>
-
-<p>
-
-退休现金流预测
-
-</p>
-
-<p>
-
-医疗支出规划
-
-</p>
-
-<p>
-
-资产消耗模型
-
-</p>
+<div id="investmentDashboard">
 
 </div>
 
-<script type="module" src="app.js"></script>
-
-</body>
-
-</html>
+</div>
