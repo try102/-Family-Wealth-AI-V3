@@ -2,17 +2,21 @@
 
 Family Wealth AI OS
 
-V5.4
+V5.4.1
 
 Wealth Engine
 
 家庭财富统一总账引擎
 
+接口兼容版
+
 */
 
 const wealthEngine={
 
-    name:"Wealth Engine V5.4",
+    name:
+
+    "Wealth Engine V5.4.1",
 
     // ======================
 
@@ -130,7 +134,7 @@ const wealthEngine={
 
         .forEach(item=>{
 
-            let category=
+            let category =
 
             item.category || "其他";
 
@@ -154,7 +158,7 @@ const wealthEngine={
 
         .forEach(item=>{
 
-            let category=
+            let category =
 
             item.type || "投资";
 
@@ -168,7 +172,7 @@ const wealthEngine={
 
             Number(
 
-                investmentAgent.currentValue(item)
+                investmentAgent.marketValue(item)
 
                 ||
 
@@ -202,7 +206,7 @@ const wealthEngine={
 
         .forEach(item=>{
 
-            let owner=
+            let owner =
 
             item.owner || "未分类";
 
@@ -226,7 +230,7 @@ const wealthEngine={
 
         .forEach(item=>{
 
-            let owner=
+            let owner =
 
             item.owner || "未分类";
 
@@ -240,7 +244,7 @@ const wealthEngine={
 
             Number(
 
-                investmentAgent.currentValue(item)
+                investmentAgent.marketValue(item)
 
                 ||
 
@@ -274,7 +278,7 @@ const wealthEngine={
 
         .forEach(item=>{
 
-            let country=
+            let country =
 
             item.country || "其他";
 
@@ -298,7 +302,7 @@ const wealthEngine={
 
         .forEach(item=>{
 
-            let country=
+            let country =
 
             item.market || "其他";
 
@@ -312,7 +316,7 @@ const wealthEngine={
 
             Number(
 
-                investmentAgent.currentValue(item)
+                investmentAgent.marketValue(item)
 
                 ||
 
