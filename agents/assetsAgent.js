@@ -2,19 +2,21 @@
 
 Family Wealth AI OS
 
-V5.2
+V5.4
 
 Assets Agent
 
-资产管理 + 价格×数量自动计算
-
-兼容旧数据版
+资产管理统一接口版
 
 */
 
 const assetsAgent = {
 
-    name:"Assets Agent V5.2",
+    name:"Assets Agent V5.4",
+
+    storageKey:"assets",
+
+    assets:[],
 
     // ======================
 
@@ -24,85 +26,63 @@ const assetsAgent = {
 
     init(){
 
-        // 兼容旧版本 assets
+        this.load();
 
-        let oldData =
+        return "Assets Agent Ready";
 
-        localStorage.getItem("assets");
+    },
 
-        let newData =
+    // ======================
 
-        localStorage.getItem("wealth_assets");
+    // 读取数据
 
-        if(!newData){
+    // ======================
 
-            if(oldData){
+    load(){
 
-                localStorage.setItem(
+        let data =
 
-                    "wealth_assets",
+        localStorage.getItem(
 
-                    oldData
+            this.storageKey
 
-                );
+        );
 
-            }
+        if(data){
 
-            else{
+            this.assets =
 
-                localStorage.setItem(
-
-                    "wealth_assets",
-
-                    JSON.stringify([])
-
-                );
-
-            }
+            JSON.parse(data);
 
         }
 
-        return "Assets Agent V5.2 Ready";
+        else{
+
+            this.assets=[];
+
+            this.save();
+
+        }
 
     },
 
     // ======================
 
-    // 获取数据
+    // 保存
 
     // ======================
 
-    getData(){
-
-        return JSON.parse(
-
-            localStorage.getItem(
-
-                "wealth_assets"
-
-            )
-
-            ||
-
-            "[]"
-
-        );
-
-    },
-
-    // ======================
-
-    // 保存数据
-
-    // ======================
-
-    save(data){
+    save(){
 
         localStorage.setItem(
 
-            "wealth_assets",
+            this.storageKey,
 
-            JSON.stringify(data)
+            JSON.stringify(
+
+                this.assets
+
+            )
 
         );
 
@@ -110,39 +90,43 @@ const assetsAgent = {
 
     // ======================
 
-    // 核心计算
-
-    // 价格 × 数量
-
-    // 否则使用价值
+    // 自动计算价值
 
     // ======================
 
-    calculateValue(asset){
+    calculateValue(item){
 
-        let price =
+        let price=
 
-        Number(asset.price || 0);
+        Number(
 
-        let quantity =
+            item.price || 0
 
-        Number(asset.quantity || 0);
+        );
+
+        let quantity=
+
+        Number(
+
+            item.quantity || 0
+
+        );
 
         if(
 
-            price > 0 &&
+            price>0 &&
 
-            quantity > 0
+            quantity>0
 
         ){
 
-            return price * quantity;
+            return price*quantity;
 
         }
 
         return Number(
 
-            asset.value || 0
+            item.value || 0
 
         );
 
@@ -156,11 +140,7 @@ const assetsAgent = {
 
     add(asset){
 
-        let assets =
-
-        this.getData();
-
-        let newAsset={
+        let item={
 
             id:
 
@@ -198,8 +178,6 @@ const assetsAgent = {
 
             asset.account || "",
 
-            // 价格
-
             price:
 
             Number(
@@ -208,8 +186,6 @@ const assetsAgent = {
 
             ),
 
-            // 数量
-
             quantity:
 
             Number(
@@ -217,15 +193,8 @@ const assetsAgent = {
                 asset.quantity || 0
 
             ),
-// 当前价值
 
-value:
-
-Number(
-
-    asset.value || 0
-
-),
+            value:0,
 
             note:
 
@@ -233,27 +202,15 @@ Number(
 
         };
 
-        newAsset.value =
+        item.value=
 
-        this.calculateValue(
+        this.calculateValue(item);
 
-            newAsset
+        this.assets.push(item);
 
-        );
+        this.save();
 
-        assets.push(
-
-            newAsset
-
-        );
-
-        this.save(
-
-            assets
-
-        );
-
-        return newAsset;
+        return item;
 
     },
 
@@ -265,7 +222,7 @@ Number(
 
     view(){
 
-        return this.getData();
+        return this.assets;
 
     },
 
@@ -277,49 +234,35 @@ Number(
 
     edit(id,newData){
 
-        let assets =
+        let item=
 
-        this.getData();
+        this.assets.find(
 
-        let index =
-
-        assets.findIndex(
-
-            item =>
-
-            item.id === id
+            a=>a.id===id
 
         );
 
-        if(index !== -1){
+        if(!item){
 
-            let updated={
-
-                ...assets[index],
-
-                ...newData
-
-            };
-
-            updated.value =
-
-            this.calculateValue(
-
-                updated
-
-            );
-
-            assets[index]=updated;
+            return "未找到资产";
 
         }
 
-        this.save(
+        Object.assign(
 
-            assets
+            item,
+
+            newData
 
         );
 
-        return "修改成功";
+        item.value=
+
+        this.calculateValue(item);
+
+        this.save();
+
+        return item;
 
     },
 
@@ -331,25 +274,15 @@ Number(
 
     delete(id){
 
-        let assets =
+        this.assets=
 
-        this.getData();
+        this.assets.filter(
 
-        assets =
-
-        assets.filter(
-
-            item =>
-
-            item.id !== id
+            a=>a.id!==id
 
         );
 
-        this.save(
-
-            assets
-
-        );
+        this.save();
 
         return "删除成功";
 
@@ -363,29 +296,21 @@ Number(
 
     summary(){
 
-        let assets =
-
-        this.getData();
-
         let totalValue=0;
 
-        assets.forEach(item=>{
+        this.assets.forEach(item=>{
 
             totalValue +=
 
-            this.calculateValue(
-
-                item
-
-            );
+            this.calculateValue(item);
 
         });
 
-        return {
+        return{
 
             count:
 
-            assets.length,
+            this.assets.length,
 
             totalValue
 
@@ -395,31 +320,19 @@ Number(
 
     // ======================
 
-    // 分类分析
+    // 分类统计
 
     // ======================
 
-    allocationSummary(){
-
-        let assets =
-
-        this.getData();
+    allocation(){
 
         let result={};
 
-        let total =
+        this.assets.forEach(item=>{
 
-        this.summary()
+            let category=
 
-        .totalValue;
-
-        assets.forEach(item=>{
-
-            let category =
-
-            item.category ||
-
-            "其他";
+            item.category || "其他";
 
             if(!result[category]){
 
@@ -427,57 +340,13 @@ Number(
 
             }
 
-            result[category] +=
+            result[category]+=
 
-            this.calculateValue(
-
-                item
-
-            );
+            this.calculateValue(item);
 
         });
 
-        let allocation={};
-
-        Object.keys(result)
-
-        .forEach(category=>{
-
-            allocation[category]={
-
-                value:
-
-                result[category],
-
-                percentage:
-
-                total>0
-
-                ?
-
-                (
-
-                    result[category]
-
-                    /
-
-                    total
-
-                    *
-
-                    100
-
-                ).toFixed(2)
-
-                :
-
-                0
-
-            };
-
-        });
-
-        return allocation;
+        return result;
 
     }
 
